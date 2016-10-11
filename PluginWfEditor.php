@@ -226,6 +226,7 @@ class PluginWfEditor{
   
   
   public function page_elementattribute(){
+    $this->includePlugin();
     wfPlugin::includeonce('wf/yml');
     //$widget = new PluginWfYml(__DIR__.'/page/attribute.yml');
     $form = new PluginWfYml(__DIR__.'/form/attribute.yml');
