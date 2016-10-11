@@ -1,0 +1,84 @@
+settings:
+  name: 'Bootstrap Table'
+content:
+  -
+    type: table
+    attribute:
+      class: 'table'
+    innerHTML:
+      -
+        type: caption
+        innerHTML: 'Optional table caption.'
+      -
+        type: thead
+        innerHTML:
+          -
+            type: tr
+            innerHTML:
+              -
+                type: th
+                innerHTML: '#'
+              -
+                type: th
+                innerHTML: 'First Name'
+              -
+                type: th
+                innerHTML: 'Last Name'
+              -
+                type: th
+                innerHTML: 'Username'
+      -
+        type: tbody
+        innerHTML:
+          -
+            type: tr
+            innerHTML:
+              -
+                type: th
+                attribute:
+                  scope: row
+                innerHTML: '1'
+              -
+                type: td
+                innerHTML: 'Mark'
+              -
+                type: td
+                innerHTML: 'Otto'
+              -
+                type: td
+                innerHTML: '@mdo'
+          -
+            type: tr
+            innerHTML:
+              -
+                type: th
+                attribute:
+                  scope: row
+                innerHTML: '2'
+              -
+                type: td
+                innerHTML: 'Jacob'
+              -
+                type: td
+                innerHTML: 'Thornton'
+              -
+                type: td
+                innerHTML: '@fat'
+          -
+            type: tr
+            innerHTML:
+              -
+                type: th
+                attribute:
+                  scope: row
+                innerHTML: '3'
+              -
+                type: td
+                innerHTML: 'Larry'
+              -
+                type: td
+                innerHTML: 'the Bird'
+              -
+                type: td
+                innerHTML: '@twitter'
+

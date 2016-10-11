@@ -1,0 +1,8 @@
+settings:
+  name: 'Bootstrap Col md 3'
+content:
+  -
+    type: div
+    attribute:
+      class: 'col-md-3'
+

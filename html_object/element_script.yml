@@ -1,0 +1,10 @@
+settings:
+  name: 'Element Script'
+content:
+  -
+    type: script
+    attribute:
+      type: 'text/javascript'
+      src: ''
+
+

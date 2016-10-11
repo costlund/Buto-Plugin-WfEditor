@@ -1,0 +1,29 @@
+settings:
+  name: 'Bootstrap Listgroup'
+content:
+  -
+    type: div
+    attribute:
+      class: list-group
+    innerHTML:
+      -
+        type: a
+        innerHTML: Link
+        attribute:
+          class: list-group-item
+      -
+        type: a
+        innerHTML: Link
+        attribute:
+          class: list-group-item
+      -
+        type: a
+        innerHTML: Link
+        attribute:
+          class: list-group-item
+      -
+        type: a
+        innerHTML: Link
+        attribute:
+          class: list-group-item
+

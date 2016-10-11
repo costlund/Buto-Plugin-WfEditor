@@ -1,0 +1,19 @@
+url: /editor/action?a=file_edit
+ajax: true
+submit_value: Save
+id: frm_file_edit
+items:
+  filename_old:
+    type: hidden
+    lable: Old filename
+    default: 
+    mandatory: true
+  filename_new:
+    type: varchar
+    lable: Filename
+    default: 
+    mandatory: true
+  copy:
+    type: checkbox
+    lable: Copy
+    default:

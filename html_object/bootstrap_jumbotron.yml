@@ -1,0 +1,31 @@
+settings:
+  name: 'Bootstrap Jumbotron'
+content:
+  -
+    type: div
+    attribute:
+      class: 'jumbotron'
+    innerHTML:
+      -
+        type: div
+        attribute:
+          class: container
+        innerHTML:
+          -
+            type: h1
+            innerHTML: 'Hello World!'
+          -
+            type: p
+            innerHTML: 'This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.'
+          -
+            type: p
+            innerHTML:
+              -
+                type: a
+                attribute:
+                  class: 'btn btn-primary btn-lg'
+                  role: button
+                innerHTML: Learn more
+            
+
+

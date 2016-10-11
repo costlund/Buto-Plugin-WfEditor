@@ -1,0 +1,56 @@
+url: /editor/action?a=attributesave
+post_to_divzzzzz: 'sdfds'
+ajax: true
+submit_value: Save
+id: frm_element_attribute
+items:
+  attribute_origin:
+    type: hidden
+    lable: Name (origin)
+    default: ''
+  attribute:
+    type: varchar
+    lable: Name
+    mandatory: true
+    default: ''
+    validate_as_emailzzz: true
+    container_classzzz: row
+    validator:
+      -
+        plugin: wf/editor
+        method: validate_origin
+#    validator:
+#      -
+#        plugin: wf/form
+#        method: validate_email
+  value:
+    type: text
+    lable: Value
+    default: 
+    container_classzzz: row
+  file:
+    type: varchar
+    lable: 'File'
+    mandatory: true
+    default: ''
+    container_style: 'display:none;'
+  key:
+    type: varchar
+    lable: 'Key'
+    mandatory: true
+    default: ''
+    container_style: 'display:none;'
+#  action:
+#    type: hidden
+#    lable: action
+#    mandatory: true
+#    default: 'create'
+success_redirect: /page/home
+buttons:
+  -
+    type: a
+    innerHTML: Delete
+    attribute:
+      href: '#'
+      onclick: "$.get('/editor/action?a=attribute_delete&file='+encodeURIComponent(document.getElementById('frm_element_attribute_file').value)+'&key='+encodeURIComponent(document.getElementById('frm_element_attribute_key').value)+'&attribute='+encodeURIComponent(document.getElementById('frm_element_attribute_attribute').value)+'', function(data){PluginWfCallbackjson.call( data );});return false;"
+      classzzz: 'btn btn-default'

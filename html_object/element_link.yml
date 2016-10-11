@@ -1,0 +1,11 @@
+settings:
+  name: 'Element Link'
+content:
+  -
+    type: link
+    attribute:
+      type: 'text/css'
+      rel: 'stylesheet'
+      href: ''
+
+

@@ -1,0 +1,10 @@
+settings:
+  name: 'Bootstrap Alert'
+content:
+  -
+    type: div
+    attribute:
+      class: 'alert alert-success'
+      role: alert
+    innerHTML: Alert
+

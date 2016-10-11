@@ -1,0 +1,8 @@
+settings:
+  name: 'Bootstrap Container-Fluid'
+content:
+  -
+    type: div
+    attribute:
+      class: 'container-fluid'
+

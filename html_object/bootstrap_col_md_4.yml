@@ -1,0 +1,8 @@
+settings:
+  name: 'Bootstrap Col md 4'
+content:
+  -
+    type: div
+    attribute:
+      class: 'col-md-4'
+

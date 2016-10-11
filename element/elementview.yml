@@ -1,0 +1,188 @@
+view:
+  type: div
+  attribute:
+    class: alert alert-success
+    id: element_view
+  innerHTML:
+    type:
+      type: div
+      attribute:
+        style: 'font-weight: bold;'
+    key:
+      type: div
+      innerHTML: 'Key: 123'
+    inner_plugin:
+      type: div
+      innerHTML: 'Plugin: '
+      attribute:
+        id: element_view_plugin
+    inner_method:
+      type: div
+      innerHTML: 'Method: '
+      attribute:
+        id: element_view_method
+    inner_data:
+      type: div
+      innerHTML: 'Data: '
+      attribute:
+        id: element_view_data
+    inner_data_value:
+      type: pre
+      innerHTML:
+        -
+          type: code
+          innerHTML: 'element_view_data_value...'
+          attribute:
+            id: element_view_data_value
+            class: 'language-yaml'
+      attribute:
+        class: 'language-yaml'
+    inner_html:
+      type: div
+      innerHTML: 'Inner HTML: (child)'
+      attribute:
+        id: element_view_innerhtml
+    attribute:
+      type: div
+      innerHTML: 'Attribute:'
+      attribute:
+        id: element_view_attribute
+    listgroup:
+      type: div
+      attribute:
+        class: list-group
+        id: element_view_list-group
+      innerHTML:
+        - 
+          type: span
+          attribute:
+            class: 'list-group-item'
+    inner_settings:
+      type: div
+      innerHTML: 'Settings: '
+      attribute:
+        id: element_view_settings
+    inner_settings_value:
+      type: pre
+      innerHTML:
+        -
+          type: code
+          innerHTML: 'element_view_settings_value...'
+          attribute:
+            id: element_view_settings_value
+            class: 'language-yaml'
+      attribute:
+        class: 'language-yaml'
+    script_prism:
+      type: script
+      innerHTML: 'Prism.highlightAll();'
+btn_documentation:
+  type: div
+  attribute:
+    class: 'btn-group dropup'
+  innerHTML:
+    -
+      type: button
+      attribute:
+        type: button
+        class: 'btn btn-default dropdown-toggle'
+        data-toggle: dropdown
+        aria-haspopup: true
+        aria-expanded: false
+      innerHTML:
+        -
+          type: text
+          innerHTML: Action
+        -
+          type: span
+          attribute:
+            class: caret
+    -
+      type: ul
+      attribute:
+        class: 'dropdown-menu'
+      innerHTML:
+        btn_delete:
+          type: li
+          innerHTML:
+            -
+              type: a
+              innerHTML: Delete
+              attribute:
+                id: btn_delete
+                data_file: 'file...'
+                data_key: 'key...'
+                onclick: "if(confirm('Are you sure?')){$.get('/editor/action?a=delete&file='+encodeURIComponent(this.getAttribute('data_file'))+'&key='+encodeURIComponent(this.getAttribute('data_key'))+'', function(data){PluginWfCallbackjson.call( data );});}return false;"
+        divider2:
+          type: li
+          attribute:
+            role: separator
+            class: divider
+        btn_move:
+          type: li
+          innerHTML:
+            -
+              type: a
+              innerHTML: Move
+              attribute:
+                id: btn_move
+                data_file: 'file...'
+                data_key: 'key...'
+                onclick: "$.get('/editor/action?a=move_set&file='+encodeURIComponent(this.getAttribute('data_file'))+'&key='+encodeURIComponent(this.getAttribute('data_key'))+'', function(data){PluginWfCallbackjson.call( data );});return false;"
+        btn_copy:
+          type: li
+          innerHTML:
+            -
+              type: a
+              innerHTML: Copy
+              attribute:
+                id: btn_copy
+                data_file: 'file...'
+                data_key: 'key...'
+                onclick: "$.get('/editor/action?a=copy_set&file='+encodeURIComponent(this.getAttribute('data_file'))+'&key='+encodeURIComponent(this.getAttribute('data_key'))+'', function(data){PluginWfCallbackjson.call( data );});return false;"
+        btn_position_up:
+          type: li
+          innerHTML:
+            -
+              type: a
+              innerHTML: Up
+              attribute:
+                id: btn_position_up
+                data_file: 'file...'
+                data_key: 'key...'
+                onclick: "$.get('/editor/action?a=position_up&file='+encodeURIComponent(this.getAttribute('data_file'))+'&key='+encodeURIComponent(this.getAttribute('data_key'))+'', function(data){PluginWfCallbackjson.call( data );});return false;"
+        btn_position_down:
+          type: li
+          innerHTML:
+            -
+              type: a
+              innerHTML: Down
+              attribute:
+                id: btn_position_down
+                data_file: 'file...'
+                data_key: 'key...'
+                onclick: "$.get('/editor/action?a=position_down&file='+encodeURIComponent(this.getAttribute('data_file'))+'&key='+encodeURIComponent(this.getAttribute('data_key'))+'', function(data){PluginWfCallbackjson.call( data );});return false;"
+        divider1:
+          type: li
+          attribute:
+            role: separator
+            class: divider
+        plugin_doc:
+          type: li
+          innerHTML:
+            -
+              type: a
+              innerHTML: Plugin doc
+              attribute:
+                onclick: "alert(8);return false;"
+                id: btn_documentation_plugin
+        widget_doc:
+          type: li
+          innerHTML:
+            -
+              type: a
+              innerHTML: Widget doc
+              attribute:
+                onclick: "alert(8);return false;"
+                id: btn_documentation_widget
+  

@@ -1,0 +1,15 @@
+url: /editor/action?a=folder_new
+ajax: true
+submit_value: Save
+id: frm_folder_new
+items:
+  foldername_new:
+    type: varchar
+    lable: Name
+    default: 
+    mandatory: true
+  folder:
+    type: hidden
+    lable: Folder
+    default: 
+    mandatory: true

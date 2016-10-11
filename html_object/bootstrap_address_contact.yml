@@ -1,0 +1,22 @@
+settings:
+  name: 'Bootstrap Address Contact'
+content:
+  -
+    type: address
+    innerHTML:
+      -
+        type: div
+        innerHTML:
+          -
+            type: strong
+            innerHTML: 'James Winter'
+      -
+        type: div
+        innerHTML:
+          -
+            type: a
+            attribute:
+              href: 'mailto:james.winter@webforms.se'
+            innerHTML: 'james.winter@webforms.se'
+            
+            

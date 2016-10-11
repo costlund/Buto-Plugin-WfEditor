@@ -1,0 +1,36 @@
+settings:
+  layout:
+    - html
+    - main
+  title: Webmaster
+content:
+  files:
+    type: div
+    settings:
+      disabled: true
+    attribute:
+      class: 'col-md-3'
+      id: wf_editor_files
+    innerHTML: 'Files...!'
+  workarea:
+    type: div
+    attribute:
+      class: 'col-md-12'
+      id: wf_editor_workarea
+    innerHTML: ''
+  plugin:
+    type: div
+    settings:
+      disabled: true
+    attribute:
+      class: 'col-md-4'
+      id: wf_editor_plugin
+    innerHTML: 'Plugin...!'
+
+  script:
+    settings:
+      disabled: true
+    type: script
+    innerHTML: |
+      PluginWfAjax.load('wf_editor_files', '/[[class]]/files');
+  

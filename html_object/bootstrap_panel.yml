@@ -1,0 +1,29 @@
+settings:
+  name: 'Bootstrap Panel'
+content:
+  -
+    type: div
+    attribute:
+      class: 'panel panel-default'
+    innerHTML:
+      -
+        type: div
+        attribute:
+          class: 'panel-heading'
+        innerHTML:
+          -
+            type: h3
+            attribute:
+              class: 'panel-title'
+            innerHTML: Panel title
+      -
+        type: div
+        attribute:
+          class: 'panel-body'
+        innerHTML: 'Panel content'
+      -
+        type: div
+        attribute:
+          class: 'panel-footer'
+        innerHTML: 'Panel footer'
+

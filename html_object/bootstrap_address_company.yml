@@ -1,0 +1,31 @@
+settings:
+  name: 'Bootstrap Address Company'
+content:
+  -
+    type: address
+    innerHTML:
+      -
+        type: div
+        innerHTML:
+          -
+            type: strong
+            innerHTML: 'Twitter, Inc.'
+      -
+        type: div
+        innerHTML: '1355 Market Street, Suite 900'
+      -
+        type: div
+        innerHTML: 'San Francisco, CA 94103'
+      -
+        type: div
+        innerHTML:
+          -
+            type: abbr
+            attribute:
+              title: Phone
+            innerHTML: 'P:'
+          -
+            type: text
+            innerHTML: '(123) 456-7890'
+            
+            

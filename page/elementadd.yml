@@ -1,0 +1,87 @@
+
+info_move:
+  settings:
+    disabled: true
+  type: div
+  innerHTML:
+    info:
+      type: h4
+      innerHTML: Move element
+      attribute:
+        id: info_move_h4
+    file:
+      type: div
+      innerHTML:
+        lable:
+          type: span
+          innerHTML: 'File: '
+          attribute:
+            class: 'alert-link'
+        value:
+          type: span
+          innerHTML: 'sfdsf'
+    key:
+      type: div
+      innerHTML:
+        lable:
+          type: span
+          innerHTML: 'Key: '
+          attribute:
+            class: 'alert-link'
+        value:
+          type: span
+          innerHTML: 'sfdsf'
+    btn_move:
+      type: a
+      innerHTML: 'Move'
+      attribute:
+        class: 'btn btn-primary'
+        onclick: "alert(8);"
+        style: 'margin-top: 10px'
+        id: info_move_btn
+    btn_discard:
+      type: a
+      innerHTML: 'Discard'
+      attribute:
+        onclick: "$.get('/editor/action?a=move_discard', function(data){PluginWfCallbackjson.call( data );});return false;"
+        style: 'margin-top: 10px'
+  attribute:
+    class: 'alert alert-info'
+group: 
+  type: div
+  attribute:
+    class: 'list-group'
+  innerHTML:
+    btn_html_element: 
+      type: a
+      innerHTML: 'HTML'
+      attribute:
+        class: 'list-group-item'
+        onclick: "alert(8);"
+    btn_html_object_element: 
+      type: a
+      innerHTML: 'HTML (object)'
+      attribute:
+        class: 'list-group-item'
+    btn_widget: 
+      type: a
+      innerHTML: 'Widget'
+      attribute:
+        class: 'list-group-item'
+        onclick: 'alert(12345);return; false;'
+        id: btn_widget
+    btn_widget_add_from_window: 
+      type: a
+      innerHTML: Widget test
+      attribute:
+        class: 'list-group-item'
+        data_file: 'file...'
+        data_key: 'key...'
+        data_plugin: 'wf/bootstrap'
+        data_widget: 'alert'
+        onclick: "$.get('/editor/action?a=addwidget&file='+encodeURIComponent(this.getAttribute('data_file'))+'&key='+encodeURIComponent(this.getAttribute('data_key'))+'&plugin='+encodeURIComponent(this.getAttribute('data_plugin'))+'&widget='+encodeURIComponent(this.getAttribute('data_widget'))+'', function(data){PluginWfCallbackjson.call( data );});return false;"
+        id: btn_widget_add_from_window
+        style: 'display:none'
+    
+    
+    

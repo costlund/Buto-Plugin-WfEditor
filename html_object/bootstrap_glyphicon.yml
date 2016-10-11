@@ -1,0 +1,9 @@
+settings:
+  name: 'Bootstrap Glyphicon'
+content:
+  -
+    type: span
+    attribute:
+      class: 'glyphicon glyphicon-search'
+      aria-hidden: true
+

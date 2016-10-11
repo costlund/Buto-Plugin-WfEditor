@@ -1,0 +1,10 @@
+settings:
+  name: 'Bootstrap Navbar LI element'
+content:
+  -
+    type: li
+    innerHTML:
+      -
+        type: a
+        innerHTML: Link
+

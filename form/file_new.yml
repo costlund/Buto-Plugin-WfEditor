@@ -1,0 +1,24 @@
+url: /editor/action?a=file_new
+ajax: true
+submit_value: Save
+id: frm_file_new
+items:
+  filename_new:
+    type: varchar
+    lable: Filename
+    default: 
+    mandatory: true
+  type_of_file:
+    type: varchar
+    lable: File type
+    mandatory: true
+    option:
+      '': '-'
+      'Settings': 'Settings'
+      'Layout': 'Layout'
+      'Page': 'Page'
+  folder:
+    type: hidden
+    lable: Folder
+    default: 
+    mandatory: true

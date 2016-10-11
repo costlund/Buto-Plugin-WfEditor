@@ -1,0 +1,9 @@
+settings:
+  name: 'Bootstrap Well'
+content:
+  -
+    type: div
+    attribute:
+      class: 'well'
+    innerHTML: Well...
+

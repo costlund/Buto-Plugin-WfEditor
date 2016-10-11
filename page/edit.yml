@@ -1,0 +1,61 @@
+content:
+  menu:
+    type: widget
+    data:
+      plugin: wf/bootstrap
+      method: menu
+      data:
+        settings:
+          fluit: true
+        brand:
+          lable: 'Webforms'
+          href: '#'
+        navbar:
+          navbar1:
+            classzzz: 'navbar-right'
+            item:
+              save:
+                lable: Save
+                onclick: "$.post('/editor/edit', $('#edit_save').serialize()).done(function(data) { PluginWfCallbackjson.call( data ); });return false;"
+                id: _set_in_action_
+              close:
+                lable: Close
+                href: #
+                onclick: _set_in_action_
+                id: close_edit
+        
+    
+  form:
+    type: form
+    attribute:
+      method: post
+      id: edit_save
+    innerHTML:
+      yml:
+        type: input
+        attribute:
+          type: hidden
+          name: yml
+          id: yml
+          value: _set_in_action_
+      yml_content:
+        type: textarea
+        attribute:
+          name: yml_content
+          class: form-control
+          style: 'height:200px;'
+          id: yml_content
+          wrap: off
+          onkeypresszzz: "console.log(this.keyCode);return false;"
+      textarea_script_onkeypress:
+        type: script
+        innerHTML: "document.getElementById('yml_content').onkeypress = function(event){if(event.ctrlKey && event.which==115){console.log(event.ctrlKey+':'+event.which);document.getElementById('_set_in_action_').onclick();return false;}}"
+      textarea_script:
+        type: script
+        innerHTML: "PluginWfTextareatab.setTextareaTabEnabled(document.getElementById('yml_content'), '  ');PluginWfTextareatab.reziseNoScroll('yml_content');"
+      textarea_ctrl_w:
+        type: script
+        innerHTML: "PluginWfOnkeypress.set('yml_content', {ctrlKey: true, which: 119}, function(){document.getElementById('close_edit').onclick();});"
+        
+        
+  

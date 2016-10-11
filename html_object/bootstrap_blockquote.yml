@@ -1,0 +1,13 @@
+settings:
+  name: 'Bootstrap Blockquote'
+content:
+  -
+    type: blockquote
+    innerHTML:
+      -
+        type: p
+        innerHTML: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.
+      -
+        type: footer
+        innerHTML: Someone famous in Source Title
+

@@ -1,0 +1,16 @@
+type: div
+attribute:
+  class: 'panel panel-default'
+innerHTML:
+  heading:
+    type: div
+    attribute:
+      class: 'panel-heading'
+      onclick: "PluginWfAjax.update('wf_editor_plugin');"
+    innerHTML:
+  content:
+    type: div
+    attribute:
+      class: 'panel-body'
+      stylezzz: 'height:800px;overflow:auto;'
+    innerHTML:

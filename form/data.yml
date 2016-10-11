@@ -1,0 +1,36 @@
+url: /editor/action?a=datasave
+ajax: true
+submit_value: Save
+id: frm_element_data
+items:
+  data:
+    type: text
+    lable: Data
+    default: 
+    container_classzzz: row
+  file:
+    type: hidden
+    lable: 'File'
+    mandatory: true
+    default: ''
+    container_style: 'display:zzznone;'
+  key:
+    type: hidden
+    lable: 'Key'
+    mandatory: true
+    default: ''
+    container_style: 'display:zzznone;'
+#  action:
+#    type: hidden
+#    lable: action
+#    mandatory: true
+#    default: 'create'
+#success_redirect: /page/home
+#buttons:
+#  -
+#    type: a
+#    innerHTML: Delete
+#    attribute:
+#      href: '#'
+#      onclick: "$.get('/editor/action?a=attribute_delete&file='+encodeURIComponent(document.getElementById('frm_element_attribute_file').value)+'&key='+encodeURIComponent(document.getElementById('frm_element_attribute_key').value)+'&attribute='+encodeURIComponent(document.getElementById('frm_element_attribute_attribute').value)+'', function(data){PluginWfCallbackjson.call( data );})"
+#      classzzz: 'btn btn-default'

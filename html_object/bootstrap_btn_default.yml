@@ -1,0 +1,9 @@
+settings:
+  name: 'Bootstrap A btn-default'
+content:
+  -
+    type: a
+    innerHTML: Link
+    attribute:
+      class: 'btn btn-default'
+      href: '#'

@@ -1,0 +1,10 @@
+settings:
+  layout:
+    - html
+    - main
+  title: Theme
+content:
+  - 
+    type: div
+    innerHTML: 'theme...'
+  
