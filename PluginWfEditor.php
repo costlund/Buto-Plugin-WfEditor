@@ -241,6 +241,7 @@ class PluginWfEditor{
   }
   
   public function page_elementhtml(){
+    $this->includePlugin();
     wfPlugin::includeonce('wf/yml');
     $form = new PluginWfYml(__DIR__.'/form/html.yml');
     $form->set('items/file/default', urldecode(wfRequest::get('file')));
