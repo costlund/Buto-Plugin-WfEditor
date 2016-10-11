@@ -1,4 +1,8 @@
 settings:
+  rewrite_globals:
+    -
+      key: 'sys/settings/plugin/twitter/bootstrap335v/enabled'
+      value: true
   layout:
     - html
     - main

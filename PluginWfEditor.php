@@ -8,6 +8,7 @@ class PluginWfEditor{
   
   
   public function page_desktop(){
+    $this->includePlugin();
     
     
     if(!wfArray::get($_SESSION, 'plugin/wf/editor/activetheme')){
@@ -253,6 +254,7 @@ class PluginWfEditor{
   }
   
   private function includePlugin(){
+    $GLOBALS['sys']['settings']['plugin']['twitter']['bootstrap335v ']['enabled'] = 'true';
     $GLOBALS['sys']['settings']['plugin']['wf']['form']['enabled'] = 'true';
     $GLOBALS['sys']['settings']['plugin']['wf']['bootstrap']['enabled'] = 'true';
   }
