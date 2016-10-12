@@ -1,0 +1,37 @@
+settings:
+  name: 'Bootstrap Tabs (pages)'
+content:
+  -
+    type: ul
+    attribute:
+      class: 'nav nav-tabs'
+      id: myTabs
+      role: tablist
+    innerHTML:
+      -
+        type: li
+        innerHTML:
+          -
+            type: a
+            innerHTML: Home
+            attribute:
+              href: /
+        attribute:
+          class: active
+          role: presentation
+      -
+        type: li
+        innerHTML:
+          -
+            type: a
+            innerHTML: Support
+            attribute:
+              href: '#support'
+              id: tab_support
+              onclick: 'location.href=''/support'';'
+        attribute:
+          role: presentation
+      -
+        type: script
+        innerHTML: "if(document.title=='Support'){\r\n  $('#myTabs #tab_support').tab('show');\r\n}"
+
