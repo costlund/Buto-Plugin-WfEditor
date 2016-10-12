@@ -1064,6 +1064,7 @@ class PluginWfEditor{
     $a = array();
     if(sizeof($folder) > 0){
       foreach ($folder as $key => $value) {
+        if(substr($value, 0, 1) == '.'){ continue; } // Filter to exclude all files and folder who start with ".".
         $is_file = $this->is_file($dir, $value);
         $glyphicon = null;
         if($dir){
