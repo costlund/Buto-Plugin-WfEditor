@@ -972,6 +972,7 @@ class PluginWfEditor{
   }
   
   public function page_file_new(){
+    $this->includePlugin();
     wfPlugin::includeonce('wf/yml');
     $form = new PluginWfYml(__DIR__.'/form/file_new.yml');
     $form->set('items/folder/default', urldecode(wfRequest::get('yml')));
@@ -979,6 +980,7 @@ class PluginWfEditor{
     wfDocument::renderElement(array($element));
   }
   public function page_folder_new(){
+    $this->includePlugin();
     wfPlugin::includeonce('wf/yml');
     $form = new PluginWfYml(__DIR__.'/form/folder_new.yml');
     $form->set('items/folder/default', urldecode(wfRequest::get('folder')));
