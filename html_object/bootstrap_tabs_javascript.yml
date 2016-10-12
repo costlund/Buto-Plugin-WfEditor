@@ -1,0 +1,35 @@
+settings:
+  name: 'Bootstrap Tabs (javascript)'
+content:
+  -
+    type: ul
+    attribute:
+      class: 'nav nav-tabs'
+      id: myTabs
+      role: tablist
+    innerHTML:
+      -
+        type: li
+        innerHTML:
+          -
+            type: a
+            innerHTML: Home
+            attribute:
+              href: '#'
+        attribute:
+          class: active
+          role: presentation
+      -
+        type: li
+        innerHTML:
+          -
+            type: a
+            innerHTML: Support
+            attribute:
+              href: '#support'
+        attribute:
+          role: presentation
+      -
+        type: script
+        innerHTML: "$('#myTabs a').click(function (e) {\r\n  e.preventDefault();\r\n  $(this).tab('show');\r\n  console.log(this.innerHTML);\r\n})"
+
