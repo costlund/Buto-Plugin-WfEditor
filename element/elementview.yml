@@ -112,7 +112,7 @@ btn_documentation:
                 id: btn_delete
                 data_file: 'file...'
                 data_key: 'key...'
-                onclick: "if(confirm('Are you sure?')){$.get('/editor/action?a=delete&file='+encodeURIComponent(this.getAttribute('data_file'))+'&key='+encodeURIComponent(this.getAttribute('data_key'))+'', function(data){PluginWfCallbackjson.call( data );});}return false;"
+                onclick: "   $.get('/editor/action?a=delete&file='+encodeURIComponent(this.getAttribute('data_file'))+'&key='+encodeURIComponent(this.getAttribute('data_key'))+'', function(data){PluginWfCallbackjson.call( data );}); return false;"
         divider2:
           type: li
           attribute:
