@@ -8,6 +8,10 @@ items:
     lable: Settings
     default: 
     container_classzzz: row
+    style: 'min-height: 300px'
+  stay:
+    type: checkbox
+    lable: Do not close this window
   file:
     type: hidden
     lable: 'File'

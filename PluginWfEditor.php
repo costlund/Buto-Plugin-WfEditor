@@ -551,7 +551,13 @@ class PluginWfEditor{
       if($form->get('is_valid')){
         $yml->set(null, $form->get('items/html/post_value'));
         $yml->save();
-        $json->set('script', array("PluginWfAjax.update('".$this->file_to_id(urldecode(wfRequest::get('file')))."');", "PluginWfAjax.update('element_view_body');", "document.getElementById('element_html_btn_close').click();"));
+        $script = array();
+        $script[] = "PluginWfAjax.update('".$this->file_to_id(urldecode(wfRequest::get('file')))."');";
+        $script[] = "PluginWfAjax.update('element_view_body');";
+        if(!$form->get('items/stay/post_value')){
+          $script[] = "document.getElementById('element_html_btn_close').click();";
+        }
+        $json->set('script', $script);
       }else{
         $json->set('script', array("alert(\"".PluginWfForm::getErrors($form->get(), "\\n")."\");"));
       }
@@ -565,7 +571,13 @@ class PluginWfEditor{
           $value = sfYaml::load($value);
           $yml->set(null, $value);
           $yml->save();
-          $json->set('script', array("PluginWfAjax.update('".$this->file_to_id(urldecode(wfRequest::get('file')))."');", "PluginWfAjax.update('element_view_body');", "document.getElementById('element_settings_btn_close').click();"));
+          $script = array();
+          $script[] = "PluginWfAjax.update('".$this->file_to_id(urldecode(wfRequest::get('file')))."');";
+          $script[] = "PluginWfAjax.update('element_view_body');";
+          if(!$form->get('items/stay/post_value')){
+            $script[] = "document.getElementById('element_settings_btn_close').click();";
+          }
+          $json->set('script', $script);
         } catch (Exception $exc) {
           $json->set('script', array("alert(\"Unable to parse yml!\");"));
         }
@@ -582,7 +594,13 @@ class PluginWfEditor{
           $value = sfYaml::load($value);
           $yml->set(null, $value);
           $yml->save();
-          $json->set('script', array("PluginWfAjax.update('".$this->file_to_id(urldecode(wfRequest::get('file')))."');", "PluginWfAjax.update('element_view_body');", "document.getElementById('element_data_btn_close').click();"));
+          $script = array();
+          $script[] = "PluginWfAjax.update('".$this->file_to_id(urldecode(wfRequest::get('file')))."');";
+          $script[] = "PluginWfAjax.update('element_view_body');";
+          if(!$form->get('items/stay/post_value')){
+            $script[] = "document.getElementById('element_data_btn_close').click();";
+          }
+          $json->set('script', $script);
         } catch (Exception $exc) {
           $json->set('script', array("alert(\"Unable to parse yml!\");"));
         }
