@@ -938,9 +938,19 @@ class PluginWfEditor{
               array('type' => 'div', 'innerHTML' => $innerHTML, 'attribute' => array('style' => $style))
               ), 'attribute' => array('class' => $class));
         }else{
+          
+          
+          //$temp = wfArray::get($_SESSION, 'plugin/wf/editor/activetheme');
+          $active_theme_settings = new PluginWfArray(wfSettings::getSettings('/theme/'.wfArray::get($_SESSION, 'plugin/wf/editor/activetheme').'/config/settings.yml'));
+          //wfHelp::yml_dump($active_theme_settings->get());
+          $alert = null;
+          if(!$active_theme_settings->get('plugin/'.$item->get('data/plugin').'/enabled')){
+            $alert = wfDocument::createHtmlElement('div', 'Plugin not enabled in theme config/settings.yml!', array('class' => 'alert alert-danger'));
+          }
+          
           $item = array('type' => 'div', 'innerHTML' => array(
               array('type' => 'div', 'innerHTML' => 'widget ('.$item->get('data/plugin').')', 'attribute' => array('style' => $style_type, 'onclick' => $onclick_view)),
-              array('type' => 'div', 'innerHTML' => 'name: '.$item->get('data/method').'')
+              array('type' => 'div', 'innerHTML' => 'name: '.$item->get('data/method').''), $alert
               ), 'attribute' => array('class' => 'alert alert-info'));
         }
         $items[] = $item;
@@ -1150,7 +1160,7 @@ class PluginWfEditor{
     
     
     $btn_group = null;
-    if($dir){
+    if(true || $dir){
       $btn_group = $this->getBtnGroup(array('label' => 'Action', 'btn_class' => 'btn', 'buttons' => array(
         array('label' => 'New file', 'onclick' => "PluginWfBootstrapjs.modal({id: 'modal_file_new', url: '/editor/file_new?yml='+encodeURIComponent('$dir'), lable: 'File new', size: 'sm'});return false;"),
         array('label' => 'New folder', 'onclick' => "PluginWfBootstrapjs.modal({id: 'modal_folder_new', url: '/editor/folder_new?folder='+encodeURIComponent('$dir'), lable: 'Folder new', size: 'sm'});return false;"),

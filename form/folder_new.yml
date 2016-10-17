@@ -12,4 +12,4 @@ items:
     type: hidden
     lable: Folder
     default: 
-    mandatory: true
+    mandatory: false
