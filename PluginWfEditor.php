@@ -1629,41 +1629,23 @@ class PluginWfEditor{
   
   
   public function page_theme(){
-    
     $this->includePlugin();
-    
     $filename = dirname( __FILE__).'/page/theme.yml';
     $page = wfFilesystem::loadYml($filename);
     wfArray::set($GLOBALS, 'sys/layout_path', '/plugin/wf/editor/layout');
-    
-    //Insert element in page.
-    //$page = wfArray::set($page, 'content', $this->getFiles());
-    
     $item = array();
     foreach (wfFilesystem::getScandir(wfArray::get($GLOBALS, 'sys/app_dir').'/theme') as $key => $value) {
       $dir = wfFilesystem::getScandir(wfArray::get($GLOBALS, 'sys/app_dir').'/theme/'.$value);
-      //wfHelp::yml_dump($dir);
-      
       foreach (wfFilesystem::getScandir(wfArray::get($GLOBALS, 'sys/app_dir').'/theme/'.$value) as $key2 => $value2) {
- 
-        
         $theme = urlencode( $value.'/'.$value2);
         $onclick = "$.get('/editor/themeload?theme=$theme', function(data){PluginWfCallbackjson.call( data );});return false;";
         $item[] = array('href' => '#', 'innerHTML' => $value.'/'.$value2, 'onclick' => $onclick);
       }
-      
     }
-    
-    
-    //exit;
-    
-    
     $data = array();
     $data['item'] = $item;
     $listgroup = wfDocument::createWfElement('widget', array('plugin' => 'wf/bootstrap', 'method' => 'listgroup', 'data' => $data));
     $page = wfArray::set($page, 'content', array($listgroup));
-    
-    
     wfDocument::mergeLayout($page);
   }
   
