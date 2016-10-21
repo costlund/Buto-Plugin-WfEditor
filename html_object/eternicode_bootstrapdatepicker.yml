@@ -1,0 +1,26 @@
+settings:
+  name: 'Eternicode Bootstrapdatepicker (include widget is required).'
+content:
+  -
+    type: div
+    attribute:
+      class: 'input-append date'
+      data-date: '2002-04-06'
+      data-date-format: yyyy-mm-dd
+      id: dp3
+    innerHTML:
+      -
+        type: input
+        attribute:
+          class: span2
+          type: text
+          size: '16'
+          readonly: 'true'
+          value: '2002-04-06'
+      -
+        type: span
+        attribute:
+          class: 'glyphicon glyphicon-calendar add-on'
+      -
+        type: script
+        innerHTML: "this.datepicker = $('#dp3').datepicker({\r\n      format: 'yyyy-mm-dd',\r\n      weekStart: 1,\r\n      daysOfWeekHighlighted: \"0,6\",\r\n      autoclose: true,\r\n      todayHighlight: true\r\n    }).on( 'changeDate', function(ev) {console.log(ev.date);} );"
