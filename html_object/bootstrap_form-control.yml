@@ -1,0 +1,8 @@
+settings:
+  name: 'Bootstrap Form Control'
+content:
+  -
+    type: input
+    attribute:
+      class: 'form-control'
+
