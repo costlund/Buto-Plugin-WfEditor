@@ -1644,8 +1644,14 @@ class PluginWfEditor{
       $dir = wfFilesystem::getScandir(wfArray::get($GLOBALS, 'sys/app_dir').'/theme/'.$value);
       //wfHelp::yml_dump($dir);
       
+      
+      
       foreach (wfFilesystem::getScandir(wfArray::get($GLOBALS, 'sys/app_dir').'/theme/'.$value) as $key2 => $value2) {
- 
+        
+//        if(substr($value2, 0, 1)=='.'){
+//          wfHelp::yml_dump($value2);
+//          break;
+//        }
         
         $theme = urlencode( $value.'/'.$value2);
         $onclick = "$.get('/editor/themeload?theme=$theme', function(data){PluginWfCallbackjson.call( data );});return false;";

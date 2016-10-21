@@ -1,0 +1,51 @@
+settings:
+  name: 'Bootstrap Form (ajax search)'
+content:
+  -
+    type: div
+    innerHTML:
+      frm:
+        type: form
+        attribute:
+          id: frm_search
+        innerHTML:
+          -
+            type: div
+            attribute:
+              class: row
+            innerHTML:
+              -
+                type: div
+                attribute:
+                  class: 'col-md-4'
+                innerHTML:
+                  -
+                    type: div
+                    attribute:
+                      class: input-group
+                    innerHTML:
+                      -
+                        type: input
+                        attribute:
+                          name: sw
+                          class: form-control
+                          placeholder: Enter search word
+                          type: text
+                      -
+                        type: span
+                        attribute:
+                          class: input-group-btn
+                        innerHTML:
+                          -
+                            type: button
+                            attribute:
+                              class: btn btn-default
+                              onclick: "document.getElementById('frm_result').innerHTML='<img style=\'margin:10px;\' src=\'/plugin/wf/ajax/loading.gif\'>'; $.post('/doc/my_search_adress', $('#frm_search').serialize()).done(function(data) { document.getElementById('frm_result').innerHTML=data; return false; });return false;"
+                            innerHTML: Search
+      frm_result:
+        type: div
+        attribute:
+          class: row
+          id: frm_result
+        innerHTML: Div to post to...
+        
