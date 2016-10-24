@@ -1,0 +1,35 @@
+settings:
+  name: 'Eternicode Bootstrapdatepicker Ajax (include widget is required).'
+  description: 'Add a full functional date picker object with ajax post script.'
+content:
+  -
+    type: div
+    attribute:
+      class: 'input-append date'
+      data-date: '2002-04-06'
+      data-date-format: yyyy-mm-dd
+      id: dp3
+    innerHTML:
+      -
+        type: input
+        attribute:
+          type: text
+          size: '16'
+          readonly: 'true'
+          value: ''
+          id: input_date
+          style: ''
+      -
+        type: span
+        attribute:
+          class: 'glyphicon glyphicon-calendar add-on'
+          id: input_date_icon
+      -
+        type: div
+        innerHTML: 'Calendar should post here...'
+        attribute:
+          id: calendar_post_div
+      -
+        type: script
+        innerHTML: "load_my_calendar({\r\n  input_date:'input_date', \r\n  div_datepicker:'dp3', \r\n  input_date_icon:'input_date_icon',\r\n  default_date: new Date().getFullYear()+'-'+(new Date().getMonth()+1)+'-'+new Date().getDate(),\r\n  calendar_post_div: 'calendar_post_div',\r\n  calendar_post_url: '/p/training_heat/date/',\r\n  show_hole_calendar: true\r\n});\r\nfunction load_my_calendar(data){\r\n  if(data.show_hole_calendar){\r\n    document.getElementById(data.input_date_icon).className = '';\r\n    document.getElementById(data.input_date).style.display = 'none';\r\n  }\r\n  document.getElementById(data.input_date).value = data.default_date;\r\n  document.getElementById('dp3').setAttribute('data-date', data.default_date);\r\n  PluginWfAjax.load(data.calendar_post_div, data.calendar_post_url+data.default_date);\r\n  var datepicker = $('#'+data.div_datepicker).datepicker({\r\n        format: 'yyyy-mm-dd',\r\n        weekStart: 1,\r\n        daysOfWeekHighlighted: \"0,6\",\r\n        autoclose: true,\r\n        todayHighlight: true\r\n      }).on( 'changeDate', function(ev) {\r\n        var date = ev.date; \r\n        var date_str = ( date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate() ); \r\n        PluginWfAjax.load(data.calendar_post_div, data.calendar_post_url+date_str);  \r\n  } );\r\n}"
+        settings: null
