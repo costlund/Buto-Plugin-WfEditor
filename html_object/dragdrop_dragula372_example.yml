@@ -1,0 +1,61 @@
+settings:
+  name: 'DragdropDragula372Example (include two widgets is required).'
+content:
+  -
+    type: div
+    innerHTML:
+      -
+        type: div
+        attribute:
+          class: my_first_div
+        innerHTML:
+          -
+            type: div
+            attribute:
+              class: container
+              id: first_left
+            innerHTML:
+              -
+                type: div
+                innerHTML: 'Drag example'
+          -
+            type: div
+            attribute:
+              class: container
+              id: first_right
+            innerHTML:
+              -
+                type: div
+                innerHTML: 'Drag to here'
+          -
+            type: script
+            innerHTML: "dragula([document.getElementById('first_left'), document.getElementById('first_right')])\r\n  .on('drag', function (el) {\r\n    el.className = el.className.replace('ex-moved', '');\r\n    console.log('drag');\r\n  }).on('drop', function (el) {\r\n    el.className += ' ex-moved';\r\n    console.log('drop');\r\n  }).on('over', function (el, container) {\r\n    container.className += ' ex-over';\r\n    console.log('over');\r\n  }).on('out', function (el, container) {\r\n    container.className = container.className.replace('ex-over', '');\r\n    console.log('out');  \r\n});"
+      -
+        type: div
+        attribute:
+          class: my_last_div
+        innerHTML:
+          -
+            type: div
+            attribute:
+              class: container
+              id: last_left
+            innerHTML:
+              -
+                type: div
+                innerHTML: 'Drag example'
+          -
+            type: div
+            attribute:
+              class: container
+              id: last_right
+            innerHTML:
+              -
+                type: div
+                innerHTML: 'Drag to here'
+          -
+            type: script
+            innerHTML: "var last_drake = dragula([document.getElementById('last_left'), document.getElementById('last_right')])\r\n  .on('drag', function (el) {\r\n    el.className = el.className.replace('ex-moved', '');\r\n    console.log('drag');\r\n  }).on('drop', function (el, element) {\r\n   \r\n    if(!confirm('Move?')){last_drake.cancel(true);}\r\n\r\n    el.className += ' ex-moved';\r\n    console.log('drop');\r\n  }).on('over', function (el, container) {\r\n    container.className += ' ex-over';\r\n    console.log('over');\r\n  }).on('out', function (el, container) {\r\n    container.className = container.className.replace('ex-over', '');\r\n    console.log('out');  \r\n});"
+      -
+        type: style
+        innerHTML: ".container{width:160px;height:100px;background:gray;margin:20px;padding:10px;}\r\n.container div{background:silver;}\r\n.my_first_div, .my_last_div {border: solid 1px gray}"
