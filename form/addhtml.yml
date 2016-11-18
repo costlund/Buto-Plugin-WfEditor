@@ -5,23 +5,37 @@ id: frm_add_element_html
 items:
   html_tag:
     type: varchar
-    lable: HTML tag
+    lable: Type
     default: 
     mandatory: true
-    container_classzzz: row
-  class:
-    type: varchar
-    lable: Class
-    default: 
   inner_html:
     type: varchar
     lable: Inner HTML
     default: 
   id:
     type: varchar
-    lable: ID
+    lable: YML Key ID
     default: 
-    container_classzzz: row
+    info:
+      text: 'Set this if a specific key is needed.'
+  attribute_1_key:
+    type: varchar
+    lable: Attribute
+  attribute_1_value:
+    type: varchar
+    lable: Value
+  attribute_2_key:
+    type: varchar
+    lable: Attribute
+  attribute_2_value:
+    type: varchar
+    lable: Value
+  attribute_3_key:
+    type: varchar
+    lable: Attribute
+  attribute_3_value:
+    type: varchar
+    lable: Value
   file:
     type: hidden
     lable: 'File'
