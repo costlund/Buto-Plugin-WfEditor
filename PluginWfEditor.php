@@ -114,7 +114,8 @@ class PluginWfEditor{
     $widget->setById('btn_documentation_plugin', 'attribute/onclick', "PluginWfBootstrapjs.modal({id: 'wf_editor_pluginview', url: '/editor/pluginview?plugin=".urlencode($yml->get('data/plugin'))."', lable: 'Plugin', 'size': 'lg'});return false;");
     $widget->setById('btn_documentation_widget', 'attribute/onclick', "PluginWfBootstrapjs.modal({id: 'wf_editor_methodview', url: '/editor/methodview?plugin=".urlencode($yml->get('data/plugin'))."&method=widget_".urlencode($yml->get('data/method'))."', lable: 'Method', 'size': 'lg'});return false;");
     $onclick = "PluginWfBootstrapjs.modal({id: 'element_html', url: '/editor/elementkey?file=".urlencode($filename)."&key=".urlencode($key)."', lable: 'Key', size: 'lg'});return false;";
-    $widget->set('view/innerHTML/key/innerHTML', "<a href=\"#\" onclick=\"$onclick\">Path to key</a>: $key");
+    //$widget->set('view/innerHTML/key/innerHTML', "<a href=\"#\" onclick=\"$onclick\">Path to key</a>: $key");
+    $widget->set('view/innerHTML/key/innerHTML', "Key: $key");
     $widget->setById('btn_delete', 'attribute/data_file', urldecode(wfRequest::get('file')));
     $widget->setById('btn_delete', 'attribute/data_key', $key);
     $widget->setById('btn_move', 'attribute/data_file', urldecode(wfRequest::get('file')));
@@ -530,14 +531,31 @@ class PluginWfEditor{
       $form->set(null, PluginWfForm::bindAndValidate($form->get()));
       if($form->get('is_valid')){
         $inner_html = null;
+        /**
+         * Inner HTML.
+         */
         if($form->get('items/inner_html/post_value')){
           $inner_html = $form->get('items/inner_html/post_value');
         }
+        /**
+         * Attribute.
+         */
         $attribute = array();
         if($form->get('items/class/post_value')){
           $attribute['class'] = $form->get('items/class/post_value');
         }
+        for($i=1; $i<=3; $i++){
+          if($form->get("items/attribute_".$i."_key/post_value")){
+            $attribute[$form->get("items/attribute_".$i."_key/post_value")] = $form->get("items/attribute_".$i."_value/post_value");
+          }
+        }
+        /**
+         * Create element.
+         */
         $element = wfDocument::createHtmlElement($form->get('items/html_tag/post_value'), $inner_html, $attribute);
+        /**
+         * Handle yml key.
+         */
         if($form->get('items/id/post_value')){
           $yml->set($form->get('items/id/post_value'), $element);
         }else{
@@ -798,9 +816,18 @@ class PluginWfEditor{
             $innerHTML = htmlentities($item->get('innerHTML')).'';
             $style = 'border:dotted 1px silver';
           }
+          
+          $pre_attribute = null;
+          if($item->get('attribute')){
+            $temp = $item->get('attribute');
+            ksort($temp);
+            $pre_attribute = wfDocument::createHtmlElement('pre', wfHelp::getYmlDump(($temp)), array('style' => 'background:white;'));
+          }
+          
           $item = array('type' => 'div', 'innerHTML' => array(
               $btn_add,
-              array('type' => 'div', 'innerHTML' => ''.$item->get('type').' '.($item->get('attribute/class')?'('.$item->get('attribute/class').')':''), 'attribute' => array('style' => $style_type, 'onclick' => $onclick_view)),
+              array('type' => 'div', 'innerHTML' => ''.$item->get('type'), 'attribute' => array('style' => $style_type, 'onclick' => $onclick_view)),
+              $pre_attribute,
               array('type' => 'div', 'innerHTML' => $innerHTML, 'attribute' => array('style' => $style))
               ), 'attribute' => array('class' => $class));
         }else{
