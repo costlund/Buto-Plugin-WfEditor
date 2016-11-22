@@ -1,0 +1,54 @@
+type: div
+attribute:
+  class: 'alert alert-warning'
+  role: alert
+innerHTML:
+  -
+    type: strong
+    innerHTML: Public folder
+  -
+    type: div
+    innerHTML: 
+      - 
+        type: text
+        innerHTML: 'This plugin has an public folder who has to be linked, copied or moved to public dir '
+      -
+        type: text
+        attribute: {id: public_folder}
+        innerHTML: _
+      -
+        type: text
+        innerHTML: .
+  -
+    type: ul
+    innerHTML:
+      -
+        type: li
+        innerHTML:
+          -
+            type: span
+            innerHTML: 'File readme.txt exist:'
+          -
+            type: span
+            attribute: {id: readme_exist}
+            innerHTML: _
+      -
+        type: li
+        innerHTML:
+          -
+            type: span
+            innerHTML: 'File readme.txt can be read from public dir: '
+          -
+            type: span
+            attribute: {id: readme_exist_public}
+            innerHTML: _
+      -
+        type: li
+        innerHTML:
+          -
+            type: span
+            innerHTML: 'Actions: '
+          -
+            type: span
+            attribute: {id: actions_needed}
+            innerHTML: _
