@@ -1093,9 +1093,19 @@ class PluginWfEditor{
     return $element;
   }
   /**
+   * Get response code.
+   * @param type $url
+   * @return type
+   */
+  private function get_http_response_code($url) {
+    $headers = get_headers($url);
+    return substr($headers[0], 9, 3);
+  }
+  /**
    * Plugin view page.
    */
   public function page_pluginview(){
+    wfPlugin::includeonce('wf/yml');
     $this->includePlugin();
     $page = wfFilesystem::loadYml(wfArray::get($GLOBALS, 'sys/app_dir').'/plugin/wf/editor/page/pluginview.yml');
     $element = array();
@@ -1110,6 +1120,34 @@ class PluginWfEditor{
     }
     wfPlugin::includeonce($plugin);
     $element[] = wfDocument::createHtmlElement('h2', $plugin);
+    /**
+     * Public folder.
+     */
+    if(wfFilesystem::fileExist(wfArray::get($GLOBALS, 'sys/app_dir').'/plugin/'.$plugin.'/public')){
+      $alert_public_folder = new PluginWfYml(__DIR__.'/element/alert_public_folder.yml');
+      $alert_public_folder->setById('public_folder', 'innerHTML', wfArray::get($GLOBALS, 'sys/web_dir').'/'.$plugin);
+      /**
+       * If public folder exist we check if mandatory file readme.txt exist.
+       */
+      if(wfFilesystem::fileExist(wfArray::get($GLOBALS, 'sys/app_dir').'/plugin/'.$plugin.'/public/readme.txt')){
+        $alert_public_folder->setById('readme_exist', 'innerHTML', 'Yes');
+        if($this->get_http_response_code(wfSettings::getHttpAddress(true).'/plugin/'.$plugin.'/readme.txt') != "200"){
+          $alert_public_folder->setById('readme_exist_public', 'innerHTML', 'No');
+          $alert_public_folder->setById('actions_needed', 'innerHTML', 'Link, copy or move the folder to public directory.');
+        }else{
+          $alert_public_folder->setById('readme_exist_public', 'innerHTML', 'Yes');
+          $alert_public_folder->setById('actions_needed', 'innerHTML', 'All is fine.');
+        }
+      }else{
+        $alert_public_folder->setById('readme_exist', 'innerHTML', 'No');
+        $alert_public_folder->setById('readme_exist_public', 'innerHTML', '-');
+        $alert_public_folder->setById('actions_needed', 'innerHTML', 'Maybe! The plugin does not have the readme.txt file but could work anyway if it´s linked in a proper way?');
+      }
+      $element[] = $alert_public_folder->get();
+    }
+    /**
+     * 
+     */
     $item = array();
     $item[] = array('innerHTML' => 'Methods', 'active' => true);
     $class = wfArray::get($GLOBALS, 'sys/class');
