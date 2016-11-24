@@ -4,6 +4,11 @@
  Get support from installed plugins.
  */
 class PluginWfEditor{
+  function __construct($buto = false) {
+    if(!wfUser::hasRole('webmaster')){
+      exit('Role webmaster is required!');
+    }
+  }
   public function page_desktop(){
     if(!wfArray::get($_SESSION, 'plugin/wf/editor/activetheme')){
       $_SESSION = wfArray::set($_SESSION, 'plugin/wf/editor/activetheme', wfArray::get($GLOBALS, 'sys/theme'));
