@@ -271,11 +271,9 @@ class PluginWfEditor{
     wfPlugin::includeonce('wf/yml');
     $element = new PluginWfYml(__DIR__.'/page/elementadd.yml');
     $onclick = "PluginWfBootstrapjs.modal({id: 'element_add_html', url: '/editor/elementaddhtml?file=".(wfRequest::get('file'))."&key=".(wfRequest::get('key'))."', lable: 'Add HTML element', size: 'sm'});";
-    $onclick .= "document.getElementById('element_add_btn_close').click();";
     $onclick .= "return false;";
     $element->set('group/innerHTML/btn_html_element/attribute/onclick', $onclick);
     $onclick = "PluginWfBootstrapjs.modal({id: 'element_add_html_object', url: '/editor/elementaddhtmlobject?file=".(wfRequest::get('file'))."&key=".(wfRequest::get('key'))."', lable: 'Add HTML element', size: 'sm'});";
-    $onclick .= "document.getElementById('element_add_btn_close').click();";
     $onclick .= "return false;";
     $element->set('group/innerHTML/btn_html_object_element/attribute/onclick', $onclick);
     $onclick = "PluginWfBootstrapjs.modal({id: 'modal_plugin', url: '/editor/plugin', lable: 'Plugin', size: 'lg'});";
@@ -402,13 +400,13 @@ class PluginWfEditor{
     $json->set('success', false);
     if($a=='delete'){
       $this->delete_element(urldecode(wfRequest::get('file')), urldecode(wfRequest::get('key')));
-      $json->set('script', array("PluginWfAjax.update('".$this->file_to_id(urldecode(wfRequest::get('file')))."');", "document.getElementById('element_view_btn_close').click();"));
+      $json->set('script', array("PluginWfAjax.update('".$this->file_to_id(urldecode(wfRequest::get('file')))."');", "$('.modal').modal('hide');"));
     }elseif($a=='move_set'){
       $this->handle_move_param('set');
-      $json->set('script', array("document.getElementById('element_view_btn_close').click();"));
+      $json->set('script', array("$('.modal').modal('hide');"));
     }elseif($a=='copy_set'){
       $this->handle_move_param('set', true);
-      $json->set('script', array("document.getElementById('element_view_btn_close').click();"));
+      $json->set('script', array("$('.modal').modal('hide');"));
     }elseif($a=='move_do' || $a=='copy_do'){
       /**
        * Move element.
@@ -434,7 +432,7 @@ class PluginWfEditor{
           $this->handle_move_param('unset');
         }else{
         }
-        $json->set('script', array("PluginWfAjax.update('".$this->file_to_id(urldecode(wfRequest::get('file')))."');", "document.getElementById('element_add_btn_close').click();"));
+        $json->set('script', array("PluginWfAjax.update('".$this->file_to_id(urldecode(wfRequest::get('file')))."');", "$('.modal').modal('hide');"));
       }
     }elseif($a=='move_discard'){
       $this->handle_move_param('unset');
@@ -454,7 +452,7 @@ class PluginWfEditor{
           $yml->setUnset(urldecode(wfRequest::get('attribute_origin')));
           $yml->save();
         }
-        $json->set('script', array("PluginWfAjax.update('".$this->file_to_id(urldecode(wfRequest::get('file')))."');", "PluginWfAjax.update('element_view_body');", "document.getElementById('element_attribute_btn_close').click();"));
+        $json->set('script', array("PluginWfAjax.update('".$this->file_to_id(urldecode(wfRequest::get('file')))."');", "PluginWfAjax.update('element_view_body');", "$('#element_attribute').modal('hide');"));
       }else{
         $json->set('script', array("alert(\"".PluginWfForm::getErrors($form->get(), "\\n")."\");"));
       }
@@ -462,7 +460,7 @@ class PluginWfEditor{
       $yml = new PluginWfYml(wfArray::get($GLOBALS, 'sys/app_dir').'/'.urldecode(wfRequest::get('file')), 'content/'.urldecode(wfRequest::get('key')));
       $yml->setUnset('attribute/'.urldecode(wfRequest::get('attribute')));
       $yml->save();
-      $json->set('script', array("PluginWfAjax.update('".$this->file_to_id(urldecode(wfRequest::get('file')))."');", "PluginWfAjax.update('element_view_body');", "document.getElementById('element_attribute_btn_close').click();"));
+      $json->set('script', array("PluginWfAjax.update('".$this->file_to_id(urldecode(wfRequest::get('file')))."');", "PluginWfAjax.update('element_view_body');", "$('#element_attribute').modal('hide');"));
     }elseif($a=='htmlsave'){
       $yml = new PluginWfYml(wfArray::get($GLOBALS, 'sys/app_dir').'/'.urldecode(wfRequest::get('file')), 'content/'.urldecode(wfRequest::get('key').'/innerHTML'));
       $form = new PluginWfYml(__DIR__.'/form/html.yml');
@@ -474,7 +472,7 @@ class PluginWfEditor{
         $script[] = "PluginWfAjax.update('".$this->file_to_id(urldecode(wfRequest::get('file')))."');";
         $script[] = "PluginWfAjax.update('element_view_body');";
         if(!$form->get('items/stay/post_value')){
-          $script[] = "document.getElementById('element_html_btn_close').click();";
+          $script[] = "$('#element_html').modal('hide');";
         }
         $json->set('script', $script);
       }else{
@@ -494,7 +492,7 @@ class PluginWfEditor{
           $script[] = "PluginWfAjax.update('".$this->file_to_id(urldecode(wfRequest::get('file')))."');";
           $script[] = "PluginWfAjax.update('element_view_body');";
           if(!$form->get('items/stay/post_value')){
-            $script[] = "document.getElementById('element_settings_btn_close').click();";
+            $script[] = "$('#element_settings').modal('hide');";
           }
           $json->set('script', $script);
         } catch (Exception $exc) {
@@ -517,7 +515,7 @@ class PluginWfEditor{
           $script[] = "PluginWfAjax.update('".$this->file_to_id(urldecode(wfRequest::get('file')))."');";
           $script[] = "PluginWfAjax.update('element_view_body');";
           if(!$form->get('items/stay/post_value')){
-            $script[] = "document.getElementById('element_data_btn_close').click();";
+            $script[] = "$('#element_data').modal('hide');";
           }
           $json->set('script', $script);
         } catch (Exception $exc) {
@@ -568,7 +566,7 @@ class PluginWfEditor{
           $yml->set($id, $element);
         }
         $yml->save();
-        $json->set('script', array("PluginWfAjax.update('".$this->file_to_id(urldecode(wfRequest::get('file')))."');", "document.getElementById('element_add_html_btn_close').click();"));
+        $json->set('script', array("PluginWfAjax.update('".$this->file_to_id(urldecode(wfRequest::get('file')))."');", "$('.modal').modal('hide');"));
       }else{
         $json->set('script', array("alert(\"".PluginWfForm::getErrors($form->get(), "\\n")."\");"));
       }
@@ -625,7 +623,7 @@ class PluginWfEditor{
           }
         }
         $yml->save();
-        $json->set('script', array("PluginWfAjax.update('".$this->file_to_id(urldecode(wfRequest::get('file')))."');", "document.getElementById('element_add_html_object_btn_close').click();"));
+        $json->set('script', array("PluginWfAjax.update('".$this->file_to_id(urldecode(wfRequest::get('file')))."');", "$('#element_add_html_object').modal('hide');"));
       }else{
         $json->set('script', array("alert(\"".PluginWfForm::getErrors($form->get(), "\\n")."\");"));
       }
@@ -680,20 +678,20 @@ class PluginWfEditor{
         }else{
           if(wfRequest::get('copy') != 'on'){
             if(rename(wfArray::get($GLOBALS, 'sys/app_dir').'/'.$filename_old, wfArray::get($GLOBALS, 'sys/app_dir').'/'.$filename_new)){
-              $json->set('script', array("PluginWfAjax.update('modal_files_body');", "document.getElementById('modal_file_edit_btn_close').click();"));
+              $json->set('script', array("PluginWfAjax.update('modal_files_body');", "$('#modal_file_edit').modal('hide');"));
             }else{
             $json->set('script', array("alert('Could not rename file!');"));
             }
           }else{
             if(copy(wfArray::get($GLOBALS, 'sys/app_dir').'/'.$filename_old, wfArray::get($GLOBALS, 'sys/app_dir').'/'.$filename_new)){
-              $json->set('script', array("PluginWfAjax.update('modal_files_body');", "document.getElementById('modal_file_edit_btn_close').click();"));
+              $json->set('script', array("PluginWfAjax.update('modal_files_body');", "$('#modal_file_edit').modal('hide');"));
             }else{
               $json->set('script', array("alert('Could not copy file!');"));
             }
           }
         }
       }else{
-        $json->set('script', array("document.getElementById('modal_file_edit_btn_close').click();"));
+        $json->set('script', array("$('#modal_file_edit').modal('hide');"));
       }
     }elseif($a=='file_delete'){
       $file = urldecode(wfRequest::get('file'));
@@ -744,7 +742,7 @@ class PluginWfEditor{
             break;
         }
         wfFilesystem::saveFile(wfArray::get($GLOBALS, 'sys/app_dir').'/'.$filename_new, $content);
-        $json->set('script', array("PluginWfAjax.update('modal_files_body');", "document.getElementById('modal_file_new_btn_close').click();"));
+        $json->set('script', array("PluginWfAjax.update('modal_files_body');", "$('#modal_file_new').modal('hide');"));
       }
     }elseif($a=='folder_new'){
       $activetheme = wfArray::get($_SESSION, 'plugin/wf/editor/activetheme');
@@ -760,7 +758,7 @@ class PluginWfEditor{
         $json->set('script', array("alert('New folder already exist!');"));
       }else{
         wfFilesystem::createDir(wfArray::get($GLOBALS, 'sys/app_dir').'/'.$foldername_new);
-        $json->set('script', array("PluginWfAjax.update('modal_files_body');", "document.getElementById('modal_folder_new_btn_close').click();"));
+        $json->set('script', array("PluginWfAjax.update('modal_files_body');", "$('#modal_folder_new').modal('hide');"));
       }
     }
     exit(json_encode($json->get()));
@@ -948,10 +946,9 @@ class PluginWfEditor{
             $glyphicon = 'file';
             $yml = ('theme/'.$activetheme.'/'.$dir.'/'. $value);
             $panel_id = str_replace('/', '.', $yml);
-            //$onclick = "if(confirm('Edit as text?')){PluginWfBootstrapjs.panel({lable: '$yml', url: '/$class/edit?yml='+encodeURIComponent('$yml'), id: '$panel_id', parent: document.getElementById('wf_editor_workarea')});}else{PluginWfBootstrapjs.panel({lable: '$yml', url: '/$class/element?yml='+encodeURIComponent('$yml'), id: '$panel_id', parent: document.getElementById('wf_editor_workarea')});}document.getElementById('modal_files_btn_close').click();return false;";
             $a[] = $this->getBtnGroup(array('label' => $value, 'list_group_item' => true, 'buttons' => array(
-              array('label' => 'Text editor', 'onclick' => "PluginWfBootstrapjs.panel({lable: '$yml', url: '/$class/edit?yml='+encodeURIComponent('$yml'), id: '$panel_id', parent: document.getElementById('wf_editor_workarea')});document.getElementById('modal_files_btn_close').click();return false;"),
-              array('label' => 'Element editor', 'onclick' => "PluginWfBootstrapjs.panel({lable: '$yml', url: '/$class/element?yml='+encodeURIComponent('$yml'), id: '$panel_id', parent: document.getElementById('wf_editor_workarea')});document.getElementById('modal_files_btn_close').click();return false;"),
+              array('label' => 'Text editor', 'onclick' => "PluginWfBootstrapjs.panel({lable: '$yml', url: '/$class/edit?yml='+encodeURIComponent('$yml'), id: '$panel_id', parent: document.getElementById('wf_editor_workarea')});$('.modal').modal('hide');return false;"),
+              array('label' => 'Element editor', 'onclick' => "PluginWfBootstrapjs.panel({lable: '$yml', url: '/$class/element?yml='+encodeURIComponent('$yml'), id: '$panel_id', parent: document.getElementById('wf_editor_workarea')});$('.modal').modal('hide');return false;"),
               array('label' => 'Rename/Move/Copy', 'onclick' => "PluginWfBootstrapjs.modal({id: 'modal_file_edit', url: '/editor/file_edit?yml='+encodeURIComponent('".$dir."/". $value."'), lable: 'File', size: 'lg'});return false;"),
               array('label' => 'Delete file', 'onclick' => "if(confirm('Delete file?')){ $.get('/editor/action?a=file_delete&file='+encodeURIComponent('$yml')+'', function(data){PluginWfCallbackjson.call( data );});}return false;"),
               )));
