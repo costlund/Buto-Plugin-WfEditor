@@ -13,10 +13,11 @@ class PluginWfEditor{
     if(!wfArray::get($_SESSION, 'plugin/wf/editor/activetheme')){
       $_SESSION = wfArray::set($_SESSION, 'plugin/wf/editor/activetheme', wfArray::get($GLOBALS, 'sys/theme'));
     }
-    $filename = wfArray::get($GLOBALS, 'sys/app_dir').'/plugin/wf/editor/page/desktop.yml';
-    $page = wfFilesystem::loadYml($filename);
     wfArray::set($GLOBALS, 'sys/layout_path', '/plugin/wf/editor/layout');
-    wfDocument::mergeLayout($page);
+    wfPlugin::includeonce('wf/yml');
+    $page = new PluginWfYml('/plugin/wf/editor/page/desktop.yml');
+    $this->includePlugin();    
+    wfDocument::mergeLayout($page->get());
   }
   /**
    * Edit page.
@@ -57,6 +58,7 @@ class PluginWfEditor{
    * Element page.
    */
   public function page_element(){
+    $this->includePlugin();
     wfArray::set($GLOBALS, 'sys/layout_path', '/plugin/wf/editor/layout');
     $yml = wfRequest::get('yml');
     $yml = urldecode($yml);
@@ -65,7 +67,8 @@ class PluginWfEditor{
       $onclick_add = "PluginWfBootstrapjs.modal({id: 'element_add', url: '/editor/elementadd?file=".urlencode($yml)."&key=', lable: 'Add', size: 'sm'});return false;";
       wfDocument::renderElement(array(
         wfDocument::createHtmlElement('a', 'Reload', array('class' => 'btn', 'onclick' => "PluginWfAjax.update('".str_replace('/', '.', $yml)."_body');return false;")),
-        wfDocument::createHtmlElement('a', 'Add', array('class' => 'btn', 'onclick' => $onclick_add))
+        wfDocument::createHtmlElement('a', 'Add', array('class' => 'btn', 'onclick' => $onclick_add)),
+        wfDocument::createHtmlElement('a', 'Collapse', array('class' => 'btn', 'onclick' => "PluginWfEmbed.expand();"))
         ));
       wfPlugin::includeonce('wf/yml');
       wfPlugin::includeonce('wf/array');
@@ -201,6 +204,7 @@ class PluginWfEditor{
   private function includePlugin(){
     $GLOBALS['sys']['settings']['plugin']['wf']['form']['enabled'] = 'true';
     $GLOBALS['sys']['settings']['plugin']['wf']['bootstrap']['enabled'] = 'true';
+    $GLOBALS['sys']['settings']['plugin']['wf']['embed']['enabled'] = 'true';
   }
   /**
    * Element settings page.
@@ -805,6 +809,7 @@ class PluginWfEditor{
           $class = 'alert alert-warning';
         }
         if($item->get('type') != 'widget'){
+          $uid = wfCrypt::getUid();
           $innerHTML = null;
           $style = '';
           $class = 'alert alert-success';
@@ -824,15 +829,16 @@ class PluginWfEditor{
           if($item->get('attribute')){
             $temp = $item->get('attribute');
             ksort($temp);
-            $pre_attribute = wfDocument::createHtmlElement('pre', wfHelp::getYmlDump(($temp)), array('style' => 'background:white;'));
+            $pre_attribute = wfDocument::createHtmlElement('pre', wfHelp::getYmlDump(($temp)), array('style' => 'background:none;border:none;padding:0px'));
           }
           
           $item = array('type' => 'div', 'innerHTML' => array(
               $btn_add,
-              array('type' => 'div', 'innerHTML' => ''.$item->get('type'), 'attribute' => array('style' => $style_type, 'onclick' => $onclick_view)),
+              array('type' => 'span', 'innerHTML' => ''.$item->get('type'), 'attribute' => array('style' => $style_type, 'onclick' => $onclick_view, 'id' => 'header_'.$uid)),
+              wfDocument::createHtmlElement('a', '&nbsp;&nbsp;', array('style' => 'background:white;', 'data-toggle' => 'collapse', 'href' => '#innerHTML_'.$uid, 'class' => 'btn_child caret')),
               $pre_attribute,
-              array('type' => 'div', 'innerHTML' => $innerHTML, 'attribute' => array('style' => $style))
-              ), 'attribute' => array('class' => $class));
+              array('type' => 'div', 'innerHTML' => $innerHTML, 'attribute' => array('style' => $style, 'id' => 'innerHTML_'.$uid, 'class' => 'collapse'))
+              ), 'attribute' => array('class' => $class, 'id' => 'element_'.$uid));
         }else{
           $active_theme_settings = new PluginWfArray(wfSettings::getSettings('/theme/'.wfArray::get($_SESSION, 'plugin/wf/editor/activetheme').'/config/settings.yml'));
           $alert = null;

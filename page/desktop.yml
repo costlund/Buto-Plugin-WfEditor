@@ -37,4 +37,12 @@ content:
     type: script
     innerHTML: |
       PluginWfAjax.load('wf_editor_files', '/[[class]]/files');
-  
+  embed:
+    type: widget
+    data:
+      plugin: 'wf/embed'
+      method: js
+      data:
+        file: /plugin/wf/editor/js/embed.js
+        
+        
