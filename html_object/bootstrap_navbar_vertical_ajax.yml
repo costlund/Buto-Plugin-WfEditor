@@ -1,0 +1,141 @@
+settings:
+  name: 'Bootstrap Navbar Vertical Ajax'
+content:
+  -
+    type: div
+    attribute:
+      class: row
+    innerHTML:
+      -
+        type: div
+        attribute:
+          class: col-sm-3
+        innerHTML:
+          -
+            type: div
+            attribute:
+              class: 'sidebar-nav alertzzz zzzalert-default'
+            innerHTML:
+              -
+                type: nav
+                attribute:
+                  class: 'navbar navbar-default'
+                  role: navigation
+                innerHTML:
+                  -
+                    type: div
+                    attribute:
+                      class: navbar-header
+                    innerHTML:
+                      -
+                        type: button
+                        attribute:
+                          type: button
+                          class: 'navbar-toggle collapsed'
+                          data-toggle: collapse
+                          data-target: '#bs-example-navbar-collapse-2'
+                          aria-expanded: 'false'
+                        innerHTML:
+                          -
+                            type: span
+                            attribute:
+                              class: icon-bar
+                          -
+                            type: span
+                            attribute:
+                              class: icon-bar
+                          -
+                            type: span
+                            attribute:
+                              class: icon-bar
+                      -
+                        type: a
+                        attribute:
+                          class: 'navbar-brand visible-xs'
+                        innerHTML: Account
+                        settings:
+                          disabled: false
+                    settings:
+                      disabled: false
+                  -
+                    type: div
+                    attribute:
+                      id: bs-example-navbar-collapse-2
+                      classzzz: 'collapse navbar-collapse'
+                      class: 'navbar-collapse collapse sidebar-navbar-collapse'
+                    innerHTML:
+                      -
+                        type: ul
+                        attribute:
+                          class: 'nav navbar-nav'
+                        innerHTML:
+                          -
+                            type: li
+                            innerHTML:
+                              -
+                                type: a
+                                innerHTML: 'Page 1'
+                                attribute:
+                                  onclick: 'PluginWfAjax.load(''div_account'', ''/p/pers_account'');'
+                                  id: btn_first
+                          -
+                            type: li
+                            innerHTML:
+                              -
+                                type: a
+                                innerHTML: 'Page 2'
+                                attribute:
+                                  onclick: 'PluginWfAjax.load(''div_account'', ''/p/pers_account'');'
+                      -
+                        type: ul
+                        attribute:
+                          class: 'nav navbar-nav navbar-rightzzz'
+                        innerHTML:
+                          -
+                            type: li
+                            attribute:
+                              class: dropdown
+                            innerHTML:
+                              -
+                                type: a
+                                attribute:
+                                  class: dropdown-toggle
+                                  data-toggle: dropdown
+                                  role: button
+                                  aria-haspopup: 'true'
+                                  aria-expanded: 'false'
+                                innerHTML:
+                                  -
+                                    type: text
+                                    innerHTML: 'Page 3'
+                                  -
+                                    type: span
+                                    attribute:
+                                      class: caret
+                              -
+                                type: ul
+                                attribute:
+                                  class: dropdown-menu
+                                innerHTML:
+                                  -
+                                    type: li
+                                    innerHTML:
+                                      -
+                                        type: a
+                                        innerHTML: 'Page 3a'
+                                        attribute:
+                                          onclick: 'PluginWfAjax.load(''div_account'', ''/p/pers_account'');'
+          -
+            type: style
+            innerHTML: "/* make sidebar nav vertical */ \r\n@media (min-width: 768px) {\r\n  .sidebar-nav .navbar .navbar-collapse {\r\n    padding: 0;\r\n    max-height: none;\r\n  }\r\n  .sidebar-nav .navbar ul {\r\n    float: none;\r\n  }\r\n  .sidebar-nav .navbar ul:not {\r\n    display: block;\r\n  }\r\n  .sidebar-nav .navbar li {\r\n    float: none;\r\n    display: block;\r\n  }\r\n  .sidebar-nav .navbar li a {\r\n    padding-top: 12px;\r\n    padding-bottom: 12px;\r\n  }\r\n}"
+      -
+        type: div
+        attribute:
+          class: col-sm-9
+          id: div_account
+        innerHTML: ''
+      -
+        type: script
+        innerHTML: 'document.getElementById(''btn_first'').click();'
+
+
