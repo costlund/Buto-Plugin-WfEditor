@@ -1,0 +1,10 @@
+settings:
+  name: 'Link icon 16 x 16 png'
+content:
+  -
+    type: link
+    attribute:
+      rel: icon
+      sizes: 16x16
+      type: image/png
+      href: '/theme/xx/yy/logo.png'
