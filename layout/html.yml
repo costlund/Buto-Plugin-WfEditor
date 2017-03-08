@@ -31,6 +31,9 @@ settings:
     -
       key: 'sys/settings/plugin/wf/bootstrapjs/enabled'
       value: true
+    -
+      key: 'sys/settings/plugin/datatable/datatable_1_10_13/enabled'
+      value: true
     
 content:
   doctype:
@@ -116,6 +119,13 @@ content:
             settings:
               disabled: true
             innerHTML: 'body.modal-open{ overflow: hidden; position: fixed; } '
+          datatable:
+            type: widget
+            data:
+              plugin: datatable/datatable_1_10_13
+              method: include
+              data:
+                style: bootstrap
       body:
         type: body
         innerHTML: 'body...'

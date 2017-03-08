@@ -1,0 +1,21 @@
+settings:
+  name: 'Bootstrap Row with 3 columns.'
+content:
+  -
+    type: div
+    attribute:
+      class: 'row'
+    innerHTML:
+      -
+        type: div
+        attribute:
+          class: 'col-md-4'
+      -
+        type: div
+        attribute:
+          class: 'col-md-4'
+      -
+        type: div
+        attribute:
+          class: 'col-md-4'
+
