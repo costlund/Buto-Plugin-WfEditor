@@ -1214,6 +1214,18 @@ class PluginWfEditor{
     }
     $element[] = wfDocument::createWidget('wf/bootstrap', 'listgroup', array('item' => $item));
     $element[] = wfDocument::createHtmlElement('script', 'Prism.highlightAll();');
+    /**
+     * Attribute.
+     */
+    if(wfFilesystem::fileExist(wfArray::get($GLOBALS, 'sys/app_dir').'/plugin/'.$plugin.'/config/attribute.yml')){
+      $element[] = wfDocument::createHtmlElement('h2', 'Attribute');
+      wfPlugin::includeonce('wf/array');
+      $yml = new PluginWfArray(wfFilesystem::loadYml(wfArray::get($GLOBALS, 'sys/app_dir').'/plugin/'.$plugin.'/config/attribute.yml'));
+      $element[] = wfDocument::createHtmlElement('div', $yml->get('content'));
+    }
+    /**
+     * 
+     */
     $page = wfArray::set($page, 'content', $element);
     wfArray::set($GLOBALS, 'sys/layout_path', '/plugin/wf/editor/layout');
     wfDocument::mergeLayout($page);
