@@ -126,6 +126,11 @@ content:
               method: include
               data:
                 style: bootstrap
+          wf_form_v2:
+            type: widget
+            data:
+              plugin: 'wf/form_v2'
+              method: include               
       body:
         type: body
         innerHTML: 'body...'

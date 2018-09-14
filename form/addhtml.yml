@@ -5,59 +5,105 @@ id: frm_add_element_html
 items:
   html_tag:
     type: varchar
-    lable: Type
+    label: Type
     default: 
     mandatory: true
   inner_html:
-    type: varchar
-    lable: Inner HTML
+    type: text
+    label: Inner HTML
     default: 
+  attribute_1_key:
+    type: varchar
+    label: Attribute
+  attribute_1_value:
+    type: varchar
+    label: Value
+  attribute_2_key:
+    type: varchar
+    label: Attribute
+  attribute_2_value:
+    type: varchar
+    label: Value
+  attribute_3_key:
+    type: varchar
+    label: Attribute
+  attribute_3_value:
+    type: varchar
+    label: Value
   id:
     type: varchar
-    lable: YML Key ID
+    label: YML Key ID
     default: 
     info:
       text: 'Set this if a specific key is needed.'
-  attribute_1_key:
-    type: varchar
-    lable: Attribute
-  attribute_1_value:
-    type: varchar
-    lable: Value
-  attribute_2_key:
-    type: varchar
-    lable: Attribute
-  attribute_2_value:
-    type: varchar
-    lable: Value
-  attribute_3_key:
-    type: varchar
-    lable: Attribute
-  attribute_3_value:
-    type: varchar
-    lable: Value
   file:
     type: hidden
-    lable: 'File'
+    label: 'File'
     mandatory: true
     default: ''
     container_style: 'display:zzznone;'
   key:
     type: hidden
-    lable: 'Key'
+    label: 'Key'
     default: ''
     container_style: 'display:zzznone;'
-#  action:
-#    type: hidden
-#    lable: action
-#    mandatory: true
-#    default: 'create'
-#success_redirect: /page/home
-#buttons:
-#  -
-#    type: a
-#    innerHTML: Delete
-#    attribute:
-#      href: '#'
-#      onclick: "$.get('/editor/action?a=attribute_delete&file='+encodeURIComponent(document.getElementById('frm_element_attribute_file').value)+'&key='+encodeURIComponent(document.getElementById('frm_element_attribute_key').value)+'&attribute='+encodeURIComponent(document.getElementById('frm_element_attribute_attribute').value)+'', function(data){PluginWfCallbackjson.call( data );})"
-#      classzzz: 'btn btn-default'
+layout:
+  -
+    type: div
+    attribute: {class: "row form-group"}
+    innerHTML:
+      -
+        type: div
+        attribute: {class: col-xs-6}
+        innerHTML: 'item[{"id": "html_tag", "type": "div"}]'
+      -
+        type: div
+        attribute: {class: col-xs-12}
+        innerHTML: 'item[{"id": "inner_html", "type": "div"}]'
+  -
+    type: div
+    attribute: {class: "row form-group"}
+    innerHTML:
+      -
+        type: div
+        attribute: {class: col-xs-6}
+        innerHTML: 'item[{"id": "attribute_1_key", "type": "div"}]'
+      -
+        type: div
+        attribute: {class: col-xs-6}
+        innerHTML: 'item[{"id": "attribute_1_value", "type": "div"}]'
+      -
+        type: div
+        attribute: {class: col-xs-6}
+        innerHTML: 'item[{"id": "attribute_2_key", "type": "div"}]'
+      -
+        type: div
+        attribute: {class: col-xs-6}
+        innerHTML: 'item[{"id": "attribute_2_value", "type": "div"}]'
+      -
+        type: div
+        attribute: {class: col-xs-6}
+        innerHTML: 'item[{"id": "attribute_3_key", "type": "div"}]'
+      -
+        type: div
+        attribute: {class: col-xs-6}
+        innerHTML: 'item[{"id": "attribute_3_value", "type": "div"}]'
+  -
+    type: div
+    attribute: {class: "row form-group"}
+    innerHTML:
+      -
+        type: div
+        attribute: {class: col-xs-12}
+        innerHTML: 'item[{"id": "id", "type": "div"}]'
+  -
+    type: datalist
+    attribute: {id: tags}
+    innerHTML:
+      - {type: option, attribute: {value: table}}
+  -
+    type: script
+    innerHTML: "document.getElementById('frm_add_element_html_html_tag').setAttribute('list', 'tags');"
+    
+    
+    

@@ -5,7 +5,7 @@ content:
     type: ul
     attribute:
       class: 'nav nav-tabs'
-      id: myTabs
+      id: demo_tabs
       role: tablist
     innerHTML:
       -
@@ -15,7 +15,8 @@ content:
             type: a
             innerHTML: Home
             attribute:
-              href: '#'
+              href: '#home'
+              data-url: '/home/home'
         attribute:
           class: active
           role: presentation
@@ -24,12 +25,19 @@ content:
         innerHTML:
           -
             type: a
-            innerHTML: Support
+            innerHTML: Content
             attribute:
-              href: '#support'
+              href: '#content'
+              data-url: '/home/content'
         attribute:
           role: presentation
       -
         type: script
-        innerHTML: "$('#myTabs a').click(function (e) {\r\n  e.preventDefault();\r\n  $(this).tab('show');\r\n  console.log(this.innerHTML);\r\n})"
+        innerHTML: |
+          $('#demo_tabs a').click(function (e) {
+            e.preventDefault();
+            $(this).tab('show');
+            console.log(this.getAttribute('data-url'));
+          });
+          $('#demo_tabs a')[0].click();
 

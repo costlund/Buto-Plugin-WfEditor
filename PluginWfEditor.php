@@ -4,10 +4,33 @@
  Get support from installed plugins.
  */
 class PluginWfEditor{
+  private $settings = null;
   function __construct($buto = false) {
     if(!wfUser::hasRole('webmaster')){
       exit('Role webmaster is required!');
     }
+    if($buto){
+      wfPlugin::includeonce('wf/array');
+      $this->settings = new PluginWfArray(wfArray::get($GLOBALS, 'sys/settings/plugin_modules/'.wfArray::get($GLOBALS, 'sys/class').'/settings'));
+    }
+  }
+  public function widget_analyse(){
+    $a = new PluginWfArray();
+    $a->set('system/app_dir', wfArray::get($GLOBALS, 'sys/app_dir'));
+    $a->set('system/web_dir', wfArray::get($GLOBALS, 'sys/web_dir'));
+    $a->set('system/sys_dir', wfArray::get($GLOBALS, 'sys/sys_dir'));
+    $a->set('theme', wfArray::get($_SESSION, 'plugin/wf/editor/activetheme'));
+    $a->set('config/folder_exist', wfFilesystem::fileExist(wfArray::get($GLOBALS, 'sys/app_dir').'/theme/'.wfArray::get($_SESSION, 'plugin/wf/editor/activetheme').'/config'));
+    $a->set('config/settings_exist', wfFilesystem::fileExist(wfArray::get($GLOBALS, 'sys/app_dir').'/theme/'.wfArray::get($_SESSION, 'plugin/wf/editor/activetheme').'/config/settings.yml'));
+    
+    wfHelp::yml_dump($a);
+    
+    
+    
+    
+    $element = array();
+    $element[] = wfDocument::createHtmlElement('div', 'analyse...');
+    wfDocument::renderElement($element);
   }
   public function page_desktop(){
     if(!wfArray::get($_SESSION, 'plugin/wf/editor/activetheme')){
@@ -16,6 +39,7 @@ class PluginWfEditor{
     wfArray::set($GLOBALS, 'sys/layout_path', '/plugin/wf/editor/layout');
     wfPlugin::includeonce('wf/yml');
     $page = new PluginWfYml('/plugin/wf/editor/page/desktop.yml');
+    $page = wfDocument::insertAdminLayout($this->settings, 1, $page);
     $this->includePlugin();    
     wfDocument::mergeLayout($page->get());
   }
@@ -202,7 +226,9 @@ class PluginWfEditor{
    * Method to switch theme.
    */
   private function includePlugin(){
+    $GLOBALS['sys']['settings']['plugin']['wf']['editor']['enabled'] = 'true';
     $GLOBALS['sys']['settings']['plugin']['wf']['form']['enabled'] = 'true';
+    $GLOBALS['sys']['settings']['plugin']['wf']['form_v2']['enabled'] = 'true';
     $GLOBALS['sys']['settings']['plugin']['wf']['bootstrap']['enabled'] = 'true';
     $GLOBALS['sys']['settings']['plugin']['wf']['embed']['enabled'] = 'true';
     $GLOBALS['sys']['settings']['plugin']['datatable']['datatable_1_10_13']['enabled'] = 'true';
@@ -312,7 +338,7 @@ class PluginWfEditor{
     $form = new PluginWfYml(__DIR__.'/form/addhtml.yml');
     $form->set('items/file/default', urldecode(wfRequest::get('file')));
     $form->set('items/key/default', urldecode(wfRequest::get('key')));
-    $element = wfDocument::createWidget('wf/form', 'render', $form->get());
+    $element = wfDocument::createWidget('wf/form_v2', 'render', $form->get());
     wfDocument::renderElement(array($element));
   }
   /**
@@ -1214,18 +1240,6 @@ class PluginWfEditor{
     }
     $element[] = wfDocument::createWidget('wf/bootstrap', 'listgroup', array('item' => $item));
     $element[] = wfDocument::createHtmlElement('script', 'Prism.highlightAll();');
-    /**
-     * Attribute.
-     */
-    if(wfFilesystem::fileExist(wfArray::get($GLOBALS, 'sys/app_dir').'/plugin/'.$plugin.'/config/attribute.yml')){
-      $element[] = wfDocument::createHtmlElement('h2', 'Attribute');
-      wfPlugin::includeonce('wf/array');
-      $yml = new PluginWfArray(wfFilesystem::loadYml(wfArray::get($GLOBALS, 'sys/app_dir').'/plugin/'.$plugin.'/config/attribute.yml'));
-      $element[] = wfDocument::createHtmlElement('div', $yml->get('content'));
-    }
-    /**
-     * 
-     */
     $page = wfArray::set($page, 'content', $element);
     wfArray::set($GLOBALS, 'sys/layout_path', '/plugin/wf/editor/layout');
     wfDocument::mergeLayout($page);

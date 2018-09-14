@@ -34,6 +34,11 @@ content:
               data-theme: 'globals:_SESSION/plugin/wf/editor/activetheme'
               onclick: "location.href='?loadtheme='+encodeURIComponent(this.getAttribute('data-theme'));"
             innerHTML: View
+          -
+            type: widget
+            data:
+              plugin: 'wf/editor'
+              method: analyse
   container:
     type: div
     attribute:
