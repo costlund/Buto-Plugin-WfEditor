@@ -6,8 +6,12 @@
 class PluginWfEditor{
   private $settings = null;
   function __construct($buto = false) {
-    if(!wfUser::hasRole('webmaster')){
-      exit('Role webmaster is required!');
+    if($buto){
+      if(!wfUser::hasRole('webmaster')){
+        exit('Role webmaster is required!');
+      }
+      wfPlugin::includeonce('wf/array');
+      $this->settings = new PluginWfArray(wfArray::get($GLOBALS, 'sys/settings/plugin_modules/'.wfArray::get($GLOBALS, 'sys/class').'/settings'));
     }
     if($buto){
       wfPlugin::includeonce('wf/array');
@@ -39,6 +43,9 @@ class PluginWfEditor{
     wfArray::set($GLOBALS, 'sys/layout_path', '/plugin/wf/editor/layout');
     wfPlugin::includeonce('wf/yml');
     $page = new PluginWfYml('/plugin/wf/editor/page/desktop.yml');
+    /**
+     * Insert admin layout from theme.
+     */
     $page = wfDocument::insertAdminLayout($this->settings, 1, $page);
     $this->includePlugin();    
     wfDocument::mergeLayout($page->get());
@@ -1304,8 +1311,8 @@ class PluginWfEditor{
         )),
         wfDocument::createHtmlElement('i', $type),
         wfDocument::createHtmlElement('h3', $name),
-        $default_yml,
-        wfDocument::createHtmlElement('div', $comment)
+        wfDocument::createHtmlElement('div', $comment),
+        $default_yml
       ), array('class' => $class, 'style' => 'padding:10px;margin-top:4px;border-radius:4px;'));
       $element[] = wfDocument::createHtmlElement('div', '&nbsp;');
     }
@@ -1321,7 +1328,7 @@ class PluginWfEditor{
   /**
    * Method to get reflection of class.
    */
-  private static function getReflectionClass($class){
+  public static function getReflectionClass($class){
     $return = array();
     $rc = new ReflectionClass($class);
     $return['name'] = $rc->getName();
