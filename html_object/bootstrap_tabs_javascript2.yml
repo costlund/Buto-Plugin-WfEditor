@@ -1,0 +1,66 @@
+settings:
+  name: 'Bootstrap Tabs (javascript) 2'
+content:
+  -
+    type: div
+    attribute:
+      id: demo
+    innerHTML:
+      -
+        type: ul
+        attribute:
+          class: 'nav nav-tabs'
+          role: tablist
+        innerHTML:
+          -
+            type: li
+            innerHTML:
+              -
+                type: a
+                innerHTML: Details
+                attribute:
+                  href: '#details'
+                  data-element: 'details'
+            attribute:
+              role: presentation
+              class: active
+          -
+            type: li
+            innerHTML:
+              -
+                type: a
+                innerHTML: Content
+                attribute:
+                  href: '#content'
+                  data-element: 'content'
+            attribute:
+              role: presentation
+      -
+        type: div
+        attribute:
+          class: nav_tabs_element
+        innerHTML:
+          -
+            type: div
+            attribute:
+              id: details
+              style: 'display:none'
+            innerHTML: details...
+          -
+            type: div
+            attribute:
+              id: content
+              style: 'display:none'
+            innerHTML: content...
+      -
+        type: script
+        innerHTML: |
+          $('#demo .nav-tabs a').click(function (e) {
+            console.log(this.getAttribute('data-element'));
+            e.preventDefault();
+            $(this).tab('show');
+            $('#demo .nav_tabs_element div').hide();
+            $('#'+this.getAttribute('data-element')).show();
+          });
+          $('#demo .nav-tabs a')[0].click();
+
