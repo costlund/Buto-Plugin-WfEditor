@@ -1,0 +1,41 @@
+settings:
+  name: 'Bootstrap 4 navtabs'
+content:
+  -
+    type: ul
+    attribute:
+      class: nav nav-tabs
+      id: my_navtab
+    innerHTML:
+      -
+        type: li 
+        attribute:
+          class: nav-item
+        innerHTML:
+          -
+            type: a 
+            attribute:
+              class: nav-link active
+              data-show: list
+            innerHTML: Kanuts
+      -
+        type: li 
+        attribute:
+          class: nav-item
+        innerHTML:
+          -
+            type: a 
+            attribute:
+              class: nav-link
+              data-show: total
+            innerHTML: Total
+  -
+    type: script
+    innerHTML: |
+      $('#my_navtab a').on('click', function (e) {
+        e.preventDefault();
+        $(this).tab('show');
+        $('#list').hide();
+        $('#total').hide();
+        $('#'+this.getAttribute('data-show')).show();
+      })  
