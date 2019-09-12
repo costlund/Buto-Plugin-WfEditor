@@ -13,10 +13,7 @@ class PluginWfEditor{
       wfPlugin::includeonce('wf/array');
       $this->settings = new PluginWfArray(wfArray::get($GLOBALS, 'sys/settings/plugin_modules/'.wfArray::get($GLOBALS, 'sys/class').'/settings'));
     }
-    if($buto){
-      wfPlugin::includeonce('wf/array');
-      $this->settings = new PluginWfArray(wfArray::get($GLOBALS, 'sys/settings/plugin_modules/'.wfArray::get($GLOBALS, 'sys/class').'/settings'));
-    }
+    wfPlugin::enable('form/form_v1');
   }
   public function widget_analyse(){
     $a = new PluginWfArray();
@@ -210,7 +207,7 @@ class PluginWfEditor{
     $form->set('items/key/default', urldecode(wfRequest::get('key')));
     $yml = new PluginWfYml(wfArray::get($GLOBALS, 'sys/app_dir').'/'.urldecode(wfRequest::get('file')), 'content/'.urldecode(wfRequest::get('key').'/attribute/'.urldecode(wfRequest::get('attribute'))));
     $form->set('items/value/default', $yml->get());
-    $element = wfDocument::createWidget('wf/form', 'render', $form->get());
+    $element = wfDocument::createWidget('form/form_v1', 'render', $form->get());
     wfDocument::renderElement(array($element));
     return null;
   }
@@ -225,7 +222,7 @@ class PluginWfEditor{
     $form->set('items/key/default', urldecode(wfRequest::get('key')));
     $yml = new PluginWfYml(wfArray::get($GLOBALS, 'sys/app_dir').'/'.urldecode(wfRequest::get('file')), 'content/'.urldecode(wfRequest::get('key')).'/innerHTML');
     $form->set('items/html/default', $yml->get());
-    $element = wfDocument::createWidget('wf/form', 'render', $form->get());
+    $element = wfDocument::createWidget('form/form_v1', 'render', $form->get());
     wfDocument::renderElement(array($element));
     return null;
   }
@@ -251,7 +248,7 @@ class PluginWfEditor{
     $form->set('items/key/default', urldecode(wfRequest::get('key')));
     $yml = new PluginWfYml(wfArray::get($GLOBALS, 'sys/app_dir').'/'.urldecode(wfRequest::get('file')), 'content/'.urldecode(wfRequest::get('key')).'/settings');
     $form->set('items/settings/default', wfHelp::getYmlDump($yml->get()));
-    $element = wfDocument::createWidget('wf/form', 'render', $form->get());
+    $element = wfDocument::createWidget('form/form_v1', 'render', $form->get());
     $script = wfDocument::createHtmlElement('script', "PluginWfTextareatab.setTextareaTabEnabled(document.getElementById('frm_element_settings_settings'), '  ');");
     wfDocument::renderElement(array($element, $script));
     return null;
@@ -267,7 +264,7 @@ class PluginWfEditor{
     $form->set('items/key/default', urldecode(wfRequest::get('key')));
     $yml = new PluginWfYml(wfArray::get($GLOBALS, 'sys/app_dir').'/'.urldecode(wfRequest::get('file')), 'content/'.urldecode(wfRequest::get('key')).'/data/data');
     $form->set('items/data/default', wfHelp::getYmlDump($yml->get()));
-    $element = wfDocument::createWidget('wf/form', 'render', $form->get());
+    $element = wfDocument::createWidget('form/form_v1', 'render', $form->get());
     $script = wfDocument::createHtmlElement('script', "PluginWfTextareatab.setTextareaTabEnabled(document.getElementById('frm_element_data_data'), '  ');");
     wfDocument::renderElement(array($element, $script));
     return null;
@@ -345,7 +342,7 @@ class PluginWfEditor{
     $form = new PluginWfYml(__DIR__.'/form/addhtml.yml');
     $form->set('items/file/default', urldecode(wfRequest::get('file')));
     $form->set('items/key/default', urldecode(wfRequest::get('key')));
-    $element = wfDocument::createWidget('wf/form_v2', 'render', $form->get());
+    $element = wfDocument::createWidget('form/form_v1', 'render', $form->get());
     wfDocument::renderElement(array($element));
   }
   /**
@@ -368,7 +365,7 @@ class PluginWfEditor{
       $option[$key] = $yml->get('settings/name');
     }
     $form->set('items/html_object/option', $option);
-    $element = wfDocument::createWidget('wf/form', 'render', $form->get());
+    $element = wfDocument::createWidget('form/form_v1', 'render', $form->get());
     wfDocument::renderElement(array($element));
   }
   /**
@@ -390,7 +387,7 @@ class PluginWfEditor{
       $option[$key] = $yml->get('settings/name');
     }
     $form->set('items/html_object/option', $option);
-    $element = wfDocument::createWidget('wf/form', 'render', $form->get());
+    $element = wfDocument::createWidget('form/form_v1', 'render', $form->get());
     wfDocument::renderElement(array($element));
   }
   /**
@@ -432,7 +429,7 @@ class PluginWfEditor{
   public function page_action(){
     wfPlugin::includeonce('wf/yml');
     wfPlugin::includeonce('wf/array');
-    wfPlugin::includeonce('wf/form');
+    wfPlugin::includeonce('form/form_v1');
     $a = wfRequest::get('a');
     $json = new PluginWfArray();
     $json->set('success', false);
@@ -478,7 +475,13 @@ class PluginWfEditor{
     }elseif($a=='attributesave'){
       $yml = new PluginWfYml(wfArray::get($GLOBALS, 'sys/app_dir').'/'.urldecode(wfRequest::get('file')), 'content/'.urldecode(wfRequest::get('key').'/attribute/'.urldecode(wfRequest::get('attribute'))));
       $form = new PluginWfYml(__DIR__.'/form/attribute.yml');
-      $form->set(null, PluginWfForm::bindAndValidate($form->get()));
+      
+      //$form->set(null, PluginWfForm::bindAndValidate($form->get()));
+      $form_form_v1 = new PluginFormForm_v1();
+      $form_form_v1->setData($form->get());
+      $form_form_v1->bindAndValidate();
+      $form->set(null, $form_form_v1->data);
+      
       if($form->get('is_valid')){
         $yml->set(null, $form->get('items/value/post_value'));
         $yml->save();
@@ -490,10 +493,12 @@ class PluginWfEditor{
           $yml->setUnset(urldecode(wfRequest::get('attribute_origin')));
           $yml->save();
         }
-        //$json->set('script', array("PluginWfAjax.update('".$this->file_to_id(urldecode(wfRequest::get('file')))."');", "PluginWfAjax.update('element_view_body');", "$('#element_attribute').modal('hide');"));
         $json->set('script', array("PluginWfAjax.update('element_view_body');", "$('#element_attribute').modal('hide');"));
       }else{
-        $json->set('script', array("alert(\"".PluginWfForm::getErrors($form->get(), "\\n")."\");"));
+        
+        //$json->set('script', array("alert(\"".PluginWfForm::getErrors($form->get(), "\\n")."\");"));
+        $json->set('script', array("alert(\"".$form_form_v1->getErrors("\\n")."\");"));
+        
       }
     }elseif($a=='attribute_delete'){
       $yml = new PluginWfYml(wfArray::get($GLOBALS, 'sys/app_dir').'/'.urldecode(wfRequest::get('file')), 'content/'.urldecode(wfRequest::get('key')));
@@ -925,7 +930,7 @@ class PluginWfEditor{
     $form = new PluginWfYml(__DIR__.'/form/file_edit.yml');
     $form->set('items/filename_old/default', urldecode(wfRequest::get('yml')));
     $form->set('items/filename_new/default', urldecode(wfRequest::get('yml')));
-    $element = wfDocument::createWidget('wf/form', 'render', $form->get());
+    $element = wfDocument::createWidget('form/form_v1', 'render', $form->get());
     wfDocument::renderElement(array($element));
   }
   /**
@@ -936,7 +941,7 @@ class PluginWfEditor{
     wfPlugin::includeonce('wf/yml');
     $form = new PluginWfYml(__DIR__.'/form/file_new.yml');
     $form->set('items/folder/default', urldecode(wfRequest::get('yml')));
-    $element = wfDocument::createWidget('wf/form', 'render', $form->get());
+    $element = wfDocument::createWidget('form/form_v1', 'render', $form->get());
     wfDocument::renderElement(array($element));
   }
   /**
@@ -947,7 +952,7 @@ class PluginWfEditor{
     wfPlugin::includeonce('wf/yml');
     $form = new PluginWfYml(__DIR__.'/form/folder_new.yml');
     $form->set('items/folder/default', urldecode(wfRequest::get('folder')));
-    $element = wfDocument::createWidget('wf/form', 'render', $form->get());
+    $element = wfDocument::createWidget('form/form_v1', 'render', $form->get());
     wfDocument::renderElement(array($element));
   }
   /**

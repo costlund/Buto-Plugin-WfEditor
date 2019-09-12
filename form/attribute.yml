@@ -1,50 +1,37 @@
 url: /editor/action?a=attributesave
-post_to_divzzzzz: 'sdfds'
 ajax: true
 submit_value: Save
 id: frm_element_attribute
 items:
   attribute_origin:
     type: hidden
-    lable: Name (origin)
+    label: Name (origin)
     default: ''
   attribute:
     type: varchar
-    lable: Name
+    label: Name
     mandatory: true
     default: ''
-    validate_as_emailzzz: true
-    container_classzzz: row
     validator:
       -
         plugin: wf/editor
         method: validate_origin
-#    validator:
-#      -
-#        plugin: wf/form
-#        method: validate_email
   value:
     type: text
-    lable: Value
+    label: Value
     default: 
-    container_classzzz: row
   file:
     type: varchar
-    lable: 'File'
+    label: 'File'
     mandatory: true
     default: ''
     container_style: 'display:none;'
   key:
     type: varchar
-    lable: 'Key'
+    label: 'Key'
     mandatory: true
     default: ''
     container_style: 'display:none;'
-#  action:
-#    type: hidden
-#    lable: action
-#    mandatory: true
-#    default: 'create'
 success_redirect: /page/home
 buttons:
   -

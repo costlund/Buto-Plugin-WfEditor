@@ -129,7 +129,7 @@ content:
           wf_form_v2:
             type: widget
             data:
-              plugin: 'wf/form_v2'
+              plugin: 'form/form_v1'
               method: include               
       body:
         type: body
