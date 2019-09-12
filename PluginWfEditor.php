@@ -502,7 +502,10 @@ class PluginWfEditor{
     }elseif($a=='htmlsave'){
       $yml = new PluginWfYml(wfArray::get($GLOBALS, 'sys/app_dir').'/'.urldecode(wfRequest::get('file')), 'content/'.urldecode(wfRequest::get('key').'/innerHTML'));
       $form = new PluginWfYml(__DIR__.'/form/html.yml');
-      $form->set(null, PluginWfForm::bindAndValidate($form->get()));
+      $form_form_v1 = new PluginFormForm_v1();
+      $form_form_v1->setData($form->get());
+      $form_form_v1->bindAndValidate();
+      $form->set(null, $form_form_v1->data);
       if($form->get('is_valid')){
         $yml->set(null, $form->get('items/html/post_value'));
         $yml->save();
@@ -514,7 +517,7 @@ class PluginWfEditor{
         }
         $json->set('script', $script);
       }else{
-        $json->set('script', array("alert(\"".PluginWfForm::getErrors($form->get(), "\\n")."\");"));
+        $json->set('script', array("alert(\"".$form_form_v1->getErrors("\\n")."\");"));
       }
     }elseif($a=='settingssave'){
       $yml = new PluginWfYml(wfArray::get($GLOBALS, 'sys/app_dir').'/'.urldecode(wfRequest::get('file')), 'content/'.urldecode(wfRequest::get('key').'/settings'));
@@ -545,7 +548,10 @@ class PluginWfEditor{
     }elseif($a=='datasave'){
       $yml = new PluginWfYml(wfArray::get($GLOBALS, 'sys/app_dir').'/'.urldecode(wfRequest::get('file')), 'content/'.urldecode(wfRequest::get('key').'/data/data'));
       $form = new PluginWfYml(__DIR__.'/form/data.yml');
-      $form->set(null, PluginWfForm::bindAndValidate($form->get()));
+      $form_form_v1 = new PluginFormForm_v1();
+      $form_form_v1->setData($form->get());
+      $form_form_v1->bindAndValidate();
+      $form->set(null, $form_form_v1->data);
       if($form->get('is_valid')){
         $value = $form->get('items/data/post_value');
         try {
@@ -553,7 +559,6 @@ class PluginWfEditor{
           $yml->set(null, $value);
           $yml->save();
           $script = array();
-          //$script[] = "PluginWfAjax.update('".$this->file_to_id(urldecode(wfRequest::get('file')))."');";
           $script[] = "PluginWfAjax.update('element_view_body');";
           if(!$form->get('items/stay/post_value')){
             $script[] = "$('#element_data').modal('hide');";
@@ -563,7 +568,7 @@ class PluginWfEditor{
           $json->set('script', array("alert(\"Unable to parse yml!\");"));
         }
       }else{
-        $json->set('script', array("alert(\"".PluginWfForm::getErrors($form->get(), "\\n")."\");"));
+        $json->set('script', array("alert(\"".$form_form_v1->getErrors("\\n")."\");"));
       }
     }elseif($a=='addhtmlsave'){
       if(wfRequest::get('key')){
@@ -572,7 +577,10 @@ class PluginWfEditor{
         $yml = new PluginWfYml(wfArray::get($GLOBALS, 'sys/app_dir').'/'.(wfRequest::get('file')), 'content');
       }
       $form = new PluginWfYml(__DIR__.'/form/addhtml.yml');
-      $form->set(null, PluginWfForm::bindAndValidate($form->get()));
+      $form_form_v1 = new PluginFormForm_v1();
+      $form_form_v1->setData($form->get());
+      $form_form_v1->bindAndValidate();
+      $form->set(null, $form_form_v1->data);
       if($form->get('is_valid')){
         $inner_html = null;
         /**
@@ -609,7 +617,7 @@ class PluginWfEditor{
         $yml->save();
         $json->set('script', array("PluginWfAjax.update('".$this->file_to_id(urldecode(wfRequest::get('file')))."');", "$('.modal').modal('hide');"));
       }else{
-        $json->set('script', array("alert(\"".PluginWfForm::getErrors($form->get(), "\\n")."\");"));
+        $json->set('script', array("alert(\"".$form_form_v1->getErrors("\\n")."\");"));
       }
     }elseif($a=='addwidget'){
       if(wfRequest::get('key')){
@@ -637,7 +645,10 @@ class PluginWfEditor{
         $yml = new PluginWfYml(wfArray::get($GLOBALS, 'sys/app_dir').'/'.(wfRequest::get('file')));
       }
       $form = new PluginWfYml(__DIR__.'/form/addhtmlobject.yml');
-      $form->set(null, PluginWfForm::bindAndValidate($form->get()));
+      $form_form_v1 = new PluginFormForm_v1();
+      $form_form_v1->setData($form->get());
+      $form_form_v1->bindAndValidate();
+      $form->set(null, $form_form_v1->data);
       if($form->get('is_valid')){
         $dir = __DIR__.'/html_object';
         $files = wfFilesystem::getScandir(__DIR__.'/html_object');
@@ -666,7 +677,7 @@ class PluginWfEditor{
         $yml->save();
         $json->set('script', array("PluginWfAjax.update('".$this->file_to_id(urldecode(wfRequest::get('file')))."');", "$('#element_add_html_object').modal('hide');"));
       }else{
-        $json->set('script', array("alert(\"".PluginWfForm::getErrors($form->get(), "\\n")."\");"));
+        $json->set('script', array("alert(\"".$form_form_v1->getErrors("\\n")."\");"));
       }
     }elseif($a=='position_up' || $a=='position_down'){
       $parent_key = dirname(urldecode(wfRequest::get('key')));
@@ -761,9 +772,12 @@ class PluginWfEditor{
       $folder = 'theme/'.$activetheme.'/'.wfRequest::get('folder');
       $filename_new = $folder.'/'.wfRequest::get('filename_new');
       $form = new PluginWfYml(__DIR__.'/form/file_new.yml');
-      $form->set(null, PluginWfForm::bindAndValidate($form->get()));
+      $form_form_v1 = new PluginFormForm_v1();
+      $form_form_v1->setData($form->get());
+      $form_form_v1->bindAndValidate();
+      $form->set(null, $form_form_v1->data);
       if(!$form->get('is_valid')){
-        $json->set('script', array("alert(\"".PluginWfForm::getErrors($form->get(), "\\n")."\");"));
+        $json->set('script', array("alert(\"".$form_form_v1->getErrors("\\n")."\");"));
       }elseif(!wfFilesystem::fileExist(wfArray::get($GLOBALS, 'sys/app_dir').'/'.($folder))){
         $json->set('script', array("alert('Dir does not exist!');"));
       }elseif(wfFilesystem::fileExist(wfArray::get($GLOBALS, 'sys/app_dir').'/'.$filename_new)){
@@ -790,9 +804,12 @@ class PluginWfEditor{
       $folder = 'theme/'.$activetheme.'/'.wfRequest::get('folder');
       $foldername_new = $folder.'/'.wfRequest::get('foldername_new');
       $form = new PluginWfYml(__DIR__.'/form/folder_new.yml');
-      $form->set(null, PluginWfForm::bindAndValidate($form->get()));
+      $form_form_v1 = new PluginFormForm_v1();
+      $form_form_v1->setData($form->get());
+      $form_form_v1->bindAndValidate();
+      $form->set(null, $form_form_v1->data);
       if(!$form->get('is_valid')){
-        $json->set('script', array("alert(\"".PluginWfForm::getErrors($form->get(), "\\n")."\");"));
+        $json->set('script', array("alert(\"".$form_form_v1->getErrors("\\n")."\");"));
       }elseif(!wfFilesystem::fileExist(wfArray::get($GLOBALS, 'sys/app_dir').'/'.($folder))){
         $json->set('script', array("alert('Folder does not exist!');"));
       }elseif(wfFilesystem::fileExist(wfArray::get($GLOBALS, 'sys/app_dir').'/'.$foldername_new)){
