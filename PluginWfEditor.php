@@ -475,13 +475,10 @@ class PluginWfEditor{
     }elseif($a=='attributesave'){
       $yml = new PluginWfYml(wfArray::get($GLOBALS, 'sys/app_dir').'/'.urldecode(wfRequest::get('file')), 'content/'.urldecode(wfRequest::get('key').'/attribute/'.urldecode(wfRequest::get('attribute'))));
       $form = new PluginWfYml(__DIR__.'/form/attribute.yml');
-      
-      //$form->set(null, PluginWfForm::bindAndValidate($form->get()));
       $form_form_v1 = new PluginFormForm_v1();
       $form_form_v1->setData($form->get());
       $form_form_v1->bindAndValidate();
       $form->set(null, $form_form_v1->data);
-      
       if($form->get('is_valid')){
         $yml->set(null, $form->get('items/value/post_value'));
         $yml->save();
@@ -495,10 +492,7 @@ class PluginWfEditor{
         }
         $json->set('script', array("PluginWfAjax.update('element_view_body');", "$('#element_attribute').modal('hide');"));
       }else{
-        
-        //$json->set('script', array("alert(\"".PluginWfForm::getErrors($form->get(), "\\n")."\");"));
         $json->set('script', array("alert(\"".$form_form_v1->getErrors("\\n")."\");"));
-        
       }
     }elseif($a=='attribute_delete'){
       $yml = new PluginWfYml(wfArray::get($GLOBALS, 'sys/app_dir').'/'.urldecode(wfRequest::get('file')), 'content/'.urldecode(wfRequest::get('key')));
