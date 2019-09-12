@@ -1,8 +1,4 @@
 <?php
-/**
- Theme editor. Edit pages, layouts, settings and more. 
- Get support from installed plugins.
- */
 class PluginWfEditor{
   private $settings = null;
   function __construct($buto = false) {
@@ -23,12 +19,7 @@ class PluginWfEditor{
     $a->set('theme', wfArray::get($_SESSION, 'plugin/wf/editor/activetheme'));
     $a->set('config/folder_exist', wfFilesystem::fileExist(wfArray::get($GLOBALS, 'sys/app_dir').'/theme/'.wfArray::get($_SESSION, 'plugin/wf/editor/activetheme').'/config'));
     $a->set('config/settings_exist', wfFilesystem::fileExist(wfArray::get($GLOBALS, 'sys/app_dir').'/theme/'.wfArray::get($_SESSION, 'plugin/wf/editor/activetheme').'/config/settings.yml'));
-    
     wfHelp::yml_dump($a);
-    
-    
-    
-    
     $element = array();
     $element[] = wfDocument::createHtmlElement('div', 'analyse...');
     wfDocument::renderElement($element);
@@ -150,7 +141,6 @@ class PluginWfEditor{
     $widget->setById('btn_documentation_plugin', 'attribute/onclick', "PluginWfBootstrapjs.modal({id: 'wf_editor_pluginview', url: '/editor/pluginview?plugin=".urlencode($yml->get('data/plugin'))."', lable: 'Plugin', 'size': 'lg'});return false;");
     $widget->setById('btn_documentation_widget', 'attribute/onclick', "PluginWfBootstrapjs.modal({id: 'wf_editor_methodview', url: '/editor/methodview?plugin=".urlencode($yml->get('data/plugin'))."&method=widget_".urlencode($yml->get('data/method'))."', lable: 'Method', 'size': 'lg'});return false;");
     $onclick = "PluginWfBootstrapjs.modal({id: 'element_html', url: '/editor/elementkey?file=".urlencode($filename)."&key=".urlencode($key)."', lable: 'Key', size: 'lg'});return false;";
-    //$widget->set('view/innerHTML/key/innerHTML', "<a href=\"#\" onclick=\"$onclick\">Path to key</a>: $key");
     $widget->set('view/innerHTML/key/innerHTML', "Key: $key");
     $widget->setById('btn_delete', 'attribute/data_file', urldecode(wfRequest::get('file')));
     $widget->setById('btn_delete', 'attribute/data_key', $key);
@@ -449,7 +439,6 @@ class PluginWfEditor{
       if($this->handle_move_param('get')){
         $value = $this->handle_move_param('get');
         $move = new PluginWfYml(wfArray::get($GLOBALS, 'sys/app_dir').'/'.$value['file'], 'content/'.$value['key']);
-        //wfHelp::yml_dump($value, true);
         if(strlen(wfRequest::get('key'))){
           $yml = new PluginWfYml(wfArray::get($GLOBALS, 'sys/app_dir').'/'.urldecode(wfRequest::get('file')), 'content/'.urldecode(wfRequest::get('key')).'/innerHTML');
         }else{
@@ -510,7 +499,6 @@ class PluginWfEditor{
         $yml->set(null, $form->get('items/html/post_value'));
         $yml->save();
         $script = array();
-        //$script[] = "PluginWfAjax.update('".$this->file_to_id(urldecode(wfRequest::get('file')))."');";
         $script[] = "PluginWfAjax.update('element_view_body');";
         if(!$form->get('items/stay/post_value')){
           $script[] = "$('#element_html').modal('hide');";
@@ -533,7 +521,6 @@ class PluginWfEditor{
           $yml->set(null, $value);
           $yml->save();
           $script = array();
-          //$script[] = "PluginWfAjax.update('".$this->file_to_id(urldecode(wfRequest::get('file')))."');";
           $script[] = "PluginWfAjax.update('element_view_body');";
           if(!$form->get('items/stay/post_value')){
             $script[] = "$('#element_settings').modal('hide');";
@@ -998,7 +985,13 @@ class PluginWfEditor{
     $a = array();
     if(sizeof($folder) > 0){
       foreach ($folder as $key => $value) {
-        if(substr($value, 0, 1) == '.'){ continue; } // Filter to exclude all files and folder who start with ".".
+        /**
+         * Filter to exclude all files and folder who start with ".".
+         */
+        if(substr($value, 0, 1) == '.'){ continue; }
+        /**
+         * 
+         */
         $is_file = $this->is_file($dir, $value);
         $glyphicon = null;
         if($dir){
@@ -1041,7 +1034,6 @@ class PluginWfEditor{
     if($dir){
       $di = explode('/', $dir);
       $str = null;
-      //wfHelp::yml_dump(sizeof($di));
       foreach ($di as $key => $value) {
         if($key+1==sizeof($di)){
           $glyphicon = wfDocument::createHtmlElement('span', null, array('class' => 'glyphicon glyphicon-folder-open', 'style' => 'margin-left:10px'));
@@ -1130,7 +1122,9 @@ class PluginWfEditor{
     $plugins = array();
     foreach ($org_dir as $key => $value) {
       if(substr($value, 0, 1)=='.'){
-        // We do not want folder begining with ".". 
+        /**
+         * We do not want folder begining with ".". 
+         */
         continue;
       }
       foreach (wfFilesystem::getScandir(wfArray::get($GLOBALS, 'sys/app_dir').'/plugin/'.$value) as $key2 => $value2) {
@@ -1171,26 +1165,6 @@ class PluginWfEditor{
     $table->set('innerHTML', array($thead, $tbody));
     $element[] = $table->get();
     $element[] = wfDocument::createWidget('datatable/datatable_1_10_13', 'run', array('id' => 'table_plugin', 'json' => array('paging' => true, 'iDisplayLength' => 10, 'ordering' => true, 'info' => true, 'searching' => true, 'order' => array(array('0', 'asc')), 'language' => array('url' => '/plugin/datatable/datatable_1_10_13/i18n/Swedish.json'))));
-    
-    
-    
-//    $items = array();
-//    $class = wfArray::get($GLOBALS, 'sys/class');
-//    foreach ($plugins as $key => $value) {
-//      $plugin = urlencode($key);
-//      $onclick = "PluginWfBootstrapjs.modal({id: 'wf_editor_pluginview', url: '/$class/pluginview?plugin=$plugin', lable: 'Plugin', 'size': 'lg'});return false;";
-//      $item = array('innerHTML' => $key, 'onclick' => $onclick, 'href' => '#');
-//      $filename = wfArray::get($GLOBALS, 'sys/app_dir').'/plugin/'.$key.'/config/settings.yml';
-//      $plugin_settings = null;
-//      if(wfFilesystem::fileExist($filename)){
-//        $plugin_settings = wfFilesystem::loadYml($filename);
-//        if(wfArray::issetAndTrue($plugin_settings, 'deprecated')){
-//          $item = wfArray::set($item, 'innerHTML', "<i>$key</i>");
-//        }
-//      }
-//      $items[] = $item;
-//    }
-//    $element[] = wfDocument::createWidget('wf/bootstrap', 'listgroup', array('item' => $items));
     return $element;
   }
   /**
@@ -1285,7 +1259,9 @@ class PluginWfEditor{
     $rc = self::getReflectionClass($class);
     foreach (wfArray::get($rc, 'methods') as $key2 => $value2) {
       if($key2 != $method){
-        // Only one method is of interest.
+        /**
+         * Only one method is of interest.
+         */
         continue;
       }
       $class = 'bg-danger';
@@ -1382,7 +1358,9 @@ class PluginWfEditor{
    */
   private static function cleanComment($comment, $justify = false){
     if($justify){
-      //Remove '  ' from left if exist.
+      /** 
+       * Remove '  ' from left if exist.
+       */
       $array = preg_split("/\r\n|\n|\r/", $comment);
       $temp = null;
       foreach ($array as $key => $value) {
@@ -1472,7 +1450,10 @@ class PluginWfEditor{
    */
   private function move_to_position($array, $key, $position){
     if(!array_key_exists($key, $array)){
-      return null; // The key does not exist.
+      /**
+       *  The key does not exist.
+       */
+      return null; 
     }
     $value = $array[$key];
     unset($array[$key]);
@@ -1489,7 +1470,10 @@ class PluginWfEditor{
       $new[$key] = $value;
     }
     if(!array_key_exists($key, $new)){
-      return null; // Position was not relative to array.
+      /**
+       *  Position was not relative to array.
+       */
+      return null;
     }
     return $new;
   }
