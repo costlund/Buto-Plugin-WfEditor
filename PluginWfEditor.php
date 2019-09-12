@@ -519,7 +519,10 @@ class PluginWfEditor{
     }elseif($a=='settingssave'){
       $yml = new PluginWfYml(wfArray::get($GLOBALS, 'sys/app_dir').'/'.urldecode(wfRequest::get('file')), 'content/'.urldecode(wfRequest::get('key').'/settings'));
       $form = new PluginWfYml(__DIR__.'/form/settings.yml');
-      $form->set(null, PluginWfForm::bindAndValidate($form->get()));
+      $form_form_v1 = new PluginFormForm_v1();
+      $form_form_v1->setData($form->get());
+      $form_form_v1->bindAndValidate();
+      $form->set(null, $form_form_v1->data);
       if($form->get('is_valid')){
         $value = $form->get('items/settings/post_value');
         try {
@@ -537,7 +540,7 @@ class PluginWfEditor{
           $json->set('script', array("alert(\"Unable to parse yml!\");"));
         }
       }else{
-        $json->set('script', array("alert(\"".PluginWfForm::getErrors($form->get(), "\\n")."\");"));
+        $json->set('script', array("alert(\"".$form_form_v1->getErrors("\\n")."\");"));
       }
     }elseif($a=='datasave'){
       $yml = new PluginWfYml(wfArray::get($GLOBALS, 'sys/app_dir').'/'.urldecode(wfRequest::get('file')), 'content/'.urldecode(wfRequest::get('key').'/data/data'));
