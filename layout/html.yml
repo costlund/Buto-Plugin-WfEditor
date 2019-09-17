@@ -131,6 +131,12 @@ content:
             data:
               plugin: 'form/form_v1'
               method: include               
+          icon:
+            type: link
+            attribute:
+              rel: icon
+              type: image/x-icon
+              href: '/plugin/wf/editor/icon/icon.png?x=1'
       body:
         type: body
         innerHTML: 'body...'
