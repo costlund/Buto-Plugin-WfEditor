@@ -1,5 +1,9 @@
-version: 1.2.0
+version: 1.2.1
 history:
+  1.2.1:
+    date: '2022-03-08'
+    title: 'Clean up'
+    description: 'Code clean up.'
   1.2.0:
     date: '2022-03-08'
     title: 'I18N'

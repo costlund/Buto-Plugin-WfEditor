@@ -883,8 +883,8 @@ class PluginWfEditor{
   }
   /**
    * Get last part of x/innerHTML/y/innerHTML/33
-   * @param type $path
-   * @return type
+   * @param string $path
+   * @return string
    */
   private function getIdFromPath($path){
     $temp = explode('/', $path);
@@ -965,22 +965,6 @@ class PluginWfEditor{
               ), 'attribute' => array('class' => 'alert alert-info'));
         }
         $items[] = $item;
-      }
-    }
-    return $items;
-  }
-  /*
-   * Function to get all files and folders...
-   */
-  function scan_dir($dir){
-    $items = array();
-    $content = scandir($dir);
-    foreach ($content as $key => $value) {
-      if($value=='.' || $value=='..'){continue;}
-      if(is_file($dir.'/'.$value)){
-        $items[] = array('type' => 'file', 'name' => $value, 'dir' => $dir.'/'.$value);
-      }else{
-        $items[] = array('type' => 'folder', 'name' => $value, 'child' => scan_dir($dir.'/'.$value));
       }
     }
     return $items;
@@ -1242,8 +1226,8 @@ class PluginWfEditor{
   }
   /**
    * Get response code.
-   * @param type $url
-   * @return type
+   * @param string $url
+   * @return string
    */
   private function get_http_response_code($url) {
     $headers = get_headers($url);
@@ -1516,10 +1500,10 @@ class PluginWfEditor{
   }
   /**
    * Move array value to another position.
-   * @param type $array
-   * @param type $key
-   * @param type $position, 1 to size of array.
-   * @return type
+   * @param array $array
+   * @param string $key
+   * @param int $position 1 to size of array.
+   * @return array
    */
   private function move_to_position($array, $key, $position){
     if(!array_key_exists($key, $array)){
