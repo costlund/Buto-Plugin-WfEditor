@@ -38,6 +38,79 @@ class PluginWfEditor{
     $this->includePlugin();    
     wfDocument::mergeLayout($page->get());
   }
+  public function page_i18n(){
+    wfPlugin::includeonce('wf/yml');
+    $user = wfUser::getSession();
+    $i18n_folder = wfGlobals::getAppDir().'/theme/'.$user->get('plugin/wf/editor/activetheme').'/i18n';
+    $folder_exist = wfFilesystem::fileExist($i18n_folder);
+    $result = new PluginWfArray();
+    if($folder_exist){
+      $i18n_files = wfFilesystem::getScandir($i18n_folder);
+      /*
+       * Add data.
+       */
+      foreach($i18n_files as $v){
+        $data = new PluginWfYml($i18n_folder.'/'.$v);
+        foreach($data->get() as $k2 => $v2){
+          $result->set(str_replace('.yml', '', $v).'_'.$k2, array('la' => str_replace('.yml', '', $v), 'key' => $k2, 'value' => $v2));
+        }
+      }
+      /*
+       * Add empty rows.
+       */
+      foreach($result->get() as $v){
+        foreach($i18n_files as $v2){
+          $la = str_replace('.yml', '', $v2);
+          if( !strstr($la, '_log') && !$result->get($la."_".$v['key']) ){
+            $result->set($la."_".$v['key'], array('la' => $la, 'key' => $v['key'], 'value' => ''));
+          }
+        }
+      }
+      $temp = array();
+      foreach($result->get() as $v){
+        $temp[] = $v;
+      }
+      $result = new PluginWfArray($temp);
+      unset($temp);
+    }
+    wfPlugin::enable('wf/table');
+    $element = new PluginWfYml(__DIR__.'/element/'.__FUNCTION__.'.yml');
+    $element->setByTag(array('data' => $result->get()));
+    wfDocument::renderElement($element->get());
+  }
+  public function page_i18n_form(){
+    wfPlugin::enable('form/form_v1');
+    wfPlugin::includeonce('wf/yml');
+    $element = new PluginWfYml(__DIR__.'/element/'.__FUNCTION__.'.yml');
+    $element->setByTag(array('method' => 'render'));
+    wfDocument::renderElement($element->get());
+  }
+  public function page_i18n_capture(){
+    wfPlugin::enable('form/form_v1');
+    wfPlugin::includeonce('wf/yml');
+    $element = new PluginWfYml(__DIR__.'/element/page_i18n_form.yml');
+    $element->setByTag(array('method' => 'capture'));
+    wfDocument::renderElement($element->get());
+  }
+  public function form_i18n_capture(){
+    $user = wfUser::getSession();
+    wfPlugin::includeonce('string/array');
+    $sa = new PluginStringArray();
+    $excel_data = $sa->from_excel_data(wfRequest::get('excel_data'));
+    if($excel_data['columns']!=3){
+      return array("alert('There should be 3 columns and not ".$excel_data['columns'].".')");
+    }
+    $id = $user->get('plugin/wf/editor/activetheme');
+    foreach($excel_data['data'] as $v){
+      $la = $v[0];
+      $key = $v[1];
+      $value = $v[2];
+      $i18n_yml = new PluginWfYml(wfGlobals::getAppDir().'/theme/'.$id.'/i18n/'.$la.'.yml');
+      $i18n_yml->set($key, $value);
+      $i18n_yml->save();
+    }
+    return array("$('#modal_i18n_form').modal('hide')");
+  }
   /**
    * Edit page.
    */
@@ -225,7 +298,7 @@ class PluginWfEditor{
     $GLOBALS['sys']['settings']['plugin']['wf']['form_v2']['enabled'] = 'true';
     $GLOBALS['sys']['settings']['plugin']['wf']['bootstrap']['enabled'] = 'true';
     $GLOBALS['sys']['settings']['plugin']['wf']['embed']['enabled'] = 'true';
-    $GLOBALS['sys']['settings']['plugin']['datatable']['datatable_1_10_13']['enabled'] = 'true';
+    $GLOBALS['sys']['settings']['plugin']['datatable']['datatable_1_10_18']['enabled'] = 'true';
   }
   /**
    * Element settings page.
@@ -1164,7 +1237,7 @@ class PluginWfEditor{
     $tbody = wfDocument::createHtmlElement('tbody', $tr);
     $table->set('innerHTML', array($thead, $tbody));
     $element[] = $table->get();
-    $element[] = wfDocument::createWidget('datatable/datatable_1_10_13', 'run', array('id' => 'table_plugin', 'json' => array('paging' => true, 'iDisplayLength' => 10, 'ordering' => true, 'info' => true, 'searching' => true, 'order' => array(array('0', 'asc')), 'language' => array('url' => '/plugin/datatable/datatable_1_10_13/i18n/Swedish.json'))));
+    $element[] = wfDocument::createWidget('datatable/datatable_1_10_18', 'run', array('id' => 'table_plugin', 'json' => array('paging' => true, 'iDisplayLength' => 10, 'ordering' => true, 'info' => true, 'searching' => true, 'order' => array(array('0', 'asc')), 'language' => array('url' => '/plugin/datatable/datatable_1_10_18/i18n/Swedish.json'))));
     return $element;
   }
   /**

@@ -1,10 +1,16 @@
-version: '1.1'
+version: 1.2.0
 history:
-  '1.1':
+  1.2.0:
+    date: '2022-03-08'
+    title: 'I18N'
+    description: 'Add theme I18N support.'
+  1.1.1:
     date: '2019-09-12'
+    title: 'Plugin'
     description: 'Replace wf/form with form/form_v1.'
-  '1.0':
+  1.0.0:
     date: '2019-01-09'
+    title: 'First version'
     description: 'First version.'
 plugin:
   -

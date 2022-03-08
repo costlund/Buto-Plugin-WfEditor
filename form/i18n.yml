@@ -1,0 +1,21 @@
+url: /editor/i18n_capture
+ajax: true
+submit_value: Save
+id: form_i18n
+focus_first_element: true
+items:
+  excel_data:
+    type: text
+    label: Excel data
+    attribute:
+      style:
+        min-height: 300px
+capture:
+  plugin: wf/editor
+  method: form_i18n_capture
+elements_before:
+  -
+    type: div
+    attribute:
+      class: alert alert-info
+    innerHTML: 'Insert rows from excel. Three columns la, key, value.'

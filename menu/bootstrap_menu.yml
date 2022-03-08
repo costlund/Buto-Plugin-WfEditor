@@ -8,6 +8,9 @@ navbar:
     class: 'navbar'
     item:
       -
+        lable: I18N
+        href: "javascript:PluginWfBootstrapjs.modal({id: 'modal_i18n', url: '/editor/i18n', lable: 'I18N', size: 'lg'});"
+      -
         lable: Files
         href: "javascript:PluginWfBootstrapjs.modal({id: 'modal_files', url: '/editor/files', lable: 'Files', size: 'lg'});"
       -

@@ -1,0 +1,31 @@
+-
+  type: p
+  innerHTML:
+    -
+      type: a
+      attribute:
+        class: btn btn-primary
+        onclick: "PluginWfBootstrapjs.modal({id: 'modal_i18n_form', label: this.innerHTML, url: 'i18n_form', size: 'xl'})"
+      innerHTML: Translate
+-
+  type: widget
+  data:
+    plugin: wf/table
+    method: render_many
+    data:
+      i18n: false
+      field:
+        la: Language
+        key: Key
+        value: Value
+      rs: rs:data
+      datatable:
+        disabled: false
+        export:
+          disabled: false
+          title: buto_theme_i18n
+        searching:
+        order:
+          -
+            - 0
+            - desc
