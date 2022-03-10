@@ -61,8 +61,10 @@ class PluginWfEditor{
       foreach($result->get() as $v){
         foreach($i18n_files as $v2){
           $la = str_replace('.yml', '', $v2);
-          if( !strstr($la, '_log') && !$result->get($la."_".$v['key']) ){
-            $result->set($la."_".$v['key'], array('la' => $la, 'key' => $v['key'], 'value' => ''));
+          if(isset($v['key'])){
+            if( !strstr($la, '_log') && !$result->get($la."_".$v['key']) ){
+              $result->set($la."_".$v['key'], array('la' => $la, 'key' => $v['key'], 'value' => ''));
+            }
           }
         }
       }

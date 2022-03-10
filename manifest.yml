@@ -1,5 +1,9 @@
-version: 1.2.1
+version: 1.2.2
 history:
+  1.2.2:
+    date: '2022-03-10'
+    title: 'I18N file'
+    description: 'Handle if bad content in file.'
   1.2.1:
     date: '2022-03-08'
     title: 'Clean up'
