@@ -109,6 +109,7 @@ class PluginWfEditor{
       $value = $v[2];
       $i18n_yml = new PluginWfYml(wfGlobals::getAppDir().'/theme/'.$id.'/i18n/'.$la.'.yml');
       $i18n_yml->set($key, $value);
+      $i18n_yml->sort();
       $i18n_yml->save();
     }
     return array("$('#modal_i18n_form').modal('hide')");
