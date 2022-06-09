@@ -1224,7 +1224,7 @@ class PluginWfEditor{
     $tbody = wfDocument::createHtmlElement('tbody', $tr);
     $table->set('innerHTML', array($thead, $tbody));
     $element[] = $table->get();
-    $element[] = wfDocument::createWidget('datatable/datatable_1_10_18', 'run', array('id' => 'table_plugin', 'json' => array('paging' => true, 'iDisplayLength' => 10, 'ordering' => true, 'info' => true, 'searching' => true, 'order' => array(array('0', 'asc')), 'language' => array('url' => '/plugin/datatable/datatable_1_10_18/i18n/Swedish.json'))));
+    $element[] = wfDocument::createWidget('datatable/datatable_1_10_18', 'run', array('id' => 'table_plugin', 'json' => array('paging' => true, 'iDisplayLength' => 10, 'ordering' => true, 'info' => true, 'searching' => true, 'order' => array(array('0', 'asc')))));
     return $element;
   }
   /**
