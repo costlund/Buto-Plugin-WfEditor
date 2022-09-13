@@ -1,10 +1,24 @@
-settings:
-  layout:
-    - html
-    - main
-  title: Theme
-content:
-  - 
-    type: div
-    innerHTML: 'theme...'
-  
+- 
+  type: widget
+  data:
+    plugin: wf/table
+    method: render_many
+    data:
+      id: dt_editor_theme
+      class:
+        table: table-sm table-striped
+      field:
+        name: Name
+      datatable:
+        ajax: /editor/theme_data
+        order:
+          -
+            - 0
+            - asc
+-
+  type: script
+  innerHTML: |
+    $('#dt_editor_theme tbody').on( 'click', 'tr', function () {
+      var theme = datatable_dt_editor_theme.row( this ).data().theme;
+      $.get('/editor/themeload?theme='+theme, function(data){PluginWfCallbackjson.call( data );});
+    } );

@@ -1473,24 +1473,26 @@ class PluginWfEditor{
    * Page to show theme to switch to.
    */
   public function page_theme(){
-    $this->includePlugin();
-    $filename = dirname( __FILE__).'/page/theme.yml';
-    $page = wfFilesystem::loadYml($filename);
-    wfArray::set($GLOBALS, 'sys/layout_path', '/plugin/wf/editor/layout');
-    $item = array();
-    foreach (wfFilesystem::getScandir(wfArray::get($GLOBALS, 'sys/app_dir').'/theme') as $key => $value) {
-      $dir = wfFilesystem::getScandir(wfArray::get($GLOBALS, 'sys/app_dir').'/theme/'.$value);
-      foreach (wfFilesystem::getScandir(wfArray::get($GLOBALS, 'sys/app_dir').'/theme/'.$value) as $key2 => $value2) {
+    wfPlugin::includeonce('wf/yml');
+    wfPlugin::enable('wf/table');
+    $page = new PluginWfYml(__DIR__.'/page/theme.yml');
+    wfDocument::renderElement($page->get());
+  }
+  private function get_theme_data(){
+    $data = array();
+    foreach (wfFilesystem::getScandir(wfArray::get($GLOBALS, 'sys/app_dir').'/theme') as $value) {
+      foreach (wfFilesystem::getScandir(wfArray::get($GLOBALS, 'sys/app_dir').'/theme/'.$value) as $value2) {
         $theme = urlencode( $value.'/'.$value2);
-        $onclick = "$.get('/editor/themeload?theme=$theme', function(data){PluginWfCallbackjson.call( data );});return false;";
-        $item[] = array('href' => '#', 'innerHTML' => $value.'/'.$value2, 'onclick' => $onclick);
+        $data[] = array('name' => $value.'/'.$value2, 'theme' => $theme);
       }
     }
-    $data = array();
-    $data['item'] = $item;
-    $listgroup = wfDocument::createWfElement('widget', array('plugin' => 'wf/bootstrap', 'method' => 'listgroup', 'data' => $data));
-    $page = wfArray::set($page, 'content', array($listgroup));
-    wfDocument::mergeLayout($page);
+    return $data;
+  }
+  public function page_theme_data(){
+    wfPlugin::includeonce('datatable/datatable_1_10_18');
+    $datatable = new PluginDatatableDatatable_1_10_18();
+    $data = $this->get_theme_data();
+    exit($datatable->set_table_data($data));
   }
   /**
    * Page to switch theme in the editor.

@@ -1,5 +1,9 @@
-version: 1.3.4
+version: 1.4.0
 history:
+  1.4.0:
+    date: '2022-09-13'
+    title: Theme
+    description: 'Improvement in select a theme via datatable.'
   1.3.4:
     date: '2022-09-07'
     title: Versions
