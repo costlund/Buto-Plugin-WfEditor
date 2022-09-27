@@ -1,5 +1,9 @@
-version: 1.4.0
+version: 1.4.1
 history:
+  1.4.1:
+    date: '2022-09-27'
+    title: Versions
+    description: 'Versions update.'
   1.4.0:
     date: '2022-09-13'
     title: Theme
@@ -54,10 +58,10 @@ plugin:
     version: 1.2.4
   -
     name: wf/yml
-    version: 1.4.1
+    version: 1.5.0
   -
     name: form/form_v1
-    version: 1.54.0
+    version: 1.54.2
 sys:
   -
     name: mercury
