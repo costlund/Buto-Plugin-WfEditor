@@ -1,5 +1,9 @@
-version: 1.4.1
+version: 1.4.2
 history:
+  1.4.2:
+    date: '2022-10-13'
+    title: Versions
+    description: 'Versions update.'
   1.4.1:
     date: '2022-09-27'
     title: Versions
@@ -61,7 +65,7 @@ plugin:
     version: 1.5.0
   -
     name: form/form_v1
-    version: 1.54.2
+    version: 1.56.0
 sys:
   -
     name: mercury
