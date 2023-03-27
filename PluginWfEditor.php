@@ -10,6 +10,8 @@ class PluginWfEditor{
       $this->settings = new PluginWfArray(wfArray::get($GLOBALS, 'sys/settings/plugin_modules/'.wfArray::get($GLOBALS, 'sys/class').'/settings'));
     }
     wfPlugin::enable('form/form_v1');
+    wfPlugin::enable('bootstrap/navbar_v1');
+    wfPlugin::includeonce('wf/yml');
   }
   public function widget_analyse(){
     $a = new PluginWfArray();
@@ -133,19 +135,21 @@ class PluginWfEditor{
         exit(json_encode($json));
       }
     }else{
-      $filename = wfArray::get($GLOBALS, 'sys/app_dir').'/plugin/wf/editor/page/edit.yml';
-      $page = wfFilesystem::loadYml($filename);
       $yml_decode = urldecode($yml);
       $filename = wfArray::get($GLOBALS, 'sys/app_dir').'/'.$yml_decode;
       $yml_content = file_get_contents($filename);
-      $page = wfArray::set($page, 'content/menu/data/data/brand/lable', '&nbsp;');
-      $page = wfArray::set($page, 'content/form/innerHTML/yml_content/innerHTML', $yml_content);
-      $page = wfArray::set($page, 'content/form/innerHTML/yml/attribute/value', $yml_decode);
-      $page = wfArray::set($page, 'content/menu/data/data/navbar/navbar1/item/close/onclick', 'PluginWfDom.remove(\''.str_replace('/', '.', $yml_decode).'\');return false;');
-      $page = wfArray::set($page, 'content/menu/data/data/navbar/navbar1/item/save/id', str_replace('/', '.', $yml_decode).'_save');
-      $script = wfArray::get($page, 'content/form/innerHTML/textarea_script_onkeypress/innerHTML');
-      $page = wfArray::set($page, 'content/form/innerHTML/textarea_script_onkeypress/innerHTML', str_replace('_set_in_action_', str_replace('/', '.', $yml_decode).'_save', $script));
-      wfDocument::mergeLayout($page);
+      $close_onclick = 'PluginWfDom.remove(\''.str_replace('/', '.', $yml_decode).'\');return false;';
+      $textarea_script_onkeypress = "document.getElementById('yml_content').onkeypress = function(event){if(event.ctrlKey && event.which==115){console.log(event.ctrlKey+':'+event.which);document.getElementById('".str_replace('/', '.', $yml_decode).'_save'."').onclick();return false;}}";
+      $page2 = new PluginWfYml(__DIR__.'/page/edit.yml');
+      $page2->setByTag(array(
+        'id' => str_replace('/', '.', $yml_decode).'_save', 
+        'close_onclick' => $close_onclick,
+        'lable' => $yml_decode,
+        'yml_decode' => $yml_decode,
+        'textarea_script_onkeypress' => $textarea_script_onkeypress,
+        'yml_content' => $yml_content
+      ));
+      wfDocument::mergeLayout($page2->get());
     }
     return null;
   }
@@ -952,7 +956,7 @@ class PluginWfEditor{
           $item = array('type' => 'div', 'innerHTML' => array(
               $btn_add,
               array('type' => 'span', 'innerHTML' => ''.$item->get('type'), 'attribute' => array('style' => $style_type, 'onclick' => $onclick_view, 'id' => 'header_'.$uid)),
-              wfDocument::createHtmlElement('a', '&nbsp;&nbsp;', array('style' => 'background:white;', 'data-toggle' => 'collapse', 'href' => '#innerHTML_'.$uid, 'class' => 'btn_child caret')),
+              wfDocument::createHtmlElement('a', '&nbsp;&nbsp;', array('style' => 'background:white;', 'data-bs-toggle' => 'collapse', 'href' => '#innerHTML_'.$uid, 'class' => 'btn_child caret')),
               $pre_attribute,
               array('type' => 'div', 'innerHTML' => $innerHTML, 'attribute' => array('style' => $style, 'id' => 'innerHTML_'.$uid, 'class' => 'collapse'))
               ), 'attribute' => array('class' => $class, 'id' => 'element_'.$uid));
@@ -1148,7 +1152,7 @@ class PluginWfEditor{
       wfDocument::createHtmlElement('a', array(
         wfDocument::createHtmlElement('text', $data['label']),
         wfDocument::createHtmlElement('span', null, array('class' => 'caret'))
-      ), array('type' => 'button', 'class' => $btn_class, 'data-toggle' => 'dropdown', 'aria-haspopup' => true, 'aria-expanded' => false)),
+      ), array('type' => 'button', 'class' => $btn_class, 'data-bs-toggle' => 'dropdown', 'aria-haspopup' => true, 'aria-expanded' => false)),
       wfDocument::createHtmlElement('ul', $li, array('class' => 'dropdown-menu'))
     ), array('class' => $class));
     return $btn_group;
@@ -1353,7 +1357,7 @@ class PluginWfEditor{
       $comment = wfArray::get($value2,'comment');
       $code = "\n".$value2['code'];
       $id = str_replace('/', '_', $plugin.'_'.$key2);
-      $comment .= '<br><a href="#" data-toggle="collapse" data-target="#plugin_source_'.$id.'">Source code.</a>';
+      $comment .= '<br><a href="#" data-bs-toggle="collapse" data-bs-target="#plugin_source_'.$id.'">Source code.</a>';
       $comment .= '<pre stylezzz="display:none" id="plugin_source_'.$id.'" class="collapse" aria-expanded="false"><span style="margin-left:50%;">PHP</span><code class=" language-php">'.$code.'</code></pre>';
       $comment = self::cleanComment($comment, true);
       $comment = self::replace_load_tags($comment, $plugin);

@@ -16,13 +16,13 @@ content:
           -
             type: li
             attribute:
-              data-target: '#carousel-example-generic'
+              data-bs-target: '#carousel-example-generic'
               data-slide-to: 0
               class: active
           -
             type: li
             attribute:
-              data-target: '#carousel-example-generic'
+              data-bs-target: '#carousel-example-generic'
               data-slide-to: 1
       -
         type: div

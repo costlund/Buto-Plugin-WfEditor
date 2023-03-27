@@ -1,30 +1,32 @@
 content:
-  menu:
+  menu2:
     type: widget
     data:
-      plugin: wf/bootstrap
-      method: menu
+      plugin: 'bootstrap/navbar_v1'
+      method: navbar
       data:
-        settings:
-          fluit: true
         brand:
-          lable: 'Webforms'
-          href: '#'
+          -
+            type: span
+            attribute:
+              class: d-sm-none
+            innerHTML: rs:lable
         navbar:
-          navbar1:
-            classzzz: 'navbar-right'
-            item:
-              save:
-                lable: Save
-                onclick: "$.post('/editor/edit', $('#edit_save').serialize()).done(function(data) { PluginWfCallbackjson.call( data ); });return false;"
-                id: _set_in_action_
-              close:
-                lable: Close
-                href: #
-                onclick: _set_in_action_
-                id: close_edit
-        
-    
+          id: _zzzmy_navbar_id_
+          item:
+            -
+              text: Save
+              onclick: "$.post('/editor/edit', $('#edit_save').serialize()).done(function(data) { PluginWfCallbackjson.call( data ); });return false;"
+              id: rs:id
+          element_after:
+            -
+              type: span
+              innerHTML: rs:lable
+            -
+              type: a
+              innerHTML: Close
+              attribute:
+                onclick: rs:close_onclick
   form:
     type: form
     attribute:
@@ -37,7 +39,7 @@ content:
           type: hidden
           name: yml
           id: yml
-          value: _set_in_action_
+          value: rs:yml_decode
       yml_content:
         type: textarea
         attribute:
@@ -46,10 +48,10 @@ content:
           style: 'height:200px;'
           id: yml_content
           wrap: off
-          onkeypresszzz: "console.log(this.keyCode);return false;"
+        innerHTML: rs:yml_content
       textarea_script_onkeypress:
         type: script
-        innerHTML: "document.getElementById('yml_content').onkeypress = function(event){if(event.ctrlKey && event.which==115){console.log(event.ctrlKey+':'+event.which);document.getElementById('_set_in_action_').onclick();return false;}}"
+        innerHTML: rs:textarea_script_onkeypress
       textarea_script:
         type: script
         innerHTML: "PluginWfTextareatab.setTextareaTabEnabled(document.getElementById('yml_content'), '  ');PluginWfTextareatab.reziseNoScroll('yml_content');"

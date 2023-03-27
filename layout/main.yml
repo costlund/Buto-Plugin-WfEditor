@@ -4,12 +4,53 @@ content:
   style1:
     type: style
     innerHTML: '.wf_form_row{margin-top:10px;}'
-  bootstrap_menu:
+  bootstrap_menu2:
     type: widget
     data:
-      plugin: 'wf/bootstrap'
-      method: menu
-      data: 'yml:/plugin/wf/editor/menu/bootstrap_menu.yml'
+      plugin: 'bootstrap/navbar_v1'
+      method: navbar
+      data:
+        brand_href: /
+        brand:
+          -
+            type: img
+            attribute:
+              src: /plugin/theme/include/icon/icon.png
+              style:
+                width: 24px
+                margin-top: -5px
+          -
+            type: span
+            attribute:
+              class: d-sm-none
+            innerHTML: 'Brand-name'
+        navbar:
+          id: _my_navbar_id_
+          item:
+            -
+              text: I18N
+              href: "javascript:PluginWfBootstrapjs.modal({id: 'modal_i18n', url: '/editor/i18n', lable: 'I18N', size: 'lg'});"
+            -
+              text: Files
+              href: "javascript:PluginWfBootstrapjs.modal({id: 'modal_files', url: '/editor/files', lable: 'Files', size: 'lg'});"
+            -
+              text: Plugin
+              href: "javascript:PluginWfBootstrapjs.modal({id: 'modal_plugin', url: '/editor/plugin', lable: 'Plugin', size: 'lg'});"
+            -
+              text: Theme
+              href: "javascript:PluginWfBootstrapjs.modal({id: 'modal_plugin', url: '/editor/theme', lable: 'Themes', size: 'lg'});"
+          element_after:
+            -
+              type: div
+              innerHTML:
+                - 
+                  type: strong
+                  attribute:
+                    class: content-colon
+                  innerHTML: Theme
+                - 
+                  type: span
+                  innerHTML: globals:sys/theme 
   theme_info:
     type: div
     attribute:
