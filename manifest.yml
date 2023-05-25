@@ -1,5 +1,9 @@
-version: 1.6.0
+version: 1.7.0
 history:
+  1.7.0:
+    date: '2023-05-25'
+    title: I18N
+    description: 'Add search column.'
   1.6.0:
     date: '2023-05-25'
     title: I18N

@@ -65,7 +65,7 @@ class PluginWfEditor{
       foreach($i18n_files as $v){
         $data = new PluginWfYml($i18n_folder.'/'.$v);
         foreach($data->get() as $k2 => $v2){
-          $result->set(str_replace('.yml', '', $v).'_'.$k2, array('la' => str_replace('.yml', '', $v), 'key' => $k2, 'value' => $v2));
+          $result->set(str_replace('.yml', '', $v).'_'.$k2, array('la' => str_replace('.yml', '', $v), 'key' => $k2, 'value' => $v2, 'search' => '(translated)'));
         }
       }
       /*
@@ -76,7 +76,7 @@ class PluginWfEditor{
           $la = str_replace('.yml', '', $v2);
           if(isset($v['key'])){
             if( !strstr($la, '_log') && !$result->get($la."_".$v['key']) ){
-              $result->set($la."_".$v['key'], array('la' => $la, 'key' => $v['key'], 'value' => ''));
+              $result->set($la."_".$v['key'], array('la' => $la, 'key' => $v['key'], 'value' => '', 'search' => '(empty)'));
             }
           }
         }
