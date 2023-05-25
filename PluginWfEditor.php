@@ -47,7 +47,18 @@ class PluginWfEditor{
     $folder_exist = wfFilesystem::fileExist($i18n_folder);
     $result = new PluginWfArray();
     if($folder_exist){
+      /**
+       * 
+       */
       $i18n_files = wfFilesystem::getScandir($i18n_folder);
+      /**
+       * Clean up.
+       */
+      foreach($i18n_files as $k => $v){
+        if(substr($v, 0, 1)=='_'){
+          unset($i18n_files[$k]);
+        }
+      }
       /*
        * Add data.
        */
