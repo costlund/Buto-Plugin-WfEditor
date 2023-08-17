@@ -30,7 +30,7 @@ class PluginWfEditor{
     if(!wfArray::get($_SESSION, 'plugin/wf/editor/activetheme')){
       $_SESSION = wfArray::set($_SESSION, 'plugin/wf/editor/activetheme', wfArray::get($GLOBALS, 'sys/theme'));
     }
-    wfArray::set($GLOBALS, 'sys/layout_path', '/plugin/wf/editor/layout');
+    wfGlobals::setSys('layout_path', '/plugin/wf/editor/layout');
     wfPlugin::includeonce('wf/yml');
     $page = new PluginWfYml('/plugin/wf/editor/page/desktop.yml');
     /**
@@ -55,7 +55,7 @@ class PluginWfEditor{
        * Clean up.
        */
       foreach($i18n_files as $k => $v){
-        if(substr($v, 0, 1)=='_'){
+        if(wfPhpfunc::substr($v, 0, 1)=='_'){
           unset($i18n_files[$k]);
         }
       }
@@ -65,7 +65,7 @@ class PluginWfEditor{
       foreach($i18n_files as $v){
         $data = new PluginWfYml($i18n_folder.'/'.$v);
         foreach($data->get() as $k2 => $v2){
-          $result->set(str_replace('.yml', '', $v).'_'.$k2, array('la' => str_replace('.yml', '', $v), 'key' => $k2, 'value' => $v2, 'search' => '(translated)'));
+          $result->set(wfPhpfunc::str_replace('.yml', '', $v).'_'.$k2, array('la' => wfPhpfunc::str_replace('.yml', '', $v), 'key' => $k2, 'value' => $v2, 'search' => '(translated)'));
         }
       }
       /*
@@ -73,9 +73,9 @@ class PluginWfEditor{
        */
       foreach($result->get() as $v){
         foreach($i18n_files as $v2){
-          $la = str_replace('.yml', '', $v2);
+          $la = wfPhpfunc::str_replace('.yml', '', $v2);
           if(isset($v['key'])){
-            if( !strstr($la, '_log') && !$result->get($la."_".$v['key']) ){
+            if( !wfPhpfunc::strstr($la, '_log') && !$result->get($la."_".$v['key']) ){
               $result->set($la."_".$v['key'], array('la' => $la, 'key' => $v['key'], 'value' => '', 'search' => '(empty)'));
             }
           }
@@ -132,14 +132,14 @@ class PluginWfEditor{
    */
   public function page_edit(){
     $this->includePlugin();
-    wfArray::set($GLOBALS, 'sys/layout_path', '/plugin/wf/editor/layout');
+    wfGlobals::setSys('layout_path', '/plugin/wf/editor/layout');
     $yml = wfRequest::get('yml');
     if(wfRequest::isPost()){
       $yml_content = wfRequest::get('yml_content');
       try {
         $array = sfYaml::load($yml_content);
         wfFilesystem::saveFile(wfArray::get($GLOBALS, 'sys/app_dir').'/'.$yml, $yml_content);
-        $json = array('success' => true, 'alert' => array('Saved.'), 'removezzz' => array(str_replace('/', '.', $yml)));
+        $json = array('success' => true, 'alert' => array('Saved.'), 'removezzz' => array(wfPhpfunc::str_replace('/', '.', $yml)));
         exit(json_encode($json));
       } catch (Exception $exc) {
         $json = array('success' => false, 'alert' => array('An error occure.'));
@@ -153,7 +153,7 @@ class PluginWfEditor{
       $textarea_script_onkeypress = "document.getElementById('yml_content').onkeypress = function(event){if(event.ctrlKey && event.which==115){console.log(event.ctrlKey+':'+event.which);document.getElementById('".str_replace('/', '.', $yml_decode).'_save'."').onclick();return false;}}";
       $page2 = new PluginWfYml(__DIR__.'/page/edit.yml');
       $page2->setByTag(array(
-        'id' => str_replace('/', '.', $yml_decode).'_save', 
+        'id' => wfPhpfunc::str_replace('/', '.', $yml_decode).'_save', 
         'close_onclick' => $close_onclick,
         'lable' => $yml_decode,
         'yml_decode' => $yml_decode,
@@ -169,7 +169,7 @@ class PluginWfEditor{
    */
   public function page_element(){
     $this->includePlugin();
-    wfArray::set($GLOBALS, 'sys/layout_path', '/plugin/wf/editor/layout');
+    wfGlobals::setSys('layout_path', '/plugin/wf/editor/layout');
     $yml = wfRequest::get('yml');
     $yml = urldecode($yml);
     if(wfRequest::isPost()){
@@ -530,7 +530,7 @@ class PluginWfEditor{
       if($this->handle_move_param('get')){
         $value = $this->handle_move_param('get');
         $move = new PluginWfYml(wfArray::get($GLOBALS, 'sys/app_dir').'/'.$value['file'], 'content/'.$value['key']);
-        if(strlen(wfRequest::get('key'))){
+        if(wfPhpfunc::strlen(wfRequest::get('key'))){
           $yml = new PluginWfYml(wfArray::get($GLOBALS, 'sys/app_dir').'/'.urldecode(wfRequest::get('file')), 'content/'.urldecode(wfRequest::get('key')).'/innerHTML');
         }else{
           $yml = new PluginWfYml(wfArray::get($GLOBALS, 'sys/app_dir').'/'.urldecode(wfRequest::get('file')), 'content');
@@ -913,7 +913,7 @@ class PluginWfEditor{
    */
   private function file_to_id($file){
     $temp = $file;
-    $temp = str_replace('/', '.', $temp).'_body';
+    $temp = wfPhpfunc::str_replace('/', '.', $temp).'_body';
     return $temp;
   }
   /*
@@ -929,8 +929,8 @@ class PluginWfEditor{
         }else{
           $path_to_key = '/innerHTML/'.$key;
         }
-        if(substr($path_to_key, 0, 11) == '/innerHTML/'){
-          $path_to_key = substr($path_to_key, 11);
+        if(wfPhpfunc::substr($path_to_key, 0, 11) == '/innerHTML/'){
+          $path_to_key = wfPhpfunc::substr($path_to_key, 11);
         }
         $path_to_key = urlencode($path_to_key);
         $onclick_view = "PluginWfBootstrapjs.modal({id: 'element_view', url: '/editor/elementview?file=".$filename."&key=".$path_to_key."', lable: 'Element', size: 'lg'});return false;";
@@ -993,7 +993,7 @@ class PluginWfEditor{
   public function page_files(){
     $filename = wfArray::get($GLOBALS, 'sys/app_dir').'/plugin/wf/editor/page/files.yml';
     $page = wfFilesystem::loadYml($filename);
-    wfArray::set($GLOBALS, 'sys/layout_path', '/plugin/wf/editor/layout');
+    wfGlobals::setSys('layout_path', '/plugin/wf/editor/layout');
     $page = wfArray::set($page, 'content', $this->getFiles());
     wfDocument::mergeLayout($page);
   }
@@ -1039,7 +1039,7 @@ class PluginWfEditor{
     $filename = wfArray::get($GLOBALS, 'sys/app_dir').'/plugin/wf/editor/page/plugin.yml';
     $page = wfFilesystem::loadYml($filename);
     $page = wfArray::set($page, 'content', $this->getPlugin());
-    wfArray::set($GLOBALS, 'sys/layout_path', '/plugin/wf/editor/layout');
+    wfGlobals::setSys('layout_path', '/plugin/wf/editor/layout');
     wfDocument::mergeLayout($page);
   }
   /**
@@ -1063,7 +1063,7 @@ class PluginWfEditor{
         /**
          * Filter to exclude all files and folder who start with ".".
          */
-        if(substr($value, 0, 1) == '.'){ continue; }
+        if(wfPhpfunc::substr($value, 0, 1) == '.'){ continue; }
         /**
          * 
          */
@@ -1073,7 +1073,7 @@ class PluginWfEditor{
           if($is_file){
             $glyphicon = 'file';
             $yml = ('theme/'.$activetheme.'/'.$dir.'/'. $value);
-            $panel_id = str_replace('/', '.', $yml);
+            $panel_id = wfPhpfunc::str_replace('/', '.', $yml);
             $a[] = $this->getBtnGroup(array('label' => $value, 'list_group_item' => true, 'buttons' => array(
               array('label' => 'Text editor', 'onclick' => "PluginWfBootstrapjs.panel({lable: '$yml', url: '/$class/edit?yml='+encodeURIComponent('$yml'), id: '$panel_id', parent: document.getElementById('wf_editor_workarea')});$('.modal').modal('hide');return false;"),
               array('label' => 'Element editor', 'onclick' => "PluginWfBootstrapjs.panel({lable: '$yml', url: '/$class/element?yml='+encodeURIComponent('$yml'), id: '$panel_id', parent: document.getElementById('wf_editor_workarea')});$('.modal').modal('hide');return false;"),
@@ -1196,7 +1196,7 @@ class PluginWfEditor{
      */
     $plugins = array();
     foreach ($org_dir as $key => $value) {
-      if(substr($value, 0, 1)=='.'){
+      if(wfPhpfunc::substr($value, 0, 1)=='.'){
         /**
          * We do not want folder begining with ".". 
          */
@@ -1249,7 +1249,7 @@ class PluginWfEditor{
    */
   private function get_http_response_code($url) {
     $headers = get_headers($url);
-    return substr($headers[0], 9, 3);
+    return wfPhpfunc::substr($headers[0], 9, 3);
   }
   /**
    * Plugin view page.
@@ -1316,7 +1316,7 @@ class PluginWfEditor{
     $element[] = wfDocument::createWidget('wf/bootstrap', 'listgroup', array('item' => $item));
     $element[] = wfDocument::createHtmlElement('script', 'Prism.highlightAll();');
     $page = wfArray::set($page, 'content', $element);
-    wfArray::set($GLOBALS, 'sys/layout_path', '/plugin/wf/editor/layout');
+    wfGlobals::setSys('layout_path', '/plugin/wf/editor/layout');
     wfDocument::mergeLayout($page);
   }
   /**
@@ -1342,17 +1342,17 @@ class PluginWfEditor{
       $class = 'bg-danger';
       $name = $key2;
       $type = null;
-      if(substr($key2, 0, 7)=='widget_'){
+      if(wfPhpfunc::substr($key2, 0, 7)=='widget_'){
         $class = 'bg-warning';
-        $name = substr($name, 7);
+        $name = wfPhpfunc::substr($name, 7);
         $type = 'widget';
-      }elseif(substr($key2, 0, 6)=='event_'){
+      }elseif(wfPhpfunc::substr($key2, 0, 6)=='event_'){
         $class = 'bg-info';
-        $name = substr($name, 6);
+        $name = wfPhpfunc::substr($name, 6);
         $type = 'event';
-      }elseif(substr($key2, 0, 5)=='page_'){
+      }elseif(wfPhpfunc::substr($key2, 0, 5)=='page_'){
         $class = 'bg-success';
-        $name = substr($name, 5);
+        $name = wfPhpfunc::substr($name, 5);
         $type = 'page';
       }else{
         $class = 'bg-successzzz';
@@ -1367,7 +1367,7 @@ class PluginWfEditor{
       }
       $comment = wfArray::get($value2,'comment');
       $code = "\n".$value2['code'];
-      $id = str_replace('/', '_', $plugin.'_'.$key2);
+      $id = wfPhpfunc::str_replace('/', '_', $plugin.'_'.$key2);
       $comment .= '<br><a href="#" data-bs-toggle="collapse" data-bs-target="#plugin_source_'.$id.'">Source code.</a>';
       $comment .= '<pre stylezzz="display:none" id="plugin_source_'.$id.'" class="collapse" aria-expanded="false"><span style="margin-left:50%;">PHP</span><code class=" language-php">'.$code.'</code></pre>';
       $comment = self::cleanComment($comment, true);
@@ -1391,7 +1391,7 @@ class PluginWfEditor{
       $element[] = wfDocument::createHtmlElement('script', 'if(document.getElementById("btn_widget")){document.getElementById("btn_widget_add").style.display="";}');
     }
     $page = wfArray::set($page, 'content', $element);
-    wfArray::set($GLOBALS, 'sys/layout_path', '/plugin/wf/editor/layout');
+    wfGlobals::setSys('layout_path', '/plugin/wf/editor/layout');
     wfDocument::mergeLayout($page);
   }
   
@@ -1439,22 +1439,22 @@ class PluginWfEditor{
       $array = preg_split("/\r\n|\n|\r/", $comment);
       $temp = null;
       foreach ($array as $key => $value) {
-        if(substr($value, 0, 2)=='  '){
-          $temp .= substr($value, 2, strlen($value))."\n";
+        if(wfPhpfunc::substr($value, 0, 2)=='  '){
+          $temp .= wfPhpfunc::substr($value, 2, wfPhpfunc::strlen($value))."\n";
         }else{
           $temp .= $value."\n";
         }
       }
       $comment = $temp;
     }
-    $comment = str_replace("#code-php#",        '<pre><span style="margin-left:50%;">PHP</span><code class=" language-php">',                  $comment);
-    $comment = str_replace("#code-yml#",        '<pre><span style="margin-left:50%;">YML</span><code class=" language-yaml">',                 $comment);
-    $comment = str_replace("#code-javascript#", '<pre><span style="margin-left:50%;">Javascript</span><code class=" language-javascript">',    $comment);
-    $comment = str_replace("#code-html#",       '<pre><span style="margin-left:50%;">HTML</span><code class=" language-markup">',              $comment);
-    $comment = str_replace("#code#",            '</code></pre>', $comment);
-    $comment = str_replace("/*", '', $comment);
-    $comment = str_replace("*/", '', $comment);
-    $comment = str_replace("*", '', $comment);
+    $comment = wfPhpfunc::str_replace("#code-php#",        '<pre><span style="margin-left:50%;">PHP</span><code class=" language-php">',                  $comment);
+    $comment = wfPhpfunc::str_replace("#code-yml#",        '<pre><span style="margin-left:50%;">YML</span><code class=" language-yaml">',                 $comment);
+    $comment = wfPhpfunc::str_replace("#code-javascript#", '<pre><span style="margin-left:50%;">Javascript</span><code class=" language-javascript">',    $comment);
+    $comment = wfPhpfunc::str_replace("#code-html#",       '<pre><span style="margin-left:50%;">HTML</span><code class=" language-markup">',              $comment);
+    $comment = wfPhpfunc::str_replace("#code#",            '</code></pre>', $comment);
+    $comment = wfPhpfunc::str_replace("/*", '', $comment);
+    $comment = wfPhpfunc::str_replace("*/", '', $comment);
+    $comment = wfPhpfunc::str_replace("*", '', $comment);
     return $comment;
   }
   
@@ -1466,18 +1466,18 @@ class PluginWfEditor{
       $start = strpos($str, "#load:");
       $end = strpos($str, ":load#");
       if($start && $end){
-        $anchor = substr($str, $start, $end-$start+6);
-        $src = substr($str, $start+6, $end-$start-6);
+        $anchor = wfPhpfunc::substr($str, $start, $end-$start+6);
+        $src = wfPhpfunc::substr($str, $start+6, $end-$start-6);
         $src = wfSettings::replaceDir($src);
-        $src = str_replace('[plugin]', $plugin, $src);
+        $src = wfPhpfunc::str_replace('[plugin]', $plugin, $src);
         $content = null;
         if(wfFilesystem::fileExist($src)){
           $content = file_get_contents($src);
-          $content = str_replace('<', '&lt;', $content);
+          $content = wfPhpfunc::str_replace('<', '&lt;', $content);
         }else{
           $content = "Could not find file: $src";
         }
-        $str = str_replace($anchor, $content, $str);
+        $str = wfPhpfunc::str_replace($anchor, $content, $str);
       }else{
         break;
       }
