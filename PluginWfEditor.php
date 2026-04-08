@@ -238,7 +238,7 @@ class PluginWfEditor{
       $widget->set('view/innerHTML/inner_html/innerHTML', "HTML: (child)");
     }else{
       $onclick = "PluginWfBootstrapjs.modal({id: 'element_html', url: '/editor/elementhtml?file=".urlencode((string)$filename)."&key=".urlencode((string)$key)."', lable: 'HTML', size: 'lg'});return false;";
-      $widget->set('view/innerHTML/inner_html/innerHTML', "<a href=\"#\" onclick=\"$onclick\">HTML</a>: ".htmlentities($yml->get('innerHTML')));
+      $widget->set('view/innerHTML/inner_html/innerHTML', "<a href=\"#\" onclick=\"$onclick\">HTML</a>: ".htmlentities((string)$yml->get('innerHTML')));
     }
     $widget->set('view/innerHTML/listgroup/innerHTML', null);
     /**
@@ -949,7 +949,7 @@ class PluginWfEditor{
           }else{
             $btn_add = array('type' => 'span', 'innerHTML' => 'Add', 'attribute' => array('style' => 'float:right;margin-right:2px;'));
             $btn_add = null;
-            $innerHTML = htmlentities($item->get('innerHTML')).'';
+            $innerHTML = htmlentities((string)$item->get('innerHTML')).'';
             $style = 'border:dotted 1px silver';
           }
           

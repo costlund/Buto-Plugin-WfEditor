@@ -5,20 +5,20 @@ id: frm_file_new
 items:
   filename_new:
     type: varchar
-    lable: Filename
+    label: Filename
     default: 
     mandatory: true
   type_of_file:
     type: varchar
-    lable: File type
+    label: File type
     mandatory: true
     option:
-      '': '-'
+      '': ''
       'Settings': 'Settings'
       'Layout': 'Layout'
       'Page': 'Page'
   folder:
     type: hidden
-    lable: Folder
+    label: Folder
     default: 
     mandatory: true
