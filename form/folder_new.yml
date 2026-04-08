@@ -5,11 +5,11 @@ id: frm_folder_new
 items:
   foldername_new:
     type: varchar
-    lable: Name
+    label: Name
     default: 
     mandatory: true
   folder:
     type: hidden
-    lable: Folder
+    label: Folder
     default: 
     mandatory: false

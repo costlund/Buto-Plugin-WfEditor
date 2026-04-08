@@ -10,35 +10,24 @@ content:
       plugin: 'bootstrap/navbar_v1'
       method: navbar
       data:
-        brand_href: /
-        brand:
-          -
-            type: img
-            attribute:
-              src: /plugin/theme/include/icon/icon.png
-              style:
-                width: 24px
-                margin-top: -5px
-          -
-            type: span
-            attribute:
-              class: d-sm-none
-            innerHTML: 'Brand-name'
+        navbar_theme: light
+        bg: secondary
         navbar:
           id: _my_navbar_id_
           item:
             -
+              text: Theme
+              href: "javascript:PluginWfBootstrapjs.modal({id: 'modal_plugin', url: '/editor/theme', lable: 'Themes', size: 'lg'});"
+            -
               text: I18N
               href: "javascript:PluginWfBootstrapjs.modal({id: 'modal_i18n', url: '/editor/i18n', lable: 'I18N', size: 'lg'});"
             -
-              text: Files
-              href: "javascript:PluginWfBootstrapjs.modal({id: 'modal_files', url: '/editor/files', lable: 'Files', size: 'lg'});"
-            -
               text: Plugin
               href: "javascript:PluginWfBootstrapjs.modal({id: 'modal_plugin', url: '/editor/plugin', lable: 'Plugin', size: 'lg'});"
+          item_right:
             -
-              text: Theme
-              href: "javascript:PluginWfBootstrapjs.modal({id: 'modal_plugin', url: '/editor/theme', lable: 'Themes', size: 'lg'});"
+              text: Run
+              onclick: "if(confirm('Are you sure to run this theme? Consider run this theme from a dedicated address!')){location.href='?loadtheme='+encodeURIComponent(this.getAttribute('data-theme'));}"
           element_after:
             -
               type: div
@@ -50,7 +39,7 @@ content:
                   innerHTML: Theme
                 - 
                   type: span
-                  innerHTML: globals:sys/theme 
+                  innerHTML: globals:_SESSION/plugin/wf/editor/activetheme
   theme_info:
     type: div
     attribute:
@@ -61,20 +50,6 @@ content:
         attribute:
           class: 'col-md-12'
         innerHTML:
-          -
-            type: strong
-            innerHTML: 'Active theme:'
-          -
-            type: span
-            innerHTML: 'globals:_SESSION/plugin/wf/editor/activetheme'
-          - 
-            type: a
-            attribute:
-              style: 'font-size: smaller;'
-              id: view
-              data-theme: 'globals:_SESSION/plugin/wf/editor/activetheme'
-              onclick: "location.href='?loadtheme='+encodeURIComponent(this.getAttribute('data-theme'));"
-            innerHTML: View
           -
             type: widget
             data:

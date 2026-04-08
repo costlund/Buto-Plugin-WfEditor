@@ -1,0 +1,6 @@
+content:
+  -
+    type: div
+    attribute: 
+      class: alert alert-info
+    innerHTML: rs:files

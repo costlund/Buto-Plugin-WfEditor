@@ -1,0 +1,5 @@
+-
+  type: div
+  attribute: 
+    id: modal_files_body
+  innerHTML: load:/editor/files
