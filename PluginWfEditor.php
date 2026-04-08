@@ -159,16 +159,16 @@ class PluginWfEditor{
    */
   public function page_element(){
     $this->includePlugin();
-    wfGlobals::setSys('layout_path', '/plugin/wf/editor/layout');
     $yml = wfRequest::get('yml');
     $yml = urldecode($yml);
     if(wfRequest::isPost()){
     }else{
       $onclick_add = "PluginWfBootstrapjs.modal({id: 'element_add', url: '/editor/elementadd?file=".urlencode((string)$yml)."&key=', label: 'Add', size: 'sm'});return false;";
       wfDocument::renderElement(array(
-        wfDocument::createHtmlElement('a', 'Reload', array('class' => 'btn', 'onclick' => "PluginWfAjax.update('".str_replace('/', '.', $yml)."_body');return false;")),
-        wfDocument::createHtmlElement('a', 'Add', array('class' => 'btn', 'onclick' => $onclick_add)),
-        wfDocument::createHtmlElement('a', 'Collapse', array('class' => 'btn', 'onclick' => "PluginWfEmbed.expand();"))
+        wfDocument::createHtmlElement('a', 'Reload', array('class' => 'btn btn-secondary btn-sm', 'onclick' => "PluginWfAjax.update('modal_element_editor_body');return false;")),
+        wfDocument::createHtmlElement('a', 'Add', array('class' => 'btn btn-secondary btn-sm', 'onclick' => $onclick_add)),
+        wfDocument::createHtmlElement('a', 'Collapse', array('class' => 'btn btn-secondary btn-sm', 'onclick' => "PluginWfEmbed.expand();")),
+        wfDocument::createHtmlElement('p', '')
         ));
       wfPlugin::includeonce('wf/yml');
       wfPlugin::includeonce('wf/array');
@@ -1070,7 +1070,7 @@ class PluginWfEditor{
             $panel_id = wfPhpfunc::str_replace('/', '.', $yml);
             $a[] = $this->getBtnGroup(array('label' => $value, 'list_group_item' => true, 'buttons' => array(
               array('label' => 'Text editor', 'onclick' => "PluginWfBootstrapjs.modal({label: '$yml', url: '/$class/edit?yml='+encodeURIComponent('$yml'), id: 'modal_text_editor', size: 'xl'});;return false;"),
-              array('label' => 'Element editor', 'onclick' => "PluginWfBootstrapjs.panel({label: '$yml', url: '/$class/element?yml='+encodeURIComponent('$yml'), id: '$panel_id', parent: document.getElementById('wf_editor_workarea')});$('.modal').modal('hide');return false;"),
+              array('label' => 'Element editor', 'onclick' => "PluginWfBootstrapjs.modal({label: '$yml', url: '/$class/element?yml='+encodeURIComponent('$yml'), id: 'modal_element_editor', size: 'xl'});return false;"),
               array('label' => 'Rename/Move/Copy', 'onclick' => "PluginWfBootstrapjs.modal({id: 'modal_file_edit', url: '/editor/file_edit?yml='+encodeURIComponent('".$dir."/". $value."'), label: 'File', size: 'lg'});return false;"),
               array('label' => 'Delete file', 'onclick' => "if(confirm('Delete file?')){ $.get('/editor/action?a=file_delete&file='+encodeURIComponent('$yml')+'', function(data){PluginWfCallbackjson.call( data );});}return false;"),
               )));
