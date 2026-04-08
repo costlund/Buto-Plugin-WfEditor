@@ -165,7 +165,7 @@ class PluginWfEditor{
     $yml = urldecode($yml);
     if(wfRequest::isPost()){
     }else{
-      $onclick_add = "PluginWfBootstrapjs.modal({id: 'element_add', url: '/editor/elementadd?file=".urlencode((string)$yml)."&key=', lable: 'Add', size: 'sm'});return false;";
+      $onclick_add = "PluginWfBootstrapjs.modal({id: 'element_add', url: '/editor/elementadd?file=".urlencode((string)$yml)."&key=', label: 'Add', size: 'sm'});return false;";
       wfDocument::renderElement(array(
         wfDocument::createHtmlElement('a', 'Reload', array('class' => 'btn', 'onclick' => "PluginWfAjax.update('".str_replace('/', '.', $yml)."_body');return false;")),
         wfDocument::createHtmlElement('a', 'Add', array('class' => 'btn', 'onclick' => $onclick_add)),
@@ -220,9 +220,9 @@ class PluginWfEditor{
       $widget->set('view/innerHTML/type/attribute/style', $widget->get('view/innerHTML/type/attribute/style').'text-decoration: line-through;');
     }
     $widget->setById('element_view_settings_value', 'innerHTML', "\n".$this->getYml($yml->get('settings')));
-    $widget->setById('btn_documentation_plugin', 'attribute/onclick', "PluginWfBootstrapjs.modal({id: 'wf_editor_pluginview', url: '/editor/pluginview?plugin=".urlencode((string)$yml->get('data/plugin'))."', lable: 'Plugin', 'size': 'lg'});return false;");
-    $widget->setById('btn_documentation_widget', 'attribute/onclick', "PluginWfBootstrapjs.modal({id: 'wf_editor_methodview', url: '/editor/methodview?plugin=".urlencode((string)$yml->get('data/plugin'))."&method=widget_".urlencode((string)$yml->get('data/method'))."', lable: 'Method', 'size': 'lg'});return false;");
-    $onclick = "PluginWfBootstrapjs.modal({id: 'element_html', url: '/editor/elementkey?file=".urlencode((string)$filename)."&key=".urlencode((string)$key)."', lable: 'Key', size: 'lg'});return false;";
+    $widget->setById('btn_documentation_plugin', 'attribute/onclick', "PluginWfBootstrapjs.modal({id: 'wf_editor_pluginview', url: '/editor/pluginview?plugin=".urlencode((string)$yml->get('data/plugin'))."', label: 'Plugin', 'size': 'lg'});return false;");
+    $widget->setById('btn_documentation_widget', 'attribute/onclick', "PluginWfBootstrapjs.modal({id: 'wf_editor_methodview', url: '/editor/methodview?plugin=".urlencode((string)$yml->get('data/plugin'))."&method=widget_".urlencode((string)$yml->get('data/method'))."', label: 'Method', 'size': 'lg'});return false;");
+    $onclick = "PluginWfBootstrapjs.modal({id: 'element_html', url: '/editor/elementkey?file=".urlencode((string)$filename)."&key=".urlencode((string)$key)."', label: 'Key', size: 'lg'});return false;";
     $widget->set('view/innerHTML/key/innerHTML', "Key: $key");
     $widget->setById('btn_delete', 'attribute/data_file', urldecode(wfRequest::get('file')));
     $widget->setById('btn_delete', 'attribute/data_key', $key);
@@ -237,7 +237,7 @@ class PluginWfEditor{
     if(is_array($yml->get('innerHTML'))){
       $widget->set('view/innerHTML/inner_html/innerHTML', "HTML: (child)");
     }else{
-      $onclick = "PluginWfBootstrapjs.modal({id: 'element_html', url: '/editor/elementhtml?file=".urlencode((string)$filename)."&key=".urlencode((string)$key)."', lable: 'HTML', size: 'lg'});return false;";
+      $onclick = "PluginWfBootstrapjs.modal({id: 'element_html', url: '/editor/elementhtml?file=".urlencode((string)$filename)."&key=".urlencode((string)$key)."', label: 'HTML', size: 'lg'});return false;";
       $widget->set('view/innerHTML/inner_html/innerHTML', "<a href=\"#\" onclick=\"$onclick\">HTML</a>: ".htmlentities((string)$yml->get('innerHTML')));
     }
     $widget->set('view/innerHTML/listgroup/innerHTML', null);
@@ -248,21 +248,21 @@ class PluginWfEditor{
       $temp = $yml->get('attribute');
       ksort($temp);
       foreach ($temp as $k => $value) {
-        $onclick = "PluginWfBootstrapjs.modal({id: 'element_attribute', url: '/editor/elementattribute?file=".urlencode((string)$filename)."&key=".urlencode((string)$key)."&attribute=".$k."', lable: 'Attribute', size: 'sm'});return false;";
+        $onclick = "PluginWfBootstrapjs.modal({id: 'element_attribute', url: '/editor/elementattribute?file=".urlencode((string)$filename)."&key=".urlencode((string)$key)."&attribute=".$k."', label: 'Attribute', size: 'sm'});return false;";
         $widget->set('view/innerHTML/listgroup/innerHTML/', wfDocument::createHtmlElement('a', "$k: $value", array('class' => 'list-group-item', 'onclick' => $onclick)));
       }
     }
-    $onclick = "PluginWfBootstrapjs.modal({id: 'element_attribute', url: '/editor/elementattribute?file=".urlencode((string)$filename)."&key=".urlencode((string)$key)."&attribute=', lable: 'Attribute', size: 'sm'});return false;";
+    $onclick = "PluginWfBootstrapjs.modal({id: 'element_attribute', url: '/editor/elementattribute?file=".urlencode((string)$filename)."&key=".urlencode((string)$key)."&attribute=', label: 'Attribute', size: 'sm'});return false;";
     $widget->set('view/innerHTML/listgroup/innerHTML/', wfDocument::createHtmlElement('a', "Add", array('class' => 'list-group-item list-group-item-warning', 'onclick' => $onclick)));
     /**
      * Settings.
      */
-    $onclick = "PluginWfBootstrapjs.modal({id: 'element_settings', url: '/editor/elementsettings?file=".urlencode((string)$filename)."&key=".urlencode((string)$key)."', lable: 'Settings', size: 'lg'});return false;";
+    $onclick = "PluginWfBootstrapjs.modal({id: 'element_settings', url: '/editor/elementsettings?file=".urlencode((string)$filename)."&key=".urlencode((string)$key)."', label: 'Settings', size: 'lg'});return false;";
     $widget->set('view/innerHTML/inner_settings/innerHTML', "<a href=\"#\" onclick=\"$onclick\">Settings</a>:");
     /**
      * Data.
      */
-    $onclick = "PluginWfBootstrapjs.modal({id: 'element_data', url: '/editor/elementdata?file=".urlencode((string)$filename)."&key=".urlencode((string)$key)."', lable: 'Data', size: 'lg'});return false;";
+    $onclick = "PluginWfBootstrapjs.modal({id: 'element_data', url: '/editor/elementdata?file=".urlencode((string)$filename)."&key=".urlencode((string)$key)."', label: 'Data', size: 'lg'});return false;";
     $widget->set('view/innerHTML/inner_data/innerHTML', "<a href=\"#\" onclick=\"$onclick\">Data</a>:");
     wfDocument::renderElement($widget->get());
   }
@@ -377,13 +377,13 @@ class PluginWfEditor{
     $this->includePlugin();
     wfPlugin::includeonce('wf/yml');
     $element = new PluginWfYml(__DIR__.'/page/elementadd.yml');
-    $onclick = "PluginWfBootstrapjs.modal({id: 'element_add_html', url: '/editor/elementaddhtml?file=".(wfRequest::get('file'))."&key=".(wfRequest::get('key'))."', lable: 'Add HTML element', size: 'sm'});";
+    $onclick = "PluginWfBootstrapjs.modal({id: 'element_add_html', url: '/editor/elementaddhtml?file=".(wfRequest::get('file'))."&key=".(wfRequest::get('key'))."', label: 'Add HTML element', size: 'sm'});";
     $onclick .= "return false;";
     $element->set('group/innerHTML/btn_html_element/attribute/onclick', $onclick);
-    $onclick = "PluginWfBootstrapjs.modal({id: 'element_add_html_object', url: '/editor/elementaddhtmlobject?file=".(wfRequest::get('file'))."&key=".(wfRequest::get('key'))."', lable: 'Add HTML element', size: 'sm'});";
+    $onclick = "PluginWfBootstrapjs.modal({id: 'element_add_html_object', url: '/editor/elementaddhtmlobject?file=".(wfRequest::get('file'))."&key=".(wfRequest::get('key'))."', label: 'Add HTML element', size: 'sm'});";
     $onclick .= "return false;";
     $element->set('group/innerHTML/btn_html_object_element/attribute/onclick', $onclick);
-    $onclick = "PluginWfBootstrapjs.modal({id: 'modal_plugin', url: '/editor/plugin', lable: 'Plugin', size: 'lg'});";
+    $onclick = "PluginWfBootstrapjs.modal({id: 'modal_plugin', url: '/editor/plugin', label: 'Plugin', size: 'lg'});";
     $onclick .= "return false;";
     $element->set('group/innerHTML/btn_widget/attribute/onclick', $onclick);
     $element->setById('btn_widget_add_from_window', 'attribute/data_file', urldecode(wfRequest::get('file')));
@@ -929,8 +929,8 @@ class PluginWfEditor{
           $path_to_key = wfPhpfunc::substr($path_to_key, 11);
         }
         $path_to_key = urlencode((string)$path_to_key);
-        $onclick_view = "PluginWfBootstrapjs.modal({id: 'element_view', url: '/editor/elementview?file=".$filename."&key=".$path_to_key."', lable: 'Element', size: 'lg'});return false;";
-        $onclick_add = "PluginWfBootstrapjs.modal({id: 'element_add', url: '/editor/elementadd?file=".$filename."&key=".$path_to_key."', lable: 'Add', size: 'sm'});return false;";
+        $onclick_view = "PluginWfBootstrapjs.modal({id: 'element_view', url: '/editor/elementview?file=".$filename."&key=".$path_to_key."', label: 'Element', size: 'lg'});return false;";
+        $onclick_add = "PluginWfBootstrapjs.modal({id: 'element_add', url: '/editor/elementadd?file=".$filename."&key=".$path_to_key."', label: 'Add', size: 'sm'});return false;";
         $style_type = 'width:50%;font-weight:bold;cursor: pointer;';
         if($item->get('settings/disabled')){
           $style_type .= 'text-decoration: line-through;';
@@ -1070,9 +1070,9 @@ class PluginWfEditor{
             $yml = ('theme/'.$activetheme.'/'.$dir.'/'. $value);
             $panel_id = wfPhpfunc::str_replace('/', '.', $yml);
             $a[] = $this->getBtnGroup(array('label' => $value, 'list_group_item' => true, 'buttons' => array(
-              array('label' => 'Text editor', 'onclick' => "PluginWfBootstrapjs.panel({lable: '$yml', url: '/$class/edit?yml='+encodeURIComponent('$yml'), id: '$panel_id', parent: document.getElementById('wf_editor_workarea')});$('.modal').modal('hide');return false;"),
-              array('label' => 'Element editor', 'onclick' => "PluginWfBootstrapjs.panel({lable: '$yml', url: '/$class/element?yml='+encodeURIComponent('$yml'), id: '$panel_id', parent: document.getElementById('wf_editor_workarea')});$('.modal').modal('hide');return false;"),
-              array('label' => 'Rename/Move/Copy', 'onclick' => "PluginWfBootstrapjs.modal({id: 'modal_file_edit', url: '/editor/file_edit?yml='+encodeURIComponent('".$dir."/". $value."'), lable: 'File', size: 'lg'});return false;"),
+              array('label' => 'Text editor', 'onclick' => "PluginWfBootstrapjs.panel({label: '$yml', url: '/$class/edit?yml='+encodeURIComponent('$yml'), id: '$panel_id', parent: document.getElementById('wf_editor_workarea')});$('.modal').modal('hide');return false;"),
+              array('label' => 'Element editor', 'onclick' => "PluginWfBootstrapjs.panel({label: '$yml', url: '/$class/element?yml='+encodeURIComponent('$yml'), id: '$panel_id', parent: document.getElementById('wf_editor_workarea')});$('.modal').modal('hide');return false;"),
+              array('label' => 'Rename/Move/Copy', 'onclick' => "PluginWfBootstrapjs.modal({id: 'modal_file_edit', url: '/editor/file_edit?yml='+encodeURIComponent('".$dir."/". $value."'), label: 'File', size: 'lg'});return false;"),
               array('label' => 'Delete file', 'onclick' => "if(confirm('Delete file?')){ $.get('/editor/action?a=file_delete&file='+encodeURIComponent('$yml')+'', function(data){PluginWfCallbackjson.call( data );});}return false;"),
               )));
           }else{
@@ -1103,7 +1103,7 @@ class PluginWfEditor{
     if($dir){
       $li[] = wfDocument::createHtmlElement('p', array(wfDocument::createHtmlElement('a', 'Back', array('onclick' => "PluginWfAjax.load('modal_files_body', '/editor/files');return false;", 'class' => 'btn btn-secondary'))));
     }else{
-      $li[] = wfDocument::createHtmlElement('p', array(wfDocument::createHtmlElement('a', 'Add folder', array('onclick' => "PluginWfBootstrapjs.modal({id: 'modal_folder_new', url: '/editor/folder_new', lable: this.innerHTML, size: 'sm'});return false;", 'class' => 'btn btn-primary'))));
+      $li[] = wfDocument::createHtmlElement('p', array(wfDocument::createHtmlElement('a', 'Add folder', array('onclick' => "PluginWfBootstrapjs.modal({id: 'modal_folder_new', url: '/editor/folder_new', label: this.innerHTML, size: 'sm'});return false;", 'class' => 'btn btn-primary'))));
     }
     if($dir){
       $di = explode('/', $dir);
@@ -1129,8 +1129,8 @@ class PluginWfEditor{
     $btn_group = null;
     if($dir){
       $btn_group = $this->getBtnGroup(array('label' => 'Action', 'btn_class' => 'btn', 'buttons' => array(
-        array('label' => 'New file', 'onclick' => "PluginWfBootstrapjs.modal({id: 'modal_file_new', url: '/editor/file_new?yml='+encodeURIComponent('$dir'), lable: 'File new', size: 'sm'});return false;"),
-        array('label' => 'New folder', 'onclick' => "PluginWfBootstrapjs.modal({id: 'modal_folder_new', url: '/editor/folder_new?folder='+encodeURIComponent('$dir'), lable: 'Folder new', size: 'sm'});return false;"),
+        array('label' => 'New file', 'onclick' => "PluginWfBootstrapjs.modal({id: 'modal_file_new', url: '/editor/file_new?yml='+encodeURIComponent('$dir'), label: 'File new', size: 'sm'});return false;"),
+        array('label' => 'New folder', 'onclick' => "PluginWfBootstrapjs.modal({id: 'modal_folder_new', url: '/editor/folder_new?folder='+encodeURIComponent('$dir'), label: 'Folder new', size: 'sm'});return false;"),
         array('label' => 'Delete folder', 'onclick' => "if(confirm('Delete folder?')){ $.get('/editor/action?a=folder_delete&folder='+encodeURIComponent('$dir')+'', function(data){PluginWfCallbackjson.call( data );});}return false;"),
         array('label' => 'Rename', 'onclick' => 'alert(83);return false;', 'disabled' => true),
         )));
@@ -1219,7 +1219,7 @@ class PluginWfEditor{
     $class = wfArray::get($GLOBALS, 'sys/class');
     foreach ($plugins as $key => $value) {
       $plugin = urlencode((string)$key);
-      $onclick = "PluginWfBootstrapjs.modal({id: 'wf_editor_pluginview', url: '/$class/pluginview?plugin=$plugin', lable: 'Plugin', 'size': 'lg'});return false;";
+      $onclick = "PluginWfBootstrapjs.modal({id: 'wf_editor_pluginview', url: '/$class/pluginview?plugin=$plugin', label: 'Plugin', 'size': 'lg'});return false;";
       $filename = wfArray::get($GLOBALS, 'sys/app_dir').'/plugin/'.$key.'/config/settings.yml';
       $deprecated = '';
       $plugin_settings = null;
@@ -1305,7 +1305,7 @@ class PluginWfEditor{
     $element[] = wfDocument::createHtmlElement('div', $comment, array('class' => 'bg-primaryzzz', 'style' => 'font-familyzzz:courier new;border-radius:4px;'));
     if(wfArray::get($rc, 'methods')){
       foreach (wfArray::get($rc, 'methods') as $key2 => $value2) {
-        $onclick = "PluginWfBootstrapjs.modal({id: 'wf_editor_methodview', url: '/$class/methodview?plugin=".urlencode((string)$plugin)."&method=$key2', lable: 'Method', 'size': 'lg'});return false;";
+        $onclick = "PluginWfBootstrapjs.modal({id: 'wf_editor_methodview', url: '/$class/methodview?plugin=".urlencode((string)$plugin)."&method=$key2', label: 'Method', 'size': 'lg'});return false;";
         $item[] = array('href' => '#', 'innerHTML' => $key2, 'onclick' => $onclick);
       }
     }else{

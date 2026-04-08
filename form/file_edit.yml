@@ -5,15 +5,15 @@ id: frm_file_edit
 items:
   filename_old:
     type: hidden
-    lable: Old filename
+    label: Old filename
     default: 
     mandatory: true
   filename_new:
     type: varchar
-    lable: Filename
+    label: Filename
     default: 
     mandatory: true
   copy:
     type: checkbox
-    lable: Copy
+    label: Copy
     default:

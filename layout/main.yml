@@ -17,13 +17,13 @@ content:
           item:
             -
               text: Theme
-              href: "javascript:PluginWfBootstrapjs.modal({id: 'modal_plugin', url: '/editor/theme', lable: 'Themes', size: 'lg'});"
+              href: "javascript:PluginWfBootstrapjs.modal({id: 'modal_plugin', url: '/editor/theme', label: 'Themes', size: 'lg'});"
             -
               text: I18N
-              href: "javascript:PluginWfBootstrapjs.modal({id: 'modal_i18n', url: '/editor/i18n', lable: 'I18N', size: 'lg'});"
+              href: "javascript:PluginWfBootstrapjs.modal({id: 'modal_i18n', url: '/editor/i18n', label: 'I18N', size: 'lg'});"
             -
               text: Plugin
-              href: "javascript:PluginWfBootstrapjs.modal({id: 'modal_plugin', url: '/editor/plugin', lable: 'Plugin', size: 'lg'});"
+              href: "javascript:PluginWfBootstrapjs.modal({id: 'modal_plugin', url: '/editor/plugin', label: 'Plugin', size: 'lg'});"
           item_right:
             -
               text: Run

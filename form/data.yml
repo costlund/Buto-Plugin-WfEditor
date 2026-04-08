@@ -5,28 +5,28 @@ id: frm_element_data
 items:
   data:
     type: text
-    lable: Data
+    label: Data
     default: 
     container_classzzz: row
     style: 'min-height: 300px'
   stay:
     type: checkbox
-    lable: Do not close this window
+    label: Do not close this window
   file:
     type: hidden
-    lable: 'File'
+    label: 'File'
     mandatory: true
     default: ''
     container_style: 'display:zzznone;'
   key:
     type: hidden
-    lable: 'Key'
+    label: 'Key'
     mandatory: true
     default: ''
     container_style: 'display:zzznone;'
 #  action:
 #    type: hidden
-#    lable: action
+#    label: action
 #    mandatory: true
 #    default: 'create'
 #success_redirect: /page/home

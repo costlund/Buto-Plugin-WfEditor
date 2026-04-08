@@ -5,7 +5,7 @@ id: frm_add_element_html
 items:
   html_object:
     type: varchar
-    lable: Widget
+    label: Widget
     default: 
     mandatory: true
     container_classzzz: row
@@ -13,28 +13,28 @@ items:
       '': '-'
   widget:
     type: varchar
-    lable: Widget
+    label: Widget
     default: 
     mandatory: true
   id:
     type: varchar
-    lable: ID
+    label: ID
     default: 
     container_classzzz: row
   file:
     type: hidden
-    lable: 'File'
+    label: 'File'
     mandatory: true
     default: ''
     container_style: 'display:zzznone;'
   key:
     type: hidden
-    lable: 'Key'
+    label: 'Key'
     default: ''
     container_style: 'display:zzznone;'
 #  action:
 #    type: hidden
-#    lable: action
+#    label: action
 #    mandatory: true
 #    default: 'create'
 #success_redirect: /page/home
