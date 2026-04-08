@@ -123,14 +123,15 @@ class PluginWfEditor{
    */
   public function page_edit(){
     $this->includePlugin();
-    wfGlobals::setSys('layout_path', '/plugin/wf/editor/layout');
     $yml = wfRequest::get('yml');
     if(wfRequest::isPost()){
       $yml_content = wfRequest::get('yml_content');
       try {
-        $array = sfYaml::load($yml_content);
+        if(substr($yml, strlen($yml)-4)=='.yml'){
+          $array = sfYaml::load($yml_content);
+        }
         wfFilesystem::saveFile(wfArray::get($GLOBALS, 'sys/app_dir').'/'.$yml, $yml_content);
-        $json = array('success' => true, 'alert' => array('Saved.'), 'removezzz' => array(wfPhpfunc::str_replace('/', '.', $yml)));
+        $json = array('success' => true, 'alert' => array('Saved.'));
         exit(json_encode($json));
       } catch (Exception $exc) {
         $json = array('success' => false, 'alert' => array('An error occure.'));
@@ -140,18 +141,16 @@ class PluginWfEditor{
       $yml_decode = urldecode($yml);
       $filename = wfArray::get($GLOBALS, 'sys/app_dir').'/'.$yml_decode;
       $yml_content = file_get_contents($filename);
-      $close_onclick = 'PluginWfDom.remove(\''.str_replace('/', '.', $yml_decode).'\');return false;';
       $textarea_script_onkeypress = "document.getElementById('yml_content').onkeypress = function(event){if(event.ctrlKey && event.which==115){console.log(event.ctrlKey+':'+event.which);document.getElementById('".str_replace('/', '.', $yml_decode).'_save'."').onclick();return false;}}";
-      $page2 = new PluginWfYml(__DIR__.'/page/edit.yml');
-      $page2->setByTag(array(
+      $element = wfDocument::getElementFromFolder(__DIR__, __FUNCTION__);
+      $element->setByTag(array(
         'id' => wfPhpfunc::str_replace('/', '.', $yml_decode).'_save', 
-        'close_onclick' => $close_onclick,
         'lable' => $yml_decode,
         'yml_decode' => $yml_decode,
         'textarea_script_onkeypress' => $textarea_script_onkeypress,
         'yml_content' => $yml_content
       ));
-      wfDocument::mergeLayout($page2->get());
+      wfDocument::renderElement($element->get(''));
     }
     return null;
   }
@@ -1070,7 +1069,7 @@ class PluginWfEditor{
             $yml = ('theme/'.$activetheme.'/'.$dir.'/'. $value);
             $panel_id = wfPhpfunc::str_replace('/', '.', $yml);
             $a[] = $this->getBtnGroup(array('label' => $value, 'list_group_item' => true, 'buttons' => array(
-              array('label' => 'Text editor', 'onclick' => "PluginWfBootstrapjs.panel({label: '$yml', url: '/$class/edit?yml='+encodeURIComponent('$yml'), id: '$panel_id', parent: document.getElementById('wf_editor_workarea')});$('.modal').modal('hide');return false;"),
+              array('label' => 'Text editor', 'onclick' => "PluginWfBootstrapjs.modal({label: '$yml', url: '/$class/edit?yml='+encodeURIComponent('$yml'), id: 'modal_text_editor', size: 'xl'});;return false;"),
               array('label' => 'Element editor', 'onclick' => "PluginWfBootstrapjs.panel({label: '$yml', url: '/$class/element?yml='+encodeURIComponent('$yml'), id: '$panel_id', parent: document.getElementById('wf_editor_workarea')});$('.modal').modal('hide');return false;"),
               array('label' => 'Rename/Move/Copy', 'onclick' => "PluginWfBootstrapjs.modal({id: 'modal_file_edit', url: '/editor/file_edit?yml='+encodeURIComponent('".$dir."/". $value."'), label: 'File', size: 'lg'});return false;"),
               array('label' => 'Delete file', 'onclick' => "if(confirm('Delete file?')){ $.get('/editor/action?a=file_delete&file='+encodeURIComponent('$yml')+'', function(data){PluginWfCallbackjson.call( data );});}return false;"),

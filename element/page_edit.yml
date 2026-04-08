@@ -1,0 +1,40 @@
+-
+  type: p
+  innerHTML: 
+    -
+      type: a
+      attribute: 
+        class: btn btn-primary
+        onclick: "$.post('/editor/edit', $('#edit_save').serialize()).done(function(data) { PluginWfCallbackjson.call( data ); });return false;"
+      innerHTML: Save
+-
+  type: form
+  attribute:
+    method: post
+    id: edit_save
+  innerHTML:
+    -
+      type: input
+      attribute:
+        type: hidden
+        name: yml
+        id: yml
+        value: rs:yml_decode
+    -
+      type: textarea
+      attribute:
+        name: yml_content
+        class: form-control
+        style: 'height:200px;'
+        id: yml_content
+        wrap: off
+      innerHTML: rs:yml_content
+    -
+      type: script
+      innerHTML: rs:textarea_script_onkeypress
+    -
+      type: script
+      innerHTML: "PluginWfTextareatab.setTextareaTabEnabled(document.getElementById('yml_content'), '  ');PluginWfTextareatab.reziseNoScroll('yml_content');"
+    -
+      type: script
+      innerHTML: "PluginWfOnkeypress.set('yml_content', {ctrlKey: true, which: 119}, function(){document.getElementById('close_edit').onclick();});"
