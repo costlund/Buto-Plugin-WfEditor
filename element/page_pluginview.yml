@@ -1,0 +1,34 @@
+-
+  type: h2
+  innerHTML: rs:plugin 
+-
+  type: widget
+  data:
+    plugin: bootstrap/navtabs_v1
+    method: embed
+    data:
+      id: navtabs_pluginview
+      item:
+        -
+          text: Readme
+          content:
+            -
+              type: widget
+              data:
+                plugin: readme/parser
+                method: readme
+                data:
+                  content: rs:readme
+        -
+          text: Method
+          content:
+            -
+              type: div
+              settings:
+                enabled: plugin_settings:depricated
+              attribute: 
+                class: alert alert-warning
+              innerHTML: This plugin is depricated!
+            -
+              type: div
+              innerHTML: rs:element

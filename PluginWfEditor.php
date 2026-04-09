@@ -12,6 +12,8 @@ class PluginWfEditor{
     wfPlugin::enable('form/form_v1');
     wfPlugin::enable('bootstrap/navbar_v1');
     wfPlugin::includeonce('wf/yml');
+    wfPlugin::enable('bootstrap/navtabs_v1');
+    wfPlugin::enable('readme/parser');
   }
   public function widget_analyse(){
     $element = wfDocument::getElementFromFolder(__DIR__, __FUNCTION__);
@@ -506,7 +508,7 @@ class PluginWfEditor{
     $json->set('success', false);
     if($a=='delete'){
       $this->delete_element(urldecode(wfRequest::get('file')), urldecode(wfRequest::get('key')));
-      $json->set('script', array("PluginWfAjax.update('".$this->file_to_id(urldecode(wfRequest::get('file')))."');", "$('.modal').modal('hide');"));
+      $json->set('script', array("PluginWfAjax.update('modal_element_editor_body');", "$('#element_view').modal('hide');"));
     }elseif($a=='move_set'){
       $this->handle_move_param('set');
       $json->set('script', array("$('.modal').modal('hide');"));
@@ -683,7 +685,7 @@ class PluginWfEditor{
           $yml->set($id, $element);
         }
         $yml->save();
-        $json->set('script', array("PluginWfAjax.update('".$this->file_to_id(urldecode(wfRequest::get('file')))."');", "$('.modal').modal('hide');"));
+        $json->set('script', array("PluginWfAjax.update('modal_element_editor_body');", "$('#element_add_html').modal('hide');"));
       }else{
         $json->set('script', array("alert(\"".$form_form_v1->getErrors("\\n")."\");"));
       }
@@ -743,7 +745,7 @@ class PluginWfEditor{
           }
         }
         $yml->save();
-        $json->set('script', array("PluginWfAjax.update('".$this->file_to_id(urldecode(wfRequest::get('file')))."');", "$('#element_add_html_object').modal('hide');"));
+        $json->set('script', array("PluginWfAjax.update('modal_element_editor_body');", "$('#element_add_html_object').modal('hide');"));
       }else{
         $json->set('script', array("alert(\"".$form_form_v1->getErrors("\\n")."\");"));
       }
@@ -1254,49 +1256,31 @@ class PluginWfEditor{
   public function page_pluginview(){
     wfPlugin::includeonce('wf/yml');
     $this->includePlugin();
-    $page = wfFilesystem::loadYml(wfArray::get($GLOBALS, 'sys/app_dir').'/plugin/wf/editor/page/pluginview.yml');
-    $element = array();
     $plugin = urldecode(wfRequest::get('plugin'));
-    $filename = wfArray::get($GLOBALS, 'sys/app_dir').'/plugin/'.$plugin.'/config/settings.yml';
-    $plugin_settings = null;
-    if(wfFilesystem::fileExist($filename)){
-      $plugin_settings = wfFilesystem::loadYml($filename);
-      if(wfArray::issetAndTrue($plugin_settings, 'deprecated')){
-        $element[] = wfDocument::createWidget('wf/bootstrap', 'alert', array('rewrite' => array('innerHTML' => 'This plugin is deprecated!', 'attribute/class' => 'alert alert-warning')));
-      }
-    }
     wfPlugin::includeonce($plugin);
-    $element[] = wfDocument::createHtmlElement('h2', $plugin);
+    $page2 = wfDocument::getElementFromFolder(__DIR__, __FUNCTION__);
     /**
-     * Public folder.
+     * readme
      */
-    if(wfFilesystem::fileExist(wfArray::get($GLOBALS, 'sys/app_dir').'/plugin/'.$plugin.'/public')){
-      $alert_public_folder = new PluginWfYml(__DIR__.'/element/alert_public_folder.yml');
-      $alert_public_folder->setById('public_folder', 'innerHTML', wfArray::get($GLOBALS, 'sys/web_dir').'/'.$plugin);
-      /**
-       * If public folder exist we check if mandatory file readme.txt exist.
-       */
-      if(wfFilesystem::fileExist(wfArray::get($GLOBALS, 'sys/app_dir').'/plugin/'.$plugin.'/public/readme.txt')){
-        $alert_public_folder->setById('readme_exist', 'innerHTML', 'Yes');
-        if($this->get_http_response_code(wfSettings::getHttpAddress(true).'/plugin/'.$plugin.'/readme.txt') != "200"){
-          $alert_public_folder->setById('readme_exist_public', 'innerHTML', 'No');
-          $alert_public_folder->setById('actions_needed', 'innerHTML', 'Link, copy or move the folder to public directory.');
-        }else{
-          $alert_public_folder->setById('readme_exist_public', 'innerHTML', 'Yes');
-          $alert_public_folder->setById('actions_needed', 'innerHTML', 'All is fine.');
-        }
-      }else{
-        $alert_public_folder->setById('readme_exist', 'innerHTML', 'No');
-        $alert_public_folder->setById('readme_exist_public', 'innerHTML', '-');
-        $alert_public_folder->setById('actions_needed', 'innerHTML', 'Maybe! The plugin does not have the readme.txt file but could work anyway if it´s linked in a proper way?');
-      }
-      $element[] = $alert_public_folder->get();
+    $filename = wfArray::get($GLOBALS, 'sys/app_dir').'/plugin/'.$plugin.'/README.md';
+    $readme = null;
+    if(wfFilesystem::fileExist($filename)){
+      $readme = wfFilesystem::getContents($filename, true);
     }
     /**
      * 
      */
+    $element = array();
+    /**
+     * /config/settings.yml - depricated
+     */
+    $filename = wfArray::get($GLOBALS, 'sys/app_dir').'/plugin/'.$plugin.'/config/settings.yml';
+    $plugin_settings = new PluginWfYml($filename);
+    $page2->setByTag($plugin_settings->get(), 'plugin_settings', true);
+    /**
+     * listgroup
+     */
     $item = array();
-    $item[] = array('innerHTML' => 'Methods', 'active' => true);
     $class = wfArray::get($GLOBALS, 'sys/class');
     $rc = self::getReflectionClass(wfSettings::getPluginObj($plugin, false));
     $comment = self::cleanComment(wfArray::get($rc,'comment'));
@@ -1311,10 +1295,13 @@ class PluginWfEditor{
       $item[] = array('href' => '#!', 'innerHTML' => '<i>No methods</i>');
     }
     $element[] = wfDocument::createWidget('wf/bootstrap', 'listgroup', array('item' => $item));
-    $element[] = wfDocument::createHtmlElement('script', 'Prism.highlightAll();');
-    $page = wfArray::set($page, 'content', $element);
-    wfGlobals::setSys('layout_path', '/plugin/wf/editor/layout');
-    wfDocument::mergeLayout($page);
+    /**
+     * 
+     */
+    $page2->setByTag(array('readme' => $readme));
+    $page2->setByTag(array('element' => $element));
+    $page2->setByTag(array('plugin' => $plugin));
+    wfDocument::renderElement($page2);
   }
   /**
    * Method page.
@@ -1383,7 +1370,6 @@ class PluginWfEditor{
       ), array('class' => $class, 'style' => 'padding:10px;margin-top:4px;border-radius:4px;'));
       $element[] = wfDocument::createHtmlElement('div', '&nbsp;');
     }
-    $element[] = wfDocument::createHtmlElement('script', 'Prism.highlightAll();');
     if($type == 'widget'){
       $element[] = wfDocument::createHtmlElement('script', 'if(document.getElementById("btn_widget")){document.getElementById("btn_widget_add").style.display="";}');
     }
