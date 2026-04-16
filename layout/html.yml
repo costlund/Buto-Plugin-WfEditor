@@ -25,6 +25,7 @@ content:
               plugin: 'theme/include'
               method: include
               data:
+                icon: /plugin/wf/editor/icon/icon.png
                 bootstrap:
                   version: 5
           -

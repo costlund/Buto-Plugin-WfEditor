@@ -6,7 +6,7 @@ settings:
   layout:
     - html
     - main
-  title: Webmaster
+  title: Editor-Theme-Buto
 content:
   files:
     type: div
