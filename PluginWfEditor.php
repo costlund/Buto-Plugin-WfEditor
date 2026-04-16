@@ -1035,12 +1035,39 @@ class PluginWfEditor{
     $element = wfDocument::createWidget('form/form_v1', 'render', $form->get());
     wfDocument::renderElement(array($element));
   }
+  public function page_folder_rename(){
+    $this->includePlugin();
+    wfDocument::renderElementFromFolder(__DIR__, __FUNCTION__);
+  }
+  public function page_folder_rename_capture(){
+    $this->includePlugin();
+    wfDocument::renderElementFromFolder(__DIR__, __FUNCTION__);
+  }
+  public function form_folder_rename_render($form){
+    $form = new PluginWfArray($form);
+    wfPlugin::includeonce('string/array');
+    $sa = new PluginStringArray();
+    $temp = $sa->from_slash(wfRequest::get('yml'));
+    $default = $temp[sizeof($temp)-1];
+    $form->set('items/folder_new/default', $default);
+    return $form->get();
+  }
+  public function form_folder_rename_capture(){
+    $dir = dirname(wfRequest::get('folder_current')).'/'.wfRequest::get('folder_new');
+    $folder_current = $this->activefolder.'/theme/'.$this->activetheme.'/'.wfRequest::get('folder_current');
+    $folder_current_exist = wfFilesystem::fileExist($folder_current);
+    $folder_new = dirname($folder_current).'/'.wfRequest::get('folder_new');
+    if($folder_current_exist){
+      rename($folder_current, $folder_new);
+    }
+    return array("PluginWfAjax.load('modal_files_body', '/editor/files?dir=".  urlencode((string)$dir)."');", "$('#modal_folder_rename').modal('hide');");
+  }
   /**
    Render a page with all installed plugins.
    */
   public function page_plugin(){
     $this->includePlugin();
-    $filename = $this->activefolder.'/plugin/wf/editor/page/plugin.yml';
+    $filename = wfGlobals::getAppDir().'/plugin/wf/editor/page/plugin.yml';
     $page = wfFilesystem::loadYml($filename);
     $page = wfArray::set($page, 'content', $this->getPlugin());
     wfGlobals::setSys('layout_path', '/plugin/wf/editor/layout');
@@ -1089,7 +1116,7 @@ class PluginWfEditor{
             $a[] = wfDocument::createHtmlElement('a', array(
               wfDocument::createHtmlElement('span', null, array('class' => 'glyphicon glyphicon-'.$glyphicon, 'style' => 'float:right')),
               wfDocument::createHtmlElement('span', $value)
-              ), array('onclick' => $onclick, 'class' => 'list-group-item'));
+              ), array('onclick' => $onclick, 'class' => 'list-group-item', 'href' => "#"));
           }
         }else{
           $glyphicon = 'folder-close';
@@ -1128,7 +1155,7 @@ class PluginWfEditor{
           $str .= '/'.$value;
         }
         $li[] = wfDocument::createHtmlElement('p', array(
-          wfDocument::createHtmlElement('span', 'Folder: '.$value, array('onclickzzz' => "PluginWfAjax.load('modal_files_body', '/editor/files?dir=".  urlencode((string)$str)."');return false;")),
+          wfDocument::createHtmlElement('a', ''.$value, array('onclick' => "PluginWfAjax.load('modal_files_body', '/editor/files?dir=".  urlencode((string)$str)."');return false;")),
           $glyphicon
           ));
       }
@@ -1136,11 +1163,11 @@ class PluginWfEditor{
     $breadcrumb = wfDocument::createHtmlElement('div', $li, array('zzzclass' => 'breadcrumb'));
     $btn_group = null;
     if($dir){
-      $btn_group = $this->getBtnGroup(array('label' => 'Action', 'btn_class' => 'btn', 'buttons' => array(
+      $btn_group = $this->getBtnGroup(array('label' => 'Folder', 'btn_class' => 'btn', 'buttons' => array(
         array('label' => 'New file', 'onclick' => "PluginWfBootstrapjs.modal({id: 'modal_file_new', url: '/editor/file_new?yml='+encodeURIComponent('$dir'), label: 'File new', size: 'sm'});return false;"),
         array('label' => 'New folder', 'onclick' => "PluginWfBootstrapjs.modal({id: 'modal_folder_new', url: '/editor/folder_new?folder='+encodeURIComponent('$dir'), label: 'Folder new', size: 'sm'});return false;"),
         array('label' => 'Delete folder', 'onclick' => "if(confirm('Delete folder?')){ $.get('/editor/action?a=folder_delete&folder='+encodeURIComponent('$dir')+'', function(data){PluginWfCallbackjson.call( data );});}return false;"),
-        array('label' => 'Rename', 'onclick' => 'alert(83);return false;', 'disabled' => true),
+        array('label' => 'Rename folder', 'onclick' => "PluginWfBootstrapjs.modal({id: 'modal_folder_rename', url: '/editor/folder_rename?yml='+encodeURIComponent('".$dir."'), label: this.innerHTML});return false;", 'disabledzzz' => true),
         )));
     }
     return array($breadcrumb, $btn_group, $list_group);
@@ -1263,7 +1290,19 @@ class PluginWfEditor{
     wfPlugin::includeonce('wf/yml');
     $this->includePlugin();
     $plugin = urldecode(wfRequest::get('plugin'));
-    wfPlugin::includeonce($plugin);
+    /**
+     * 
+     */
+    try {
+      wfPlugin::includeonce($plugin);
+    }
+    catch (Exception $e) {
+      $plugin_action_file = 'Plugin'.wfPlugin::to_camel_case($plugin).'.php';
+      include_once $this->activefolder.'/plugin/'.$plugin.'/'.$plugin_action_file;
+    }
+    /**
+     * 
+     */
     $page2 = wfDocument::getElementFromFolder(__DIR__, __FUNCTION__);
     /**
      * readme
@@ -1484,7 +1523,7 @@ class PluginWfEditor{
   }
   private function get_theme_data(){
     $data = array();
-    $folder = $this->activefolder;
+    $folder = wfGlobals::getAppDir();
     $scan1 = wfFilesystem::getScandir($folder.'/../');
     foreach($scan1 as $v1){
       $scan2 = wfFilesystem::getScandir($folder.'/../'.$v1);

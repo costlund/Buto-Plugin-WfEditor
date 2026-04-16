@@ -1,0 +1,6 @@
+-
+  type: widget
+  data:
+    plugin: form/form_v1
+    method: capture
+    data: yml:/plugin/wf/editor/form/folder_rename.yml

@@ -1,0 +1,18 @@
+url: /editor/folder_rename_capture
+ajax: true
+submit_value: Save
+id: frm_folder_new
+items:
+  folder_new:
+    type: varchar
+    label: Name
+    default: 
+    mandatory: true
+  folder_current:
+    type: varchar
+    default: get:yml
+    mandatory: false
+render:
+  method: form_folder_rename_render
+capture:
+  method: form_folder_rename_capture
