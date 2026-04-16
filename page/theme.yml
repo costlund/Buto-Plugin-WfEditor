@@ -9,6 +9,7 @@
         table: table-sm table-striped
       field:
         name: Name
+        folder: Folder
       datatable:
         ajax: /editor/theme_data
         order:
@@ -20,5 +21,6 @@
   innerHTML: |
     $('#dt_editor_theme tbody').on( 'click', 'tr', function () {
       var theme = datatable_dt_editor_theme.row( this ).data().theme;
-      $.get('/editor/themeload?theme='+theme, function(data){PluginWfCallbackjson.call( data );});
+      var folder = datatable_dt_editor_theme.row( this ).data().folder;
+      $.get('/editor/themeload?theme='+theme+'&folder='+folder, function(data){PluginWfCallbackjson.call( data );});
     } );

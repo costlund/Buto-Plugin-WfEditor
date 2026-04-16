@@ -1,5 +1,9 @@
-version: 1.8.2
+version: 1.9.0
 history:
+  1.9.0:
+    date: '2026-04-16'
+    title: Themes
+    description: 'Expanding theme edit. Edit themes from system parent folder instead of current system folder.'
   1.8.2:
     date: '2026-04-08'
     title: Layout

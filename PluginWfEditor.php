@@ -1,6 +1,8 @@
 <?php
 class PluginWfEditor{
   private $settings = null;
+  private $activetheme;
+  private $activefolder;
   function __construct($buto = false) {
     if($buto){
       if(!wfUser::hasRole('webmaster')){
@@ -8,6 +10,11 @@ class PluginWfEditor{
       }
       wfPlugin::includeonce('wf/array');
       $this->settings = new PluginWfArray(wfArray::get($GLOBALS, 'sys/settings/plugin_modules/'.wfArray::get($GLOBALS, 'sys/class').'/settings'));
+      /**
+       * 
+       */
+      $this->activetheme = wfUser::getSession()->get('plugin/wf/editor/activetheme');
+      $this->activefolder = wfUser::getSession()->get('plugin/wf/editor/activefolder');
     }
     wfPlugin::enable('form/form_v1');
     wfPlugin::enable('bootstrap/navbar_v1');
@@ -20,8 +27,9 @@ class PluginWfEditor{
     wfDocument::renderElement($element);
   }
   public function page_desktop(){
-    if(!wfArray::get($_SESSION, 'plugin/wf/editor/activetheme')){
-      $_SESSION = wfArray::set($_SESSION, 'plugin/wf/editor/activetheme', wfArray::get($GLOBALS, 'sys/theme'));
+    if(!wfUser::getSession()->get('plugin/wf/editor/activetheme')){
+      wfUser::setSession('plugin/wf/editor/activetheme', wfArray::get($GLOBALS, 'sys/theme'));
+      wfUser::setSession('plugin/wf/editor/activefolder', wfGlobals::getAppDir());
     }
     wfGlobals::setSys('layout_path', '/plugin/wf/editor/layout');
     wfPlugin::includeonce('wf/yml');
@@ -132,7 +140,7 @@ class PluginWfEditor{
         if(substr($yml, strlen($yml)-4)=='.yml'){
           $array = sfYaml::load($yml_content);
         }
-        wfFilesystem::saveFile(wfArray::get($GLOBALS, 'sys/app_dir').'/'.$yml, $yml_content);
+        wfFilesystem::saveFile($this->activefolder.'/'.$yml, $yml_content);
         $json = array('success' => true, 'alert' => array('Saved.'));
         exit(json_encode($json));
       } catch (Exception $exc) {
@@ -141,7 +149,7 @@ class PluginWfEditor{
       }
     }else{
       $yml_decode = urldecode($yml);
-      $filename = wfArray::get($GLOBALS, 'sys/app_dir').'/'.$yml_decode;
+      $filename = $this->activefolder.'/'.$yml_decode;
       $yml_content = file_get_contents($filename);
       $textarea_script_onkeypress = "document.getElementById('yml_content').onkeypress = function(event){if(event.ctrlKey && event.which==115){console.log(event.ctrlKey+':'+event.which);document.getElementById('".str_replace('/', '.', $yml_decode).'_save'."').onclick();return false;}}";
       $element = wfDocument::getElementFromFolder(__DIR__, __FUNCTION__);
@@ -174,7 +182,7 @@ class PluginWfEditor{
         ));
       wfPlugin::includeonce('wf/yml');
       wfPlugin::includeonce('wf/array');
-      $yml = new PluginWfYml(wfArray::get($GLOBALS, 'sys/app_dir').'/'.$yml);
+      $yml = new PluginWfYml($this->activefolder.'/'.$yml);
       $element = $this->create_elements($yml->get('content'), wfRequest::get('yml'));
       wfDocument::renderElement(($element));
     }
@@ -198,7 +206,7 @@ class PluginWfEditor{
     $key = urldecode(wfRequest::get('key'));
     $filename = urldecode(wfRequest::get('file'));
     wfPlugin::includeonce('wf/yml');
-    $yml = new PluginWfYml(wfArray::get($GLOBALS, 'sys/app_dir').'/'.$filename, 'content/'.$key);
+    $yml = new PluginWfYml($this->activefolder.'/'.$filename, 'content/'.$key);
     $widget = new PluginWfYml(__DIR__.'/element/elementview.yml');
     if($yml->get('type')=='widget'){
       $widget->setById('element_view', 'attribute/class', 'alert alert-info');
@@ -278,7 +286,7 @@ class PluginWfEditor{
     $form->set('items/attribute/default', wfRequest::get('attribute'));
     $form->set('items/file/default', urldecode(wfRequest::get('file')));
     $form->set('items/key/default', urldecode(wfRequest::get('key')));
-    $yml = new PluginWfYml(wfArray::get($GLOBALS, 'sys/app_dir').'/'.urldecode(wfRequest::get('file')), 'content/'.urldecode(wfRequest::get('key').'/attribute/'.urldecode(wfRequest::get('attribute'))));
+    $yml = new PluginWfYml($this->activefolder.'/'.urldecode(wfRequest::get('file')), 'content/'.urldecode(wfRequest::get('key').'/attribute/'.urldecode(wfRequest::get('attribute'))));
     $form->set('items/value/default', $yml->get());
     $element = wfDocument::createWidget('form/form_v1', 'render', $form->get());
     wfDocument::renderElement(array($element));
@@ -293,7 +301,7 @@ class PluginWfEditor{
     $form = new PluginWfYml(__DIR__.'/form/html.yml');
     $form->set('items/file/default', urldecode(wfRequest::get('file')));
     $form->set('items/key/default', urldecode(wfRequest::get('key')));
-    $yml = new PluginWfYml(wfArray::get($GLOBALS, 'sys/app_dir').'/'.urldecode(wfRequest::get('file')), 'content/'.urldecode(wfRequest::get('key')).'/innerHTML');
+    $yml = new PluginWfYml($this->activefolder.'/'.urldecode(wfRequest::get('file')), 'content/'.urldecode(wfRequest::get('key')).'/innerHTML');
     $form->set('items/html/default', $yml->get());
     $element = wfDocument::createWidget('form/form_v1', 'render', $form->get());
     wfDocument::renderElement(array($element));
@@ -319,7 +327,7 @@ class PluginWfEditor{
     $form = new PluginWfYml(__DIR__.'/form/settings.yml');
     $form->set('items/file/default', urldecode(wfRequest::get('file')));
     $form->set('items/key/default', urldecode(wfRequest::get('key')));
-    $yml = new PluginWfYml(wfArray::get($GLOBALS, 'sys/app_dir').'/'.urldecode(wfRequest::get('file')), 'content/'.urldecode(wfRequest::get('key')).'/settings');
+    $yml = new PluginWfYml($this->activefolder.'/'.urldecode(wfRequest::get('file')), 'content/'.urldecode(wfRequest::get('key')).'/settings');
     $form->set('items/settings/default', wfHelp::getYmlDump($yml->get()));
     $element = wfDocument::createWidget('form/form_v1', 'render', $form->get());
     $script = wfDocument::createHtmlElement('script', "PluginWfTextareatab.setTextareaTabEnabled(document.getElementById('frm_element_settings_settings'), '  ');");
@@ -335,7 +343,7 @@ class PluginWfEditor{
     $form = new PluginWfYml(__DIR__.'/form/data.yml');
     $form->set('items/file/default', urldecode(wfRequest::get('file')));
     $form->set('items/key/default', urldecode(wfRequest::get('key')));
-    $yml = new PluginWfYml(wfArray::get($GLOBALS, 'sys/app_dir').'/'.urldecode(wfRequest::get('file')), 'content/'.urldecode(wfRequest::get('key')).'/data/data');
+    $yml = new PluginWfYml($this->activefolder.'/'.urldecode(wfRequest::get('file')), 'content/'.urldecode(wfRequest::get('key')).'/data/data');
     $form->set('items/data/default', wfHelp::getYmlDump($yml->get()));
     $element = wfDocument::createWidget('form/form_v1', 'render', $form->get());
     $script = wfDocument::createHtmlElement('script', "PluginWfTextareatab.setTextareaTabEnabled(document.getElementById('frm_element_data_data'), '  ');");
@@ -472,7 +480,7 @@ class PluginWfEditor{
    */
   public function validate_origin($field, $form, $data = array()){
     if(wfArray::get($form, "items/$field/post_value") != wfArray::get($form, "items/attribute_origin/post_value")){
-      $yml = new PluginWfYml(wfArray::get($GLOBALS, 'sys/app_dir').'/'.urldecode(wfRequest::get('file')), 'content/'.urldecode(wfRequest::get('key').'/attribute/'.urldecode(wfRequest::get('attribute'))));
+      $yml = new PluginWfYml($this->activefolder.'/'.urldecode(wfRequest::get('file')), 'content/'.urldecode(wfRequest::get('key').'/attribute/'.urldecode(wfRequest::get('attribute'))));
       if($yml->get()){
         $form = wfArray::set($form, "items/$field/is_valid", false);
         $form = wfArray::set($form, "items/$field/errors/", __('?lable can not be changed to an already existing attribute!', array('?lable' => wfArray::get($form, "items/$field/lable"))));
@@ -484,7 +492,7 @@ class PluginWfEditor{
    * Method to delete an element.
    */
   private function delete_element($file, $key){
-    $yml = new PluginWfYml(wfArray::get($GLOBALS, 'sys/app_dir').'/'.$file, 'content');
+    $yml = new PluginWfYml($this->activefolder.'/'.$file, 'content');
     $yml->setUnset($key);
     $yml->save();
     /**
@@ -521,11 +529,11 @@ class PluginWfEditor{
        */
       if($this->handle_move_param('get')){
         $value = $this->handle_move_param('get');
-        $move = new PluginWfYml(wfArray::get($GLOBALS, 'sys/app_dir').'/'.$value['file'], 'content/'.$value['key']);
+        $move = new PluginWfYml($this->activefolder.'/'.$value['file'], 'content/'.$value['key']);
         if(wfPhpfunc::strlen(wfRequest::get('key'))){
-          $yml = new PluginWfYml(wfArray::get($GLOBALS, 'sys/app_dir').'/'.urldecode(wfRequest::get('file')), 'content/'.urldecode(wfRequest::get('key')).'/innerHTML');
+          $yml = new PluginWfYml($this->activefolder.'/'.urldecode(wfRequest::get('file')), 'content/'.urldecode(wfRequest::get('key')).'/innerHTML');
         }else{
-          $yml = new PluginWfYml(wfArray::get($GLOBALS, 'sys/app_dir').'/'.urldecode(wfRequest::get('file')), 'content');
+          $yml = new PluginWfYml($this->activefolder.'/'.urldecode(wfRequest::get('file')), 'content');
         }
         if(is_array($yml->get())){
           $temp = array_merge($yml->get(), array($move->get()));
@@ -545,7 +553,7 @@ class PluginWfEditor{
       $this->handle_move_param('unset');
       $json->set('script', array("if(typeof PluginWfAjax == 'object'){PluginWfAjax.update('element_add_body');}"));
     }elseif($a=='attributesave'){
-      $yml = new PluginWfYml(wfArray::get($GLOBALS, 'sys/app_dir').'/'.urldecode(wfRequest::get('file')), 'content/'.urldecode(wfRequest::get('key').'/attribute/'.urldecode(wfRequest::get('attribute'))));
+      $yml = new PluginWfYml($this->activefolder.'/'.urldecode(wfRequest::get('file')), 'content/'.urldecode(wfRequest::get('key').'/attribute/'.urldecode(wfRequest::get('attribute'))));
       $form = new PluginWfYml(__DIR__.'/form/attribute.yml');
       $form_form_v1 = new PluginFormForm_v1();
       $form_form_v1->setData($form->get());
@@ -558,7 +566,7 @@ class PluginWfEditor{
          * If attribute name is changed.
          */
         if($form->get("items/attribute/post_value") != $form->get("items/attribute_origin/post_value")){
-          $yml = new PluginWfYml(wfArray::get($GLOBALS, 'sys/app_dir').'/'.urldecode(wfRequest::get('file')), 'content/'.urldecode(wfRequest::get('key').'/attribute'));
+          $yml = new PluginWfYml($this->activefolder.'/'.urldecode(wfRequest::get('file')), 'content/'.urldecode(wfRequest::get('key').'/attribute'));
           $yml->setUnset(urldecode(wfRequest::get('attribute_origin')));
           $yml->save();
         }
@@ -567,12 +575,12 @@ class PluginWfEditor{
         $json->set('script', array("alert(\"".$form_form_v1->getErrors("\\n")."\");"));
       }
     }elseif($a=='attribute_delete'){
-      $yml = new PluginWfYml(wfArray::get($GLOBALS, 'sys/app_dir').'/'.urldecode(wfRequest::get('file')), 'content/'.urldecode(wfRequest::get('key')));
+      $yml = new PluginWfYml($this->activefolder.'/'.urldecode(wfRequest::get('file')), 'content/'.urldecode(wfRequest::get('key')));
       $yml->setUnset('attribute/'.urldecode(wfRequest::get('attribute')));
       $yml->save();
       $json->set('script', array("PluginWfAjax.update('".$this->file_to_id(urldecode(wfRequest::get('file')))."');", "PluginWfAjax.update('element_view_body');", "$('#element_attribute').modal('hide');"));
     }elseif($a=='htmlsave'){
-      $yml = new PluginWfYml(wfArray::get($GLOBALS, 'sys/app_dir').'/'.urldecode(wfRequest::get('file')), 'content/'.urldecode(wfRequest::get('key').'/innerHTML'));
+      $yml = new PluginWfYml($this->activefolder.'/'.urldecode(wfRequest::get('file')), 'content/'.urldecode(wfRequest::get('key').'/innerHTML'));
       $form = new PluginWfYml(__DIR__.'/form/html.yml');
       $form_form_v1 = new PluginFormForm_v1();
       $form_form_v1->setData($form->get());
@@ -591,7 +599,7 @@ class PluginWfEditor{
         $json->set('script', array("alert(\"".$form_form_v1->getErrors("\\n")."\");"));
       }
     }elseif($a=='settingssave'){
-      $yml = new PluginWfYml(wfArray::get($GLOBALS, 'sys/app_dir').'/'.urldecode(wfRequest::get('file')), 'content/'.urldecode(wfRequest::get('key').'/settings'));
+      $yml = new PluginWfYml($this->activefolder.'/'.urldecode(wfRequest::get('file')), 'content/'.urldecode(wfRequest::get('key').'/settings'));
       $form = new PluginWfYml(__DIR__.'/form/settings.yml');
       $form_form_v1 = new PluginFormForm_v1();
       $form_form_v1->setData($form->get());
@@ -616,7 +624,7 @@ class PluginWfEditor{
         $json->set('script', array("alert(\"".$form_form_v1->getErrors("\\n")."\");"));
       }
     }elseif($a=='datasave'){
-      $yml = new PluginWfYml(wfArray::get($GLOBALS, 'sys/app_dir').'/'.urldecode(wfRequest::get('file')), 'content/'.urldecode(wfRequest::get('key').'/data/data'));
+      $yml = new PluginWfYml($this->activefolder.'/'.urldecode(wfRequest::get('file')), 'content/'.urldecode(wfRequest::get('key').'/data/data'));
       $form = new PluginWfYml(__DIR__.'/form/data.yml');
       $form_form_v1 = new PluginFormForm_v1();
       $form_form_v1->setData($form->get());
@@ -642,9 +650,9 @@ class PluginWfEditor{
       }
     }elseif($a=='addhtmlsave'){
       if(wfRequest::get('key')){
-        $yml = new PluginWfYml(wfArray::get($GLOBALS, 'sys/app_dir').'/'.(wfRequest::get('file')), 'content/'.wfRequest::get('key').'/innerHTML');
+        $yml = new PluginWfYml($this->activefolder.'/'.(wfRequest::get('file')), 'content/'.wfRequest::get('key').'/innerHTML');
       }else{
-        $yml = new PluginWfYml(wfArray::get($GLOBALS, 'sys/app_dir').'/'.(wfRequest::get('file')), 'content');
+        $yml = new PluginWfYml($this->activefolder.'/'.(wfRequest::get('file')), 'content');
       }
       $form = new PluginWfYml(__DIR__.'/form/addhtml.yml');
       $form_form_v1 = new PluginFormForm_v1();
@@ -691,11 +699,11 @@ class PluginWfEditor{
       }
     }elseif($a=='addwidget'){
       if(wfRequest::get('key')){
-        $yml = new PluginWfYml(wfArray::get($GLOBALS, 'sys/app_dir').'/'.urldecode(wfRequest::get('file')), 'content/'.urldecode(wfRequest::get('key')).'');
+        $yml = new PluginWfYml($this->activefolder.'/'.urldecode(wfRequest::get('file')), 'content/'.urldecode(wfRequest::get('key')).'');
       }else{
-        $yml = new PluginWfYml(wfArray::get($GLOBALS, 'sys/app_dir').'/'.urldecode(wfRequest::get('file')));
+        $yml = new PluginWfYml($this->activefolder.'/'.urldecode(wfRequest::get('file')));
       }
-      $data = new PluginWfYml(wfArray::get($GLOBALS, 'sys/app_dir').'/plugin/'.urldecode(wfRequest::get('plugin')).'/default/widget.'.urldecode(wfRequest::get('widget')).'.yml');
+      $data = new PluginWfYml($this->activefolder.'/plugin/'.urldecode(wfRequest::get('plugin')).'/default/widget.'.urldecode(wfRequest::get('widget')).'.yml');
       if($data->get()){
         $widget = wfDocument::createWidget(urldecode(wfRequest::get('plugin')), urldecode(wfRequest::get('widget')), $data->get());
       }else{
@@ -710,9 +718,9 @@ class PluginWfEditor{
       $json->set('script', array("PluginWfAjax.update('".$this->file_to_id(urldecode(wfRequest::get('file')))."');", "$('.modal').modal('hide');"));
     }elseif($a=='addhtmlobjectsave'){
       if(wfRequest::get('key')){
-        $yml = new PluginWfYml(wfArray::get($GLOBALS, 'sys/app_dir').'/'.(wfRequest::get('file')), 'content/'.wfRequest::get('key').'');
+        $yml = new PluginWfYml($this->activefolder.'/'.(wfRequest::get('file')), 'content/'.wfRequest::get('key').'');
       }else{
-        $yml = new PluginWfYml(wfArray::get($GLOBALS, 'sys/app_dir').'/'.(wfRequest::get('file')));
+        $yml = new PluginWfYml($this->activefolder.'/'.(wfRequest::get('file')));
       }
       $form = new PluginWfYml(__DIR__.'/form/addhtmlobject.yml');
       $form_form_v1 = new PluginFormForm_v1();
@@ -756,7 +764,7 @@ class PluginWfEditor{
       }else{
         $parent_key = 'content/'.$parent_key;
       }
-      $yml_parent = new PluginWfYml(wfArray::get($GLOBALS, 'sys/app_dir').'/'.urldecode(wfRequest::get('file')), $parent_key);
+      $yml_parent = new PluginWfYml($this->activefolder.'/'.urldecode(wfRequest::get('file')), $parent_key);
       if($yml_parent){
         $direction = -1;
         if($a=='position_down'){
@@ -789,23 +797,23 @@ class PluginWfEditor{
     }elseif($a=='file_edit'){
       $filename_old = wfRequest::get('filename_old');
       $filename_new = wfRequest::get('filename_new');
-      $activetheme = wfArray::get($_SESSION, 'plugin/wf/editor/activetheme');
+      $activetheme = $this->activetheme;
       if($filename_old != $filename_new){
         $filename_old = 'theme/'.$activetheme.'/'.$filename_old;
         $filename_new = 'theme/'.$activetheme.'/'.$filename_new;
-        if(!wfFilesystem::fileExist(wfArray::get($GLOBALS, 'sys/app_dir').'/'.dirname($filename_new))){
+        if(!wfFilesystem::fileExist($this->activefolder.'/'.dirname($filename_new))){
           $json->set('script', array("alert('Dir does not exist!');"));
-        }elseif(wfFilesystem::fileExist(wfArray::get($GLOBALS, 'sys/app_dir').'/'.$filename_new)){
+        }elseif(wfFilesystem::fileExist($this->activefolder.'/'.$filename_new)){
           $json->set('script', array("alert('File already exist!');"));
         }else{
           if(wfRequest::get('copy') != 'on'){
-            if(rename(wfArray::get($GLOBALS, 'sys/app_dir').'/'.$filename_old, wfArray::get($GLOBALS, 'sys/app_dir').'/'.$filename_new)){
+            if(rename($this->activefolder.'/'.$filename_old, $this->activefolder.'/'.$filename_new)){
               $json->set('script', array("PluginWfAjax.update('modal_files_body');", "$('#modal_file_edit').modal('hide');"));
             }else{
             $json->set('script', array("alert('Could not rename file!');"));
             }
           }else{
-            if(copy(wfArray::get($GLOBALS, 'sys/app_dir').'/'.$filename_old, wfArray::get($GLOBALS, 'sys/app_dir').'/'.$filename_new)){
+            if(copy($this->activefolder.'/'.$filename_old, $this->activefolder.'/'.$filename_new)){
               $json->set('script', array("PluginWfAjax.update('modal_files_body');", "$('#modal_file_edit').modal('hide');"));
             }else{
               $json->set('script', array("alert('Could not copy file!');"));
@@ -817,28 +825,28 @@ class PluginWfEditor{
       }
     }elseif($a=='file_delete'){
       $file = urldecode(wfRequest::get('file'));
-      if(!wfFilesystem::fileExist(wfArray::get($GLOBALS, 'sys/app_dir').'/'.$file)){
+      if(!wfFilesystem::fileExist($this->activefolder.'/'.$file)){
         $json->set('script', array("alert('File does not exist!');"));
       }else{
-        unlink(wfArray::get($GLOBALS, 'sys/app_dir').'/'.$file);
+        unlink($this->activefolder.'/'.$file);
         $json->set('script', array("PluginWfAjax.update('modal_files_body');"));
       }
     }elseif($a=='folder_delete'){
-      $activetheme = wfArray::get($_SESSION, 'plugin/wf/editor/activetheme');
+      $activetheme = $this->activetheme;
       $folder = urldecode(wfRequest::get('folder'));
-      if(!wfFilesystem::fileExist(wfArray::get($GLOBALS, 'sys/app_dir').'/theme/'.$activetheme.'/'. $folder)){
+      if(!wfFilesystem::fileExist($this->activefolder.'/theme/'.$activetheme.'/'. $folder)){
         $json->set('script', array("alert('Folder does not exist!');"));
       }else{
-        $check = wfFilesystem::getScandir(wfArray::get($GLOBALS, 'sys/app_dir').'/theme/'.$activetheme.'/'. $folder);
+        $check = wfFilesystem::getScandir($this->activefolder.'/theme/'.$activetheme.'/'. $folder);
         if(sizeof($check) == 0) {
-          rmdir(wfArray::get($GLOBALS, 'sys/app_dir').'/theme/'.$activetheme.'/'. $folder);
+          rmdir($this->activefolder.'/theme/'.$activetheme.'/'. $folder);
           $json->set('script', array("PluginWfAjax.load('modal_files_body', '/editor/files');"));
         } else {
           $json->set('script', array("alert('Could not delete folder, maybe it contain files or folders!');"));
         }
       }
     }elseif($a=='file_new'){
-      $activetheme = wfArray::get($_SESSION, 'plugin/wf/editor/activetheme');
+      $activetheme = $this->activetheme;
       $folder = 'theme/'.$activetheme.'/'.wfRequest::get('folder');
       $filename_new = $folder.'/'.wfRequest::get('filename_new');
       $form = new PluginWfYml(__DIR__.'/form/file_new.yml');
@@ -848,9 +856,9 @@ class PluginWfEditor{
       $form->set(null, $form_form_v1->data);
       if(!$form->get('is_valid')){
         $json->set('script', array("alert(\"".$form_form_v1->getErrors("\\n")."\");"));
-      }elseif(!wfFilesystem::fileExist(wfArray::get($GLOBALS, 'sys/app_dir').'/'.($folder))){
+      }elseif(!wfFilesystem::fileExist($this->activefolder.'/'.($folder))){
         $json->set('script', array("alert('Dir does not exist!');"));
-      }elseif(wfFilesystem::fileExist(wfArray::get($GLOBALS, 'sys/app_dir').'/'.$filename_new)){
+      }elseif(wfFilesystem::fileExist($this->activefolder.'/'.$filename_new)){
         $json->set('script', array("alert('File already exist!');"));
       }else{
         $content = null;
@@ -866,11 +874,11 @@ class PluginWfEditor{
           default:
             break;
         }
-        wfFilesystem::saveFile(wfArray::get($GLOBALS, 'sys/app_dir').'/'.$filename_new, $content);
+        wfFilesystem::saveFile($this->activefolder.'/'.$filename_new, $content);
         $json->set('script', array("PluginWfAjax.update('modal_files_body');", "$('#modal_file_new').modal('hide');"));
       }
     }elseif($a=='folder_new'){
-      $activetheme = wfArray::get($_SESSION, 'plugin/wf/editor/activetheme');
+      $activetheme = $this->activetheme;
       if(wfRequest::get('folder')){
         $folder = 'theme/'.$activetheme.'/'.wfRequest::get('folder');
       }else{
@@ -885,12 +893,12 @@ class PluginWfEditor{
       $form->set(null, $form_form_v1->data);
       if(!$form->get('is_valid')){
         $json->set('script', array("alert(\"".$form_form_v1->getErrors("\\n")."\");"));
-      }elseif(!wfFilesystem::fileExist(wfArray::get($GLOBALS, 'sys/app_dir').'/'.($folder))){
+      }elseif(!wfFilesystem::fileExist($this->activefolder.'/'.($folder))){
         $json->set('script', array("alert('Folder does not exist!');"));
-      }elseif(wfFilesystem::fileExist(wfArray::get($GLOBALS, 'sys/app_dir').'/'.$foldername_new)){
+      }elseif(wfFilesystem::fileExist($this->activefolder.'/'.$foldername_new)){
         $json->set('script', array("alert('New folder already exist!');"));
       }else{
-        wfFilesystem::createDir(wfArray::get($GLOBALS, 'sys/app_dir').'/'.$foldername_new, false);
+        wfFilesystem::createDir($this->activefolder.'/'.$foldername_new, false);
         $json->set('script', array("PluginWfAjax.update('modal_files_body');", "$('#modal_folder_new').modal('hide');"));
       }
     }
@@ -969,7 +977,7 @@ class PluginWfEditor{
               array('type' => 'div', 'innerHTML' => $innerHTML, 'attribute' => array('style' => $style, 'id' => 'innerHTML_'.$uid, 'class' => 'collapse'))
               ), 'attribute' => array('class' => $class, 'id' => 'element_'.$uid));
         }else{
-          $active_theme_settings = new PluginWfArray(wfSettings::getSettings('/theme/'.wfArray::get($_SESSION, 'plugin/wf/editor/activetheme').'/config/settings.yml'));
+          $active_theme_settings = new PluginWfYml($this->activefolder.'/theme/'.$this->activetheme.'/config/settings.yml');
           $alert = null;
           if(!$active_theme_settings->get('plugin/'.$item->get('data/plugin').'/enabled')){
             $alert = wfDocument::createHtmlElement('div', 'Plugin not enabled in theme config/settings.yml!', array('class' => 'alert alert-danger'));
@@ -1032,7 +1040,7 @@ class PluginWfEditor{
    */
   public function page_plugin(){
     $this->includePlugin();
-    $filename = wfArray::get($GLOBALS, 'sys/app_dir').'/plugin/wf/editor/page/plugin.yml';
+    $filename = $this->activefolder.'/plugin/wf/editor/page/plugin.yml';
     $page = wfFilesystem::loadYml($filename);
     $page = wfArray::set($page, 'content', $this->getPlugin());
     wfGlobals::setSys('layout_path', '/plugin/wf/editor/layout');
@@ -1042,16 +1050,15 @@ class PluginWfEditor{
    * Method to get files.
    */
   function getFiles(){
-    $activetheme = wfArray::get($_SESSION, 'plugin/wf/editor/activetheme');
     $class = wfArray::get($GLOBALS, 'sys/class');
     /**
      * Listgroup.
      */
     $dir = urldecode(wfRequest::get('dir'));
     if($dir){
-      $folder = wfFilesystem::getScandir(wfArray::get($GLOBALS, 'sys/app_dir').'/theme/'.$activetheme.'/'.$dir);
+      $folder = wfFilesystem::getScandir($this->activefolder.'/theme/'.$this->activetheme.'/'.$dir);
     }else{
-      $folder = wfFilesystem::getScandir(wfArray::get($GLOBALS, 'sys/app_dir').'/theme/'.$activetheme);
+      $folder = wfFilesystem::getScandir($this->activefolder.'/theme/'.$this->activetheme);
     }
     $a = array();
     if(sizeof($folder) > 0){
@@ -1068,7 +1075,7 @@ class PluginWfEditor{
         if($dir){
           if($is_file){
             $glyphicon = 'file';
-            $yml = ('theme/'.$activetheme.'/'.$dir.'/'. $value);
+            $yml = ('theme/'.$this->activetheme.'/'.$dir.'/'. $value);
             $panel_id = wfPhpfunc::str_replace('/', '.', $yml);
             $a[] = $this->getBtnGroup(array('label' => $value, 'list_group_item' => true, 'buttons' => array(
               array('label' => 'Text editor', 'onclick' => "PluginWfBootstrapjs.modal({label: '$yml', url: '/$class/edit?yml='+encodeURIComponent('$yml'), id: 'modal_text_editor', size: 'xl'});;return false;"),
@@ -1171,14 +1178,13 @@ class PluginWfEditor{
    * Method to check if is file.
    */
   function is_file($dir, $file_or_folder){
-    $activetheme = wfArray::get($_SESSION, 'plugin/wf/editor/activetheme');
     $is_file = false;
     if($dir){
-      if(is_file(wfArray::get($GLOBALS, 'sys/app_dir').'/theme/'.$activetheme.'/'.$dir.'/'.$file_or_folder)){
+      if(is_file($this->activefolder.'/theme/'.$this->activetheme.'/'.$dir.'/'.$file_or_folder)){
         $is_file = true;
       }
     }else{
-      if(is_file(wfArray::get($GLOBALS, 'sys/app_dir').'/theme/'.$activetheme.'/'.$file_or_folder)){
+      if(is_file($this->activefolder.'/theme/'.$this->activetheme.'/'.$file_or_folder)){
         $is_file = true;
       }
     }
@@ -1188,8 +1194,8 @@ class PluginWfEditor{
    * Metod to create elements for listing all plugins.
    */
   function getPlugin(){
-    $filename = wfArray::get($GLOBALS, 'sys/app_dir').'/plugin/wf/editor/data/panel.yml';
-    $org_dir = wfFilesystem::getScandir(wfArray::get($GLOBALS, 'sys/app_dir').'/plugin');
+    $filename = $this->activefolder.'/plugin/wf/editor/data/panel.yml';
+    $org_dir = wfFilesystem::getScandir($this->activefolder.'/plugin');
     /**
      * Grab plugins in array.
      */
@@ -1201,7 +1207,7 @@ class PluginWfEditor{
          */
         continue;
       }
-      foreach (wfFilesystem::getScandir(wfArray::get($GLOBALS, 'sys/app_dir').'/plugin/'.$value) as $key2 => $value2) {
+      foreach (wfFilesystem::getScandir($this->activefolder.'/plugin/'.$value) as $key2 => $value2) {
         $plugins[$value.'/'.$value2] = array('plugin' => $value.'/'.$value2 ); 
       }
     }
@@ -1221,7 +1227,7 @@ class PluginWfEditor{
     foreach ($plugins as $key => $value) {
       $plugin = urlencode((string)$key);
       $onclick = "PluginWfBootstrapjs.modal({id: 'wf_editor_pluginview', url: '/$class/pluginview?plugin=$plugin', label: 'Plugin', 'size': 'lg'});return false;";
-      $filename = wfArray::get($GLOBALS, 'sys/app_dir').'/plugin/'.$key.'/config/settings.yml';
+      $filename = $this->activefolder.'/plugin/'.$key.'/config/settings.yml';
       $deprecated = '';
       $plugin_settings = null;
       if(wfFilesystem::fileExist($filename)){
@@ -1262,7 +1268,7 @@ class PluginWfEditor{
     /**
      * readme
      */
-    $filename = wfArray::get($GLOBALS, 'sys/app_dir').'/plugin/'.$plugin.'/README.md';
+    $filename = $this->activefolder.'/plugin/'.$plugin.'/README.md';
     $readme = null;
     if(wfFilesystem::fileExist($filename)){
       $readme = wfFilesystem::getContents($filename, true);
@@ -1274,7 +1280,7 @@ class PluginWfEditor{
     /**
      * /config/settings.yml - depricated
      */
-    $filename = wfArray::get($GLOBALS, 'sys/app_dir').'/plugin/'.$plugin.'/config/settings.yml';
+    $filename = $this->activefolder.'/plugin/'.$plugin.'/config/settings.yml';
     $plugin_settings = new PluginWfYml($filename);
     $page2->setByTag($plugin_settings->get(), 'plugin_settings', true);
     /**
@@ -1306,10 +1312,10 @@ class PluginWfEditor{
   /**
    * Method page.
    */
-  public static function page_methodview(){
+  public function page_methodview(){
     wfPlugin::includeonce('wf/yml');
     $method = wfRequest::get('method');
-    $page = wfFilesystem::loadYml(wfArray::get($GLOBALS, 'sys/app_dir').'/plugin/wf/editor/page/methodview.yml');
+    $page = wfFilesystem::loadYml($this->activefolder.'/plugin/wf/editor/page/methodview.yml');
     $element = array();
     $plugin = urldecode(wfRequest::get('plugin'));
     wfPlugin::includeonce($plugin);
@@ -1341,7 +1347,7 @@ class PluginWfEditor{
       }else{
         $class = 'bg-successzzz';
       }
-      $default = new PluginWfYml(wfArray::get($GLOBALS, 'sys/app_dir').'/plugin/'.$plugin.'/default/'.$type.'.'.$name.'.yml');
+      $default = new PluginWfYml($this->activefolder.'/plugin/'.$plugin.'/default/'.$type.'.'.$name.'.yml');
       $default_yml = null;
       if($default->get()){
         $default_yml = wfDocument::createHtmlElement('pre', array(
@@ -1478,10 +1484,36 @@ class PluginWfEditor{
   }
   private function get_theme_data(){
     $data = array();
-    foreach (wfFilesystem::getScandir(wfArray::get($GLOBALS, 'sys/app_dir').'/theme') as $value) {
-      foreach (wfFilesystem::getScandir(wfArray::get($GLOBALS, 'sys/app_dir').'/theme/'.$value) as $value2) {
-        $theme = urlencode( $value.'/'.$value2);
-        $data[] = array('name' => $value.'/'.$value2, 'theme' => $theme);
+    $folder = $this->activefolder;
+    $scan1 = wfFilesystem::getScandir($folder.'/../');
+    foreach($scan1 as $v1){
+      $scan2 = wfFilesystem::getScandir($folder.'/../'.$v1);
+      /**
+       * Check for folder config.
+       */
+      foreach($scan2 as $v2){
+        if($v2=='config'){
+          /**
+           * Check for settings and param theme.
+           */
+          $settings = new PluginWfYml("$folder/../$v1/$v2/settings.yml");
+          if($settings->get('theme')){
+            /**
+             * Scan theme folder and sub folders.
+             */
+            $scan3 = wfFilesystem::getScandir("$folder/../$v1/theme");
+            foreach($scan3 as $v3){
+              $scan4 = wfFilesystem::getScandir("$folder/../$v1/theme/$v3");
+              foreach($scan4 as $v4){
+                /**
+                 * Add to data.
+                 */
+                $data[] = array('name' => $v3.'/'.$v4, 'theme' => urlencode($v3.'/'.$v4), 'folder' => "$folder/../$v1");
+              }
+            }
+          }
+          break;
+        }
       }
     }
     return $data;
@@ -1497,7 +1529,9 @@ class PluginWfEditor{
    */
   public function page_themeload(){
     $theme = urldecode(wfRequest::get('theme'));
-    $_SESSION = wfArray::set($_SESSION, 'plugin/wf/editor/activetheme', $theme);
+    $folder = urldecode(wfRequest::get('folder'));
+    wfUser::setSession('plugin/wf/editor/activetheme', $theme);
+    wfUser::setSession('plugin/wf/editor/activefolder', $folder);
     $json = array('reload' => true);
     exit(json_encode($json));
   }

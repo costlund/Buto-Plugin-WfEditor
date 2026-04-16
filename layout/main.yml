@@ -40,6 +40,14 @@ content:
                 - 
                   type: span
                   innerHTML: globals:_SESSION/plugin/wf/editor/activetheme
+                - 
+                  type: strong
+                  attribute:
+                    class: content-colon
+                  innerHTML: Folder
+                - 
+                  type: span
+                  innerHTML: globals:_SESSION/plugin/wf/editor/activefolder
   theme_info:
     type: div
     attribute:
