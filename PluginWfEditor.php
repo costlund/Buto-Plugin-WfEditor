@@ -1293,16 +1293,6 @@ class PluginWfEditor{
     /**
      * 
      */
-    try {
-      wfPlugin::includeonce($plugin);
-    }
-    catch (Exception $e) {
-      $plugin_action_file = 'Plugin'.wfPlugin::to_camel_case($plugin).'.php';
-      include_once $this->activefolder.'/plugin/'.$plugin.'/'.$plugin_action_file;
-    }
-    /**
-     * 
-     */
     $page2 = wfDocument::getElementFromFolder(__DIR__, __FUNCTION__);
     /**
      * readme
@@ -1315,114 +1305,16 @@ class PluginWfEditor{
     /**
      * 
      */
-    $element = array();
-    /**
-     * /config/settings.yml - depricated
-     */
     $filename = $this->activefolder.'/plugin/'.$plugin.'/config/settings.yml';
     $plugin_settings = new PluginWfYml($filename);
     $page2->setByTag($plugin_settings->get(), 'plugin_settings', true);
     /**
-     * listgroup
-     */
-    $item = array();
-    $class = wfArray::get($GLOBALS, 'sys/class');
-    $rc = self::getReflectionClass(wfSettings::getPluginObj($plugin, false));
-    $comment = self::cleanComment(wfArray::get($rc,'comment'));
-    $comment = self::replace_load_tags($comment, $plugin);
-    $element[] = wfDocument::createHtmlElement('div', $comment, array('class' => 'bg-primaryzzz', 'style' => 'font-familyzzz:courier new;border-radius:4px;'));
-    if(wfArray::get($rc, 'methods')){
-      foreach (wfArray::get($rc, 'methods') as $key2 => $value2) {
-        $onclick = "PluginWfBootstrapjs.modal({id: 'wf_editor_methodview', url: '/$class/methodview?plugin=".urlencode((string)$plugin)."&method=$key2', label: 'Method', 'size': 'lg'});return false;";
-        $item[] = array('href' => '#', 'innerHTML' => $key2, 'onclick' => $onclick);
-      }
-    }else{
-      $item[] = array('href' => '#!', 'innerHTML' => '<i>No methods</i>');
-    }
-    $element[] = wfDocument::createWidget('wf/bootstrap', 'listgroup', array('item' => $item));
-    /**
      * 
      */
     $page2->setByTag(array('readme' => $readme));
-    $page2->setByTag(array('element' => $element));
     $page2->setByTag(array('plugin' => $plugin));
     wfDocument::renderElement($page2);
   }
-  /**
-   * Method page.
-   */
-  public function page_methodview(){
-    wfPlugin::includeonce('wf/yml');
-    $method = wfRequest::get('method');
-    $page = wfFilesystem::loadYml($this->activefolder.'/plugin/wf/editor/page/methodview.yml');
-    $element = array();
-    $plugin = urldecode(wfRequest::get('plugin'));
-    wfPlugin::includeonce($plugin);
-    $element[] = wfDocument::createHtmlElement('h2', $plugin);
-    $class = wfSettings::getPluginObj($plugin, false);
-    $rc = self::getReflectionClass($class);
-    foreach (wfArray::get($rc, 'methods') as $key2 => $value2) {
-      if($key2 != $method){
-        /**
-         * Only one method is of interest.
-         */
-        continue;
-      }
-      $class = 'bg-danger';
-      $name = $key2;
-      $type = null;
-      if(wfPhpfunc::substr($key2, 0, 7)=='widget_'){
-        $class = 'bg-warning';
-        $name = wfPhpfunc::substr($name, 7);
-        $type = 'widget';
-      }elseif(wfPhpfunc::substr($key2, 0, 6)=='event_'){
-        $class = 'bg-info';
-        $name = wfPhpfunc::substr($name, 6);
-        $type = 'event';
-      }elseif(wfPhpfunc::substr($key2, 0, 5)=='page_'){
-        $class = 'bg-success';
-        $name = wfPhpfunc::substr($name, 5);
-        $type = 'page';
-      }else{
-        $class = 'bg-successzzz';
-      }
-      $default = new PluginWfYml($this->activefolder.'/plugin/'.$plugin.'/default/'.$type.'.'.$name.'.yml');
-      $default_yml = null;
-      if($default->get()){
-        $default_yml = wfDocument::createHtmlElement('pre', array(
-        wfDocument::createHtmlElement('span', 'Default values', array('style' => 'margin-left:40%;', 'title' => 'Default values from file: '.'/plugin/'.$plugin.'/default/'.$type.'.'.$name.'.yml')),
-          wfDocument::createHtmlElement('code', "\n".trim(wfHelp::getYmlDump($default->get())), array('class' => ' language-yaml'))
-          ), array('class' => ' language-yaml'));
-      }
-      $comment = wfArray::get($value2,'comment');
-      $code = "\n".$value2['code'];
-      $id = wfPhpfunc::str_replace('/', '_', $plugin.'_'.$key2);
-      $comment .= '<br><a href="#" data-bs-toggle="collapse" data-bs-target="#plugin_source_'.$id.'">Source code.</a>';
-      $comment .= '<pre stylezzz="display:none" id="plugin_source_'.$id.'" class="collapse" aria-expanded="false"><span style="margin-left:50%;">PHP</span><code class=" language-php">'.$code.'</code></pre>';
-      $comment = self::cleanComment($comment, true);
-      $comment = self::replace_load_tags($comment, $plugin);
-      $element[] = wfDocument::createHtmlElement('div', array(
-        wfDocument::createHtmlElement('a', 'Add to element', array(
-          'style' => 'float:right;display:none;', 
-          'class' => 'btn btn-default',
-          'id' => 'btn_widget_add',
-          'onclick' => "document.getElementById('btn_widget_add_from_window').setAttribute('data_plugin', '$plugin');document.getElementById('btn_widget_add_from_window').setAttribute('data_widget', '$name');document.getElementById('btn_widget_add_from_window').click();return false;"
-        )),
-        wfDocument::createHtmlElement('i', $type),
-        wfDocument::createHtmlElement('h3', $name),
-        wfDocument::createHtmlElement('div', $comment),
-        $default_yml
-      ), array('class' => $class, 'style' => 'padding:10px;margin-top:4px;border-radius:4px;'));
-      $element[] = wfDocument::createHtmlElement('div', '&nbsp;');
-    }
-    if($type == 'widget'){
-      $element[] = wfDocument::createHtmlElement('script', 'if(document.getElementById("btn_widget")){document.getElementById("btn_widget_add").style.display="";}');
-    }
-    $page = wfArray::set($page, 'content', $element);
-    wfGlobals::setSys('layout_path', '/plugin/wf/editor/layout');
-    wfDocument::mergeLayout($page);
-  }
-  
   /**
    * Method to get reflection of class.
    */

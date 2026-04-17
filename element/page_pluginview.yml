@@ -19,9 +19,6 @@
                 method: readme
                 data:
                   content: rs:readme
-        -
-          text: Method
-          content:
             -
               type: div
               settings:
@@ -31,4 +28,8 @@
               innerHTML: This plugin is depricated!
             -
               type: div
-              innerHTML: rs:element
+              settings:
+                disabled: plugin_settings:depricated
+              attribute: 
+                class: alert alert-success
+              innerHTML: This plugin is NOT depricated!
